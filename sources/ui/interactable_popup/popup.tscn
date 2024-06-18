@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://chx76m43qh42g"]
+
+[ext_resource type="Script" path="res://sources/ui/interactable_popup/popup.gd" id="1_rqr0a"]
+[ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="2_el662"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ehdmj"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Popup" type="Node3D"]
+script = ExtResource("1_rqr0a")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+offset = Vector2(100, 200)
+billboard = 1
+double_sided = false
+texture = SubResource("ViewportTexture_ehdmj")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(200, 300)
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="SubViewport/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme = ExtResource("2_el662")
+text = "sziasztok majmokk"
+horizontal_alignment = 1
+vertical_alignment = 2

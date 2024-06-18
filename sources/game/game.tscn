@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmrgqjw51idj5"]
+
+[ext_resource type="Script" path="res://sources/game/game.gd" id="1_2tqxi"]
+[ext_resource type="PackedScene" uid="uid://dn2wuuctgmm0p" path="res://sources/ui/hud/hud.tscn" id="3_isr1v"]
+[ext_resource type="PackedScene" uid="uid://d25hwl0a848au" path="res://sources/ui/ingame_menu/ingame_menu.tscn" id="4_wghfy"]
+[ext_resource type="PackedScene" uid="uid://cbm23xsrihklr" path="res://sources/maps/menu_island/menu_island.tscn" id="5_maso1"]
+[ext_resource type="PackedScene" uid="uid://dcpmsvyrxip18" path="res://sources/characters/debug_camera/debug_camera.tscn" id="6_1iahg"]
+
+[node name="Game" type="Node3D"]
+process_mode = 3
+script = ExtResource("1_2tqxi")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Hud" parent="CanvasLayer" instance=ExtResource("3_isr1v")]
+
+[node name="IngameMenu" parent="CanvasLayer" instance=ExtResource("4_wghfy")]
+visible = false
+
+[node name="Synced" type="Node3D" parent="."]
+process_mode = 1
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://sources/characters/player/player.tscn", "res://sources/characters/player/player_model.tscn", "res://sources/interactables/weapons/bazooka/bazooka.tscn", "res://sources/interactables/projectile/bullet.tscn")
+spawn_path = NodePath("../Synced")
+
+[node name="DeathCamera" parent="." instance=ExtResource("6_1iahg")]
+
+[node name="MenuIsland" parent="." instance=ExtResource("5_maso1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.90588, 0)

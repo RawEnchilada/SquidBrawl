@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://d25hwl0a848au"]
+
+[ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="1_k0arf"]
+[ext_resource type="Script" path="res://sources/ui/ingame_menu/ingame_menu.gd" id="1_uu18d"]
+
+[node name="IngameMenu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_k0arf")
+script = ExtResource("1_uu18d")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 2
+color = Color(0, 0, 0, 0.392157)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="BackToMenuButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Back To Menu"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Quit
+"

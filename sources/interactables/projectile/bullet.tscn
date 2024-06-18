@@ -1,0 +1,87 @@
+[gd_scene load_steps=13 format=3 uid="uid://bhfxh42yqc7nq"]
+
+[ext_resource type="Script" path="res://sources/interactables/projectile/bullet.gd" id="1_xwd0r"]
+[ext_resource type="Texture2D" uid="uid://c31y14upogwrp" path="res://sources/interactables/projectile/explosion.png" id="2_34ndq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g61tb"]
+metallic = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_rj8lg"]
+material = SubResource("StandardMaterial3D_g61tb")
+radius = 0.05
+height = 0.1
+radial_segments = 8
+rings = 4
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_sojdp"]
+points = PackedVector3Array(-0.000729355, -0.0212012, -0.0431456, 0.00227572, 0.0165385, 0.0458985, -0.00223354, 0.0165427, 0.0459103, -0.0022512, 0.0410985, -0.0266169, 0.0459117, 0.0165432, -0.00223605, -0.0218736, -0.0392497, 0.0203917, -0.045903, 0.0165554, -0.00222873, 0.0294114, -0.0391954, 0.00226954, 0.0309181, -0.0165773, 0.0339332, 0.000775015, 0.0486638, 0.00381466, -0.0339281, -0.0165909, -0.0309136, 0.0309396, -0.0165888, -0.0339187, -0.00226024, -0.0410976, -0.0266162, -0.0322836, 0.0180255, 0.0323166, -0.00223511, 0.0165542, -0.0459041, 0.0323095, 0.018021, 0.0323087, 0.0323182, 0.0180259, -0.0322793, -0.00223365, -0.0165435, 0.0459124, -0.0458906, -0.016551, 0.00226622, -0.0323029, 0.0180362, -0.0322978, -0.0293996, 0.0392247, -0.00223313, 0.0294192, 0.0392059, -0.00223204, 0.0458993, -0.0165387, 0.00227353, 0.00230217, -0.0410827, 0.0266447, -0.00225064, 0.0410884, 0.0266484, -0.0308932, -0.016582, 0.033943, -0.0266212, -0.0410968, -0.00225355, 0.00381677, -0.0486634, 0.000772715, 0.0219007, -0.0392377, -0.0203473, 0.0203827, 0.03923, 0.0218951, 0.0203948, 0.0392531, -0.0218699, -0.0218749, 0.039252, 0.0203928)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6wyco"]
+
+[sub_resource type="Curve" id="Curve_go3y7"]
+_data = [Vector2(0, 0.505494), 0.0, 0.0, 0, 0, Vector2(0.188406, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.208791), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_vnu8j"]
+curve = SubResource("Curve_go3y7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s51bt"]
+angle_max = 360.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_vnu8j")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjfee"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.588235)
+albedo_texture = ExtResource("2_34ndq")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_nudur"]
+material = SubResource("StandardMaterial3D_bjfee")
+size = Vector2(3, 3)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_e3a6r"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Bullet" type="RigidBody3D"]
+collision_layer = 16
+collision_mask = 83
+script = ExtResource("1_xwd0r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_rj8lg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_sojdp")
+
+[node name="ExplosionArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 14
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExplosionArea"]
+shape = SubResource("SphereShape3D_6wyco")
+
+[node name="ExplosionEmitter" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 3
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.75
+process_material = SubResource("ParticleProcessMaterial_s51bt")
+draw_pass_1 = SubResource("QuadMesh_nudur")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_e3a6r")

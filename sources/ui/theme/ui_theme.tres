@@ -1,0 +1,75 @@
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://bxjb6x8f4oty5"]
+
+[ext_resource type="Texture2D" uid="uid://s7tlxvgk2h1k" path="res://sources/ui/theme/nordic-button.png" id="1_q6y7v"]
+[ext_resource type="FontFile" uid="uid://dk765wy6unjxu" path="res://sources/ui/theme/BoyzRGrossNF.ttf" id="1_wp1ub"]
+[ext_resource type="Texture2D" uid="uid://fmu6muy2lhg6" path="res://sources/ui/theme/nordic-button_pressed.png" id="2_6c75b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4jduc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f54o5"]
+texture = ExtResource("2_6c75b")
+expand_margin_left = 20.0
+expand_margin_top = 10.0
+expand_margin_right = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sn5sl"]
+texture = ExtResource("1_q6y7v")
+expand_margin_left = 20.0
+expand_margin_top = 10.0
+expand_margin_right = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_st61b"]
+texture = ExtResource("2_6c75b")
+expand_margin_left = 15.0
+expand_margin_top = 5.0
+expand_margin_right = 15.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v5rcd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e1sxc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t4wx4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x6c7c"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ihemt"]
+texture = ExtResource("1_q6y7v")
+expand_margin_left = 20.0
+expand_margin_top = 5.0
+expand_margin_right = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e4jj1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ehquo"]
+texture = ExtResource("2_6c75b")
+
+[resource]
+Button/colors/font_color = Color(0.0338533, 0.0338533, 0.0338533, 1)
+Button/colors/font_hover_color = Color(0.324897, 0.319645, 0.327455, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 1)
+Button/constants/outline_size = 2
+Button/font_sizes/font_size = 48
+Button/fonts/font = ExtResource("1_wp1ub")
+Button/styles/focus = SubResource("StyleBoxEmpty_4jduc")
+Button/styles/hover = SubResource("StyleBoxTexture_f54o5")
+Button/styles/normal = SubResource("StyleBoxTexture_sn5sl")
+Button/styles/pressed = SubResource("StyleBoxTexture_st61b")
+ColorPickerButton/styles/disabled = null
+ColorPickerButton/styles/focus = SubResource("StyleBoxEmpty_v5rcd")
+ColorPickerButton/styles/hover = SubResource("StyleBoxEmpty_e1sxc")
+ColorPickerButton/styles/normal = SubResource("StyleBoxEmpty_t4wx4")
+ColorPickerButton/styles/pressed = SubResource("StyleBoxEmpty_x6c7c")
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+Label/constants/outline_size = 2
+Label/font_sizes/font_size = 48
+Label/fonts/font = ExtResource("1_wp1ub")
+Label/styles/normal = SubResource("StyleBoxTexture_ihemt")
+LineEdit/colors/caret_color = Color(0.27022, 0.270223, 0.270222, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_outline_color = Color(1, 1, 1, 1)
+LineEdit/constants/outline_size = 2
+LineEdit/font_sizes/font_size = 48
+LineEdit/fonts/font = ExtResource("1_wp1ub")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_e4jj1")
+LineEdit/styles/normal = SubResource("StyleBoxTexture_ehquo")

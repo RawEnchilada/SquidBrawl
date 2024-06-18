@@ -1,0 +1,94 @@
+[gd_scene load_steps=11 format=3 uid="uid://cclccwlllynbt"]
+
+[ext_resource type="Script" path="res://sources/characters/player/player.gd" id="1_fggcm"]
+[ext_resource type="PackedScene" uid="uid://bnx88th7kphdj" path="res://sources/characters/player/player_model.tscn" id="2_ar0yt"]
+[ext_resource type="Script" path="res://sources/characters/player/interact_area.gd" id="2_cb6x0"]
+[ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="2_qvorq"]
+[ext_resource type="FontFile" uid="uid://dk765wy6unjxu" path="res://sources/ui/theme/BoyzRGrossNF.ttf" id="5_x0wfm"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dejq8"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:player_name")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:player_color")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_chr4p"]
+radius = 0.204125
+height = 0.947831
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0gyle"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7ywvk"]
+radius = 1.25
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t2xtq"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 68
+collision_mask = 3
+platform_on_leave = 2
+platform_floor_layers = 3
+script = ExtResource("1_fggcm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_dejq8")
+
+[node name="PhysicsCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.477593, 0)
+shape = SubResource("CapsuleShape3D_chr4p")
+
+[node name="CameraBase" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
+collision_mask = 11
+shape = SubResource("SphereShape3D_0gyle")
+margin = 0.02
+
+[node name="Camera3D" type="Camera3D" parent="CameraBase/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0)
+environment = ExtResource("2_qvorq")
+
+[node name="RayCast3D" type="RayCast3D" parent="CameraBase/SpringArm3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(0, 0, -50)
+collision_mask = 67
+
+[node name="InteractArea" type="Area3D" parent="CameraBase/SpringArm3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("2_cb6x0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraBase/SpringArm3D/Camera3D/InteractArea"]
+shape = SubResource("SphereShape3D_7ywvk")
+
+[node name="CharacterModel" parent="." instance=ExtResource("2_ar0yt")]
+
+[node name="DeathArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.448871, 0)
+collision_layer = 0
+collision_mask = 32
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathArea"]
+shape = SubResource("SphereShape3D_t2xtq")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 1.17512, 0)
+billboard = 1
+text = "WURM"
+font = ExtResource("5_x0wfm")
+font_size = 96
+outline_size = 18
+
+[connection signal="weapon_equipped" from="." to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_weapon_equipped"]
+[connection signal="body_entered" from="CameraBase/SpringArm3D/Camera3D/InteractArea" to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_interactable_entered"]
+[connection signal="body_exited" from="CameraBase/SpringArm3D/Camera3D/InteractArea" to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_interactable_exited"]
+[connection signal="area_entered" from="DeathArea" to="." method="_on_death_area_area_entered"]

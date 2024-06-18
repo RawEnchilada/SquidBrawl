@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnx88th7kphdj"]
+
+[ext_resource type="PackedScene" uid="uid://cvhv4hvtqc46b" path="res://sources/characters/player/wurm.glb" id="1_yuwl1"]
+[ext_resource type="Script" path="res://sources/characters/character_model.gd" id="2_efm6j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1o4n4"]
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8whvg"]
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a678l"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.979743, 0.700282, 0.642277, 1)
+rim = 0.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1r4b7"]
+properties/0/path = NodePath("Armature/HeadIKTarget:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="CharacterModel" node_paths=PackedStringArray("skeleton", "skeletonik", "head_ik_target", "right_hand_target") instance=ExtResource("1_yuwl1")]
+script = ExtResource("2_efm6j")
+skeleton = NodePath("Armature/Skeleton3D")
+skeletonik = NodePath("Armature/Skeleton3D/SkeletonIK3D")
+head_ik_target = NodePath("Armature/HeadIKTarget")
+right_hand_target = NodePath("Armature/HeadIKTarget/HandTarget")
+
+[node name="Armature" parent="." index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="HeadIKTarget" type="Node3D" parent="Armature" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.44089e-16, 3.73763, -0.0625634)
+
+[node name="HandTarget" type="Node3D" parent="Armature/HeadIKTarget" index="0"]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -1.72568, -1.14002, -0.0625637)
+
+[node name="Skeleton3D" parent="Armature" index="1"]
+bones/4/scale = Vector3(1, 1, 1)
+
+[node name="SkeletonIK3D" type="SkeletonIK3D" parent="Armature/Skeleton3D" index="0"]
+process_priority = 1
+root_bone = &"Bone.001"
+tip_bone = &"Bone.005"
+target_node = NodePath("../../HeadIKTarget")
+max_iterations = 5
+
+[node name="Cylinder_002" parent="Armature/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_1o4n4")
+
+[node name="Cylinder_003" parent="Armature/Skeleton3D" index="4"]
+surface_material_override/0 = SubResource("StandardMaterial3D_8whvg")
+
+[node name="Sphere" parent="Armature/Skeleton3D" index="5"]
+surface_material_override/0 = SubResource("StandardMaterial3D_a678l")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="1"]
+replication_config = SubResource("SceneReplicationConfig_1r4b7")

@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://c802lvfwvb1ly"]
+
+[ext_resource type="Texture2D" uid="uid://c6mtjss65arar" path="res://sources/maps/assets/coconut/_kokos_apg_.png" id="1_j6bcv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4jc0v"]
+albedo_texture = ExtResource("1_j6bcv")
+
+[sub_resource type="SphereMesh" id="SphereMesh_g3vvf"]
+material = SubResource("StandardMaterial3D_4jc0v")
+radial_segments = 12
+rings = 4
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6dt18"]
+points = PackedVector3Array(0.00820111, -0.212185, -0.431398, 0.0233043, 0.165917, 0.460962, 0.145926, 0.152862, 0.43641, 0.0387248, 0.410418, -0.265301, -0.465103, -0.152725, 0.0388149, 0.295689, -0.393408, 0.0233692, 0.465494, 0.152307, -0.0373535, -0.143506, -0.409738, 0.235879, -0.385865, 0.197084, -0.219112, -0.143506, 0.409738, 0.235879, -0.142953, -0.393104, -0.26384, 0.235441, -0.166573, 0.402172, -0.401436, 0.166878, 0.235875, 0.235846, -0.16686, -0.401483, 0.235721, 0.40947, 0.144791, -0.234469, -0.166859, 0.402861, 0.0388936, 0.152688, -0.465081, -0.24909, -0.151376, -0.40051, 0.461251, -0.166056, -0.0218554, 0.402813, 0.166879, -0.234496, 0.402122, 0.166592, 0.235473, -0.293168, 0.391878, -0.0369304, 0.144882, -0.409739, -0.234499, -0.234874, 0.167146, -0.402171, -0.0222346, 0.489421, -0.0222316, -0.0222346, -0.489421, -0.0222316, -0.293166, -0.391875, -0.0369301, -0.400477, -0.151397, -0.249123, 0.143901, -0.391935, 0.264435, 0.264597, 0.392183, -0.142614, 0.402122, -0.166592, 0.235473, -0.234469, 0.166859, 0.402861)
+
+[node name="Coconut" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_g3vvf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_6dt18")

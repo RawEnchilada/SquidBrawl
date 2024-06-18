@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://bim7tw18c4ntt"]
+
+[ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_kio5s"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_y2207"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.8
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_nhvlx"]
+points = PackedVector3Array(0.109503, 0.406349, 0.0333197, -0.106328, -0.406349, -0.0428422, -0.106328, -0.406349, 0.0460168, -0.106328, 0.406349, -0.0428422, 0.0841083, -0.406349, -0.0809337, 0.0333197, -0.406349, 0.109503, -0.0301451, 0.406349, 0.109503, 0.0460168, 0.406349, -0.106328, -0.0428422, -0.406349, -0.106328, 0.109503, -0.406349, 0.0333197, -0.106328, 0.406349, 0.0460168, -0.0682366, 0.406349, -0.0936309, 0.058714, 0.406349, 0.0968055, 0.109503, 0.406349, -0.0301451, -0.0809337, -0.406349, 0.0841083, 0.0460168, -0.406349, -0.106328, 0.109503, -0.406349, -0.0301451, -0.0301451, -0.406349, 0.109503, 0.0968055, -0.406349, 0.058714, -0.0809337, 0.406349, 0.0841083, 0.0841083, 0.406349, -0.0809337, -0.0936309, -0.406349, -0.0682366, -0.0428422, 0.406349, -0.106328, 0.0333197, 0.406349, 0.109503, 0.058714, -0.406349, 0.0968055, 0.0968055, 0.406349, 0.058714, -0.0682366, -0.406349, -0.0936309, -0.0936309, 0.406349, -0.0682366)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_o5uep"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Bazooka" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 3
+script = ExtResource("1_kio5s")
+fire_rate = 30.0
+bullet_explosion_radius = 10.0
+bullet_explosion_strength = 10.0
+bullet_speed = 5.0
+
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_y2207")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_nhvlx")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_o5uep")

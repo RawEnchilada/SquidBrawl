@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bki5um47hrs62"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ndsc4"]
+shading_mode = 0
+albedo_color = Color(0.932956, 0, 0.2199, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_he4j8"]
+material = SubResource("StandardMaterial3D_ndsc4")
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 4
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_en6j4"]
+
+[node name="GrapplingHookTarget" type="Node3D"]
+
+[node name="HookMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_he4j8")
+
+[node name="RopeMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("ImmediateMesh_en6j4")

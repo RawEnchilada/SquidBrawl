@@ -1,0 +1,83 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0xbmd0w85vv0"]
+
+[ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="1_nsiuq"]
+[ext_resource type="Script" path="res://sources/ui/settings/settings.gd" id="2_amaen"]
+
+[node name="Settings" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nsiuq")
+script = ExtResource("2_amaen")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PlayerName" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="VBoxContainer/PlayerName"]
+layout_mode = 2
+text = "Player Name:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/PlayerName"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "WURM"
+alignment = 1
+
+[node name="PlayerColor" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="VBoxContainer/PlayerColor"]
+layout_mode = 2
+text = "Player Color:"
+
+[node name="ColorPicker" type="ColorPicker" parent="VBoxContainer/PlayerColor"]
+layout_mode = 2
+theme_override_constants/sv_width = 200
+theme_override_constants/sv_height = 200
+color = Color(0.980392, 0.701961, 0.643137, 1)
+edit_alpha = false
+picker_shape = 2
+can_add_swatches = false
+sampler_visible = false
+color_modes_visible = false
+sliders_visible = false
+hex_visible = false
+presets_visible = false
+
+[node name="MouseSensitivity" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseSensitivity"]
+layout_mode = 2
+text = "Sensitivity"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/MouseSensitivity"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.01
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="text_changed" from="VBoxContainer/PlayerName/LineEdit" to="." method="_on_player_name_field_text_changed"]
+[connection signal="color_changed" from="VBoxContainer/PlayerColor/ColorPicker" to="." method="_on_player_color_picker_color_changed"]
+[connection signal="drag_ended" from="VBoxContainer/MouseSensitivity/HSlider" to="." method="_on_mouse_sensitivity_slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_back_button_pressed"]
