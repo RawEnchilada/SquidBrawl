@@ -1,25 +1,18 @@
-[gd_scene load_steps=10 format=3 uid="uid://khg45re5xoun"]
+[gd_scene load_steps=9 format=3 uid="uid://khg45re5xoun"]
 
 [ext_resource type="Script" path="res://sources/maps/generated_island/generated_island.gd" id="1_hmfcd"]
+[ext_resource type="PackedScene" uid="uid://dcpmsvyrxip18" path="res://sources/characters/debug_camera/debug_camera.tscn" id="2_ober3"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ibhxt"]
 noise_type = 0
-frequency = 0.0892
+frequency = 0.05
+metadata/_preview_in_3d_space_ = true
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_pynj1"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_11wdv"]
 noise_type = 3
-frequency = 0.011
-fractal_type = 2
-fractal_gain = 0.005
-cellular_jitter = 3.0
-cellular_return_type = 0
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_q3e3u"]
-frequency = 0.004
-fractal_type = 2
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_0mtfe"]
-size = Vector2(256, 256)
+frequency = 0.0597
+fractal_type = 0
+metadata/_preview_in_3d_space_ = true
 
 [sub_resource type="Shader" id="Shader_cwm2x"]
 code = "shader_type spatial;
@@ -131,19 +124,15 @@ size = Vector3(1000, 20, 1000)
 [node name="GeneratedIsland" type="Node3D"]
 script = ExtResource("1_hmfcd")
 plant_noise_map = SubResource("FastNoiseLite_ibhxt")
-cell_noise_map = SubResource("FastNoiseLite_pynj1")
-noise_map = SubResource("FastNoiseLite_q3e3u")
+noise_map = SubResource("FastNoiseLite_11wdv")
 
-[node name="Terrain" type="MeshInstance3D" parent="."]
+[node name="Terrain" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
-mesh = SubResource("PlaneMesh_0mtfe")
 
 [node name="Water" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e4kkm")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.980172, 0.144905, 0.135147, 0.066746, -0.400741, 0.913757, 0.186567, 0.90466, 0.383123, 8.56742, 130.844, 5.61154)
@@ -156,3 +145,5 @@ collision_mask = 100
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeathArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -11, 0)
 shape = SubResource("BoxShape3D_wib2s")
+
+[node name="DebugCamera" parent="." instance=ExtResource("2_ober3")]
