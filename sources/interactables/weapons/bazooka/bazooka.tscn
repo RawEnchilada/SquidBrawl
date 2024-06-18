@@ -17,6 +17,9 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath(".:equipped")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [node name="Bazooka" type="RigidBody3D"]
 collision_layer = 8

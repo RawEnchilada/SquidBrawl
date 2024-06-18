@@ -34,11 +34,11 @@ func ask_for_user_data(peer_id:int):
 
 @rpc
 func host_asked_for_user_data():
-	rpc_id(1, "client_sent_user_data", Settings.user_name, Settings.user_color)
+	rpc_id(1, "client_sent_user_data", local_id, Settings.user_name, Settings.user_color)
 
 @rpc("any_peer")
-func client_sent_user_data(player_name:String, player_color:Color):
-	game_in_progress.add_player(local_id, player_name, player_color)
+func client_sent_user_data(peer_id:int, player_name:String, player_color:Color):
+	game_in_progress.add_player(peer_id, player_name, player_color)
 
 func join_game(loading_screen:LoadingScreen):
 	loading_screen.label.text = "Connecting..."

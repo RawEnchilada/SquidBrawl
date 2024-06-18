@@ -7,14 +7,17 @@ const PLAYER_SCENE = preload("res://sources/characters/player/player.tscn")
 @onready var hud = $CanvasLayer/Hud
 @onready var ingame_menu = $CanvasLayer/IngameMenu
 @onready var synced_node = $Synced
+@onready var island = $Island
+
 
 func add_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
+	player.global_position = Vector3.UP*20
 	player.name = str(id)
 	synced_node.add_child(player)
-	player.rpc("set_id", id)
 	player.rpc("set_player_name", player_name)
 	player.rpc("set_player_color", player_color)
+	player.rpc("set_id", id)
 	player.connect("player_died",Callable(self,"on_player_death"))
 
 
@@ -35,4 +38,7 @@ func _input(event):
 		
 func on_player_death(player:Player):
 	print_debug("player %s died" % player.id)
-	remove_player(player.id)
+	#remove_player(player.id)
+
+func register_projectile(projectile:Bullet):
+	projectile.bullet_exploded.connect(Callable(island,"on_bullet_exploded"))

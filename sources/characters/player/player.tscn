@@ -24,7 +24,7 @@ height = 0.947831
 [sub_resource type="SphereShape3D" id="SphereShape3D_0gyle"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7ywvk"]
-radius = 1.25
+radius = 0.983582
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_t2xtq"]
 
@@ -45,28 +45,33 @@ shape = SubResource("CapsuleShape3D_chr4p")
 [node name="CameraBase" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraBase"]
+[node name="CameraPivot" type="Node3D" parent="CameraBase"]
+
+[node name="WeaponHolder" type="Node3D" parent="CameraBase/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28258, -0.305276, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraBase/CameraPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
 collision_mask = 11
 shape = SubResource("SphereShape3D_0gyle")
 margin = 0.02
 
-[node name="Camera3D" type="Camera3D" parent="CameraBase/SpringArm3D"]
+[node name="Camera3D" type="Camera3D" parent="CameraBase/CameraPivot/SpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0)
 environment = ExtResource("2_qvorq")
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraBase/SpringArm3D/Camera3D"]
+[node name="RayCast3D" type="RayCast3D" parent="CameraBase/CameraPivot/SpringArm3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 target_position = Vector3(0, 0, -50)
 collision_mask = 67
 
-[node name="InteractArea" type="Area3D" parent="CameraBase/SpringArm3D/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+[node name="InteractArea" type="Area3D" parent="CameraBase/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0.3, -0.348623, -1.92127)
 collision_layer = 0
 collision_mask = 8
 script = ExtResource("2_cb6x0")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraBase/SpringArm3D/Camera3D/InteractArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraBase/CameraPivot/InteractArea"]
 shape = SubResource("SphereShape3D_7ywvk")
 
 [node name="CharacterModel" parent="." instance=ExtResource("2_ar0yt")]
@@ -88,7 +93,7 @@ font = ExtResource("5_x0wfm")
 font_size = 96
 outline_size = 18
 
-[connection signal="weapon_equipped" from="." to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_weapon_equipped"]
-[connection signal="body_entered" from="CameraBase/SpringArm3D/Camera3D/InteractArea" to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_interactable_entered"]
-[connection signal="body_exited" from="CameraBase/SpringArm3D/Camera3D/InteractArea" to="CameraBase/SpringArm3D/Camera3D/InteractArea" method="on_interactable_exited"]
+[connection signal="weapon_equipped" from="." to="CameraBase/CameraPivot/InteractArea" method="on_weapon_equipped"]
+[connection signal="body_entered" from="CameraBase/CameraPivot/InteractArea" to="CameraBase/CameraPivot/InteractArea" method="on_interactable_entered"]
+[connection signal="body_exited" from="CameraBase/CameraPivot/InteractArea" to="CameraBase/CameraPivot/InteractArea" method="on_interactable_exited"]
 [connection signal="area_entered" from="DeathArea" to="." method="_on_death_area_area_entered"]

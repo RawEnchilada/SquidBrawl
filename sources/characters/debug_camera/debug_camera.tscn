@@ -5,4 +5,6 @@
 [node name="DebugCamera" type="Node3D"]
 script = ExtResource("1_hov6a")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="CameraBase" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraBase"]

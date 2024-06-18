@@ -34,17 +34,6 @@ func turn_to_target(target:Vector3,delta:float):
 	rotation.x = 0.0
 	rotation.z = 0.0
 
-func put_weapon_in_hand(weapon:BaseWeapon):
-	weapon.reparent(right_hand_target)
-	weapon.position = Vector3.ZERO
-	weapon.rotation = Vector3.ZERO
-	weapon.disable_physics()
-
-func drop_weapon_from_hand():
-	if(right_hand_target.get_child_count() > 0):
-		right_hand_target.get_child(0).enable_physics()
-		right_hand_target.get_child(0).reparent(GameManager.game_in_progress.synced_node)
-
 func enter_ragdoll():
 	skeleton.physical_bones_start_simulation()
 	skeletonik.stop()

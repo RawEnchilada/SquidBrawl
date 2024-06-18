@@ -122,6 +122,6 @@ debug={
 3d_physics/layer_2="Movable"
 3d_physics/layer_3="Player"
 3d_physics/layer_4="Interactable"
-3d_physics/layer_5="Entities"
+3d_physics/layer_5="Projectiles"
 3d_physics/layer_6="Death"
 3d_physics/layer_7="Remote Player"

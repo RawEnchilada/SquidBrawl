@@ -9,12 +9,13 @@ signal weapon_equipped(weapon:BaseWeapon)
 signal player_died(player:Player)
 
 @onready var player_model: CharacterModel = $CharacterModel
-@onready var interact_area: Area3D = $CameraBase/SpringArm3D/Camera3D/InteractArea
+@onready var interact_area: Area3D = $CameraBase/CameraPivot/InteractArea
 @onready var nametag: Label3D = $Label3D
 @onready var camera_base: Node3D = $CameraBase
-@onready var spring_arm: SpringArm3D = $CameraBase/SpringArm3D
-@onready var camera: Camera3D = $CameraBase/SpringArm3D/Camera3D
-@onready var raycast: RayCast3D = $CameraBase/SpringArm3D/Camera3D/RayCast3D
+@onready var camera_pivot: Node3D = $CameraBase/CameraPivot
+@onready var camera: Camera3D = $CameraBase/CameraPivot/SpringArm3D/Camera3D
+@onready var raycast: RayCast3D = $CameraBase/CameraPivot/SpringArm3D/Camera3D/RayCast3D
+@onready var weapon_holder: Node3D = $CameraBase/CameraPivot/WeaponHolder
 
 @export var id: int = -1
 @export var player_name: String = "WURM"
@@ -59,8 +60,8 @@ func _ready():
 func _input(event):
 	if(!GameManager.paused):
 		if(event is InputEventMouseMotion):
-			spring_arm.rotate_x(-event.relative.y * Settings.mouse_sensitivity * 0.01)
-			spring_arm.rotation.x = clamp(spring_arm.rotation.x, -PI / 2 + 0.1, PI / 2 - 0.1)
+			camera_pivot.rotate_x(-event.relative.y * Settings.mouse_sensitivity * 0.01)
+			camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI / 2 + 0.1, PI / 2 - 0.1)
 			camera_base.rotate_y(-event.relative.x * Settings.mouse_sensitivity * 0.01)
 
 		elif(equipped_weapon && event.is_action_pressed("use_weapon") && weapon_cooldown >= 100.0):
@@ -75,24 +76,27 @@ func _input(event):
 			skill.deactivate()
 
 		elif(event.is_action_pressed("debug")):
-			player_model.toggle_ragdoll()
-		else:
-			pass
+			var b = load("res://sources/interactables/weapons/bazooka/bazooka.tscn")
+			var bazooka = b.instantiate()
+			bazooka.global_position = global_position+Vector3.UP*3
+			GameManager.game_in_progress.synced_node.add_child(bazooka)
+
 
 func use_skill():
 	if(skill.activate(self,raycast)):
 		skill_cooldown = 0.0
 
 func fire_weapon():
-	equipped_weapon.shoot(spring_arm.global_position,-camera.global_transform.basis.z)
+	equipped_weapon.shoot(weapon_holder.global_position,-camera.global_transform.basis.z)
 	weapon_cooldown = 0.0
 
 
 func equip_weapon(weapon: BaseWeapon):
-	player_model.drop_weapon_from_hand()
+	if(equipped_weapon):
+		equipped_weapon.enable_physics()
 	equipped_weapon = weapon
-	emit_signal("weapon_equipped", equipped_weapon)
-	player_model.put_weapon_in_hand(equipped_weapon)
+	equipped_weapon.disable_physics()
+	
 
 
 func _physics_process(delta:float):
@@ -147,6 +151,10 @@ func _physics_process(delta:float):
 		else:
 			skill_cooldown = 100.0
 		emit_signal("skill_cooldown_changed", skill_cooldown)
+
+		if(equipped_weapon):
+			equipped_weapon.global_position = weapon_holder.global_position
+			equipped_weapon.global_rotation = weapon_holder.global_rotation
 
 
 func get_look_target() -> Vector3:	
