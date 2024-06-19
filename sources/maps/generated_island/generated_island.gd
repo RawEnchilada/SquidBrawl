@@ -20,16 +20,17 @@ var chunk_data = []
 
 func _ready():
 	generate()
+	spawn_areas()
 
-func generate(seed = 1):
-	noise_map.seed = seed
+func generate(rseed = 1):
+	noise_map.seed = rseed
 	for x in range(chunks.x):
 		for y in range(chunks.y):
 			for z in range(chunks.z):
 				var chunk_pos = Vector3(x, y, z)
 				var value_field = _generate_value_field(chunk_pos)
 				var mesh = _create_marched_mesh(value_field)
-				var instances = _add_mesh_and_collision(mesh, chunk_pos)
+				var instances = _add_mesh_and_collision(mesh, chunk_pos * (chunk_size - 1))
 				chunk_data.append({
 					"value_field": value_field,
 					"mesh": instances["mesh"],
@@ -66,11 +67,11 @@ func _create_marched_mesh(tensor:Array) -> ArrayMesh:
 func _add_mesh_and_collision(mesh:ArrayMesh,chunk_pos: Vector3):
 	var mesh_instance = MeshInstance3D.new()
 	mesh_instance.mesh = mesh
-	mesh_instance.position = chunk_pos * (chunk_size - 1)
+	mesh_instance.position = chunk_pos
 
 	var collision_shape = CollisionShape3D.new()
 	collision_shape.shape = mesh.create_trimesh_shape()
-	collision_shape.position = chunk_pos * (chunk_size - 1)
+	collision_shape.position = chunk_pos
 	static_body.add_child(collision_shape)
 	terrain.add_child(mesh_instance)
 	return {
@@ -119,3 +120,31 @@ func on_bullet_exploded(explosion_position:Vector3,explosion_radius:float):
 # Helper function to sort chunks by distance
 func _sort_by_distance(a, b):
 	return a["distance"] < b["distance"]
+
+
+const AREA_SCENE = preload("res://sources/maps/areas/spawn_area.tscn")
+
+func spawn_areas():
+	var valid_points = []
+	
+	for x in range(chunks.x):
+		for z in range(chunks.z):
+			var chunk_pos = Vector3(x, 0, z)
+			var value = noise_map.get_noise_3d(x * (chunk_size - 1) + chunk_size / 2.0, chunks.y * (chunk_size - 1), z * (chunk_size - 1) + chunk_size / 2.0)
+
+			if value > 0.0:
+				valid_points.append(chunk_pos * chunk_size + Vector3(chunk_size / 2.0, chunks.y * chunk_size, chunk_size / 2.0))
+
+	spawn_areas_on_surfaces(valid_points)
+
+
+
+
+func spawn_areas_on_surfaces(surfaces: Array):
+	for surface in surfaces:
+		var index = int(surface.x + surface.y + surface.z)
+		var instance = AREA_SCENE.instantiate()
+		instance.random_seed = index
+		instance.global_position = surface + Vector3(0, 1, 0) # Adjust the y-offset as needed
+		add_child(instance)
+	print("Spawned " + str(len(surfaces)) + " areas")

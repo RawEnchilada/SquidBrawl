@@ -76,7 +76,7 @@ func _input(event):
 			skill.deactivate()
 
 		elif(event.is_action_pressed("debug")):
-			var b = load("res://sources/interactables/weapons/bazooka/bazooka.tscn")
+			var b = load("res://sources/interactables/weapons/bazooka.tscn")
 			var bazooka = b.instantiate()
 			bazooka.global_position = global_position+Vector3.UP*3
 			GameManager.game_in_progress.synced_node.add_child(bazooka)

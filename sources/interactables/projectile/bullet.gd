@@ -22,7 +22,7 @@ func _init():
 func _ready():
 	gravity_scale = gravity
 	((explosion_area.get_child(0) as CollisionShape3D).shape as SphereShape3D).radius = explosion_radius
-	(explosion_emitter.draw_pass_1 as QuadMesh).size = Vector2(explosion_radius,explosion_radius)
+	(explosion_emitter.draw_pass_1 as QuadMesh).size = Vector2(explosion_radius,explosion_radius) * 3
 	set_multiplayer_authority(GameManager.HOST_ID)
 	if(GameManager.local_id != GameManager.HOST_ID):
 		set_physics_process(false)

@@ -20,7 +20,8 @@ visible = false
 process_mode = 1
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://sources/characters/player/player.tscn", "res://sources/interactables/weapons/bazooka/bazooka.tscn", "res://sources/interactables/projectile/bullet.tscn")
+_spawnable_scenes = PackedStringArray("res://sources/characters/player/player.tscn", "res://sources/interactables/projectile/bullet.tscn", "res://sources/interactables/weapons/bazooka.tscn", "res://sources/interactables/weapons/mortar.tscn")
 spawn_path = NodePath("../Synced")
 
 [node name="Island" parent="." instance=ExtResource("5_8k1q1")]
+chunks = Vector3(3, 4, 3)

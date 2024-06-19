@@ -29,6 +29,10 @@ window/size/viewport_height=1080
 
 project/assembly_name="TowerRoyale"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/csgtomesh/plugin.cfg")
+
 [file_customization]
 
 folder_colors={

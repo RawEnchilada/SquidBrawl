@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bim7tw18c4ntt"]
 
-[ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_kio5s"]
+[ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_aa8sk"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_y2207"]
 top_radius = 0.1
@@ -24,11 +24,11 @@ properties/2/replication_mode = 2
 [node name="Bazooka" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 3
-script = ExtResource("1_kio5s")
+script = ExtResource("1_aa8sk")
 fire_rate = 30.0
-bullet_explosion_radius = 10.0
-bullet_explosion_strength = 10.0
-bullet_speed = 5.0
+bullet_explosion_radius = 3.0
+bullet_explosion_strength = 7.0
+bullet_speed = 20.0
 
 [node name="Barrel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

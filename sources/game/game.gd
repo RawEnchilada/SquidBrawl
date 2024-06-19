@@ -12,7 +12,11 @@ const PLAYER_SCENE = preload("res://sources/characters/player/player.tscn")
 
 func add_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
-	player.global_position = Vector3.UP*100
+	var area = SpawnArea.get_spawn_point(id)
+	var w = area.get_weapon()
+	w.global_position = area.global_position
+	synced_node.add_child(w)
+	player.global_position = area.global_position
 	player.name = str(id)
 	synced_node.add_child(player)
 	player.rpc("set_player_name", player_name)

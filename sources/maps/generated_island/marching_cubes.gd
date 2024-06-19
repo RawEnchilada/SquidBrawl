@@ -57,7 +57,6 @@ static func apply_marching_cubes(tensor:Array, size:int) -> SurfaceTool:
 					st.add_vertex(vertex_list[tri_table[cube_index][i + 2]])
 
 	st.generate_normals()
-	st.generate_tangents()
 	return st
 
 static func _vertex_interp(isolevel, p1, p2, valp1, valp2):
