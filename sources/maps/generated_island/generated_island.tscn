@@ -10,8 +10,12 @@ metadata/_preview_in_3d_space_ = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_11wdv"]
 noise_type = 3
-frequency = 0.0597
+frequency = 0.0585
 fractal_type = 0
+cellular_distance_function = 3
+cellular_jitter = 1.935
+cellular_return_type = 6
+domain_warp_amplitude = 4.49
 metadata/_preview_in_3d_space_ = true
 
 [sub_resource type="Shader" id="Shader_cwm2x"]
@@ -127,7 +131,7 @@ plant_noise_map = SubResource("FastNoiseLite_ibhxt")
 noise_map = SubResource("FastNoiseLite_11wdv")
 
 [node name="Terrain" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="Water" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e4kkm")

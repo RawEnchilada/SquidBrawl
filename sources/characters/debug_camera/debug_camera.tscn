@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcpmsvyrxip18"]
+[gd_scene load_steps=3 format=3 uid="uid://dcpmsvyrxip18"]
 
 [ext_resource type="Script" path="res://sources/characters/debug_camera/debug_camera.gd" id="1_hov6a"]
+[ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="2_kpxhj"]
 
 [node name="DebugCamera" type="Node3D"]
 script = ExtResource("1_hov6a")
+move_speed = 10.0
 
 [node name="CameraBase" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="CameraBase"]
+environment = ExtResource("2_kpxhj")

@@ -65,6 +65,7 @@ func _add_mesh_and_collision(mesh:ArrayMesh,chunk_pos: Vector3):
 
 	var collision_shape = CollisionShape3D.new()
 	collision_shape.shape = mesh.create_trimesh_shape()
+	collision_shape.position = chunk_pos * (chunk_size - 1)
 	static_body.add_child(collision_shape)
 	terrain.add_child(mesh_instance)
 	return mesh_instance
