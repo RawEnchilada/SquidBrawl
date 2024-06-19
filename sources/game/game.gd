@@ -12,7 +12,7 @@ const PLAYER_SCENE = preload("res://sources/characters/player/player.tscn")
 
 func add_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
-	player.global_position = Vector3.UP*20
+	player.global_position = Vector3.UP*100
 	player.name = str(id)
 	synced_node.add_child(player)
 	player.rpc("set_player_name", player_name)
