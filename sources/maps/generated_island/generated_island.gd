@@ -15,16 +15,41 @@ const GROUND_MATERIAL = preload("res://sources/shaders/ground.tres")
 
 @export var chunks = Vector3(8, 6, 8)
 @export var chunk_size:int = 12
-@export var map_seed:int = 1
 
 var chunk_data = []
+var modified = false
+
+
+func load_chunk_data_serialized(data):
+	chunk_data = bytes_to_var(data)
+
+func save_chunk_data_serialized():
+	if(modified):
+		var data = []
+		for chunk in chunk_data:
+			data.append({"value_field": chunk["value_field"], "center": chunk["center"]})
+		return var_to_bytes(data)
+	else:
+		return null
+
 
 func _ready():
-	generate(map_seed)
-	spawn_areas()
 	var center = Vector3(chunks.x * chunk_size / 2, 0, chunks.z * chunk_size / 2)
 	terrain.global_position = -center
 	static_body.global_position = -center
+
+func create_island(map_seed):
+	if(chunk_data.is_empty()):
+		generate(map_seed)
+		modified = false
+	else:
+		for chunk in chunk_data:
+			var mesh = _create_marched_mesh(chunk["value_field"])
+			var instances = _add_mesh_and_collision(mesh, chunk["center"] - Vector3(chunk_size / 2.0, chunk_size / 2.0, chunk_size / 2.0))
+			chunk["mesh"] = instances["mesh"]
+			chunk["collision"] = instances["collision"]
+		modified = true
+	spawn_areas()
 
 func generate(rseed = 1):
 	noise_map.seed = rseed
@@ -39,7 +64,7 @@ func generate(rseed = 1):
 					"value_field": value_field,
 					"mesh": instances["mesh"],
 					"collision": instances["collision"],
-					"center": chunk_pos * (chunk_size - 1) + Vector3(chunk_size / 2, chunk_size / 2, chunk_size / 2)
+					"center": chunk_pos * (chunk_size - 1) + Vector3(chunk_size / 2.0, chunk_size / 2.0, chunk_size / 2.0)
 				})
 
 func _generate_value_field(chunk_pos: Vector3) -> Array:
@@ -89,7 +114,8 @@ func _remove_chunk(chunk:Dictionary):
 
 
 func on_bullet_exploded(explosion_position:Vector3,explosion_radius:float):
-	var half_chunk_size = chunk_size / 2
+	modified = true
+	var half_chunk_size = chunk_size / 2.0
 	var relative_explosion_position = explosion_position - terrain.global_position
 
 	# Find the 8 closest chunks

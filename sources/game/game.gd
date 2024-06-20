@@ -13,10 +13,15 @@ const EXPLOSION_EFFECT_SCENE = preload("res://sources/interactables/projectile/e
 @onready var spawner = $Spawner
 
 var players = []
+var map_seed:int = 0
 
 func _ready():
 	spawner.connect("spawned",Callable(self,"node_spawned"))
-	pass
+
+func init_map(map_state = null):
+	if(map_state != null):
+		island.load_chunk_data_serialized(map_state)
+	island.create_island(map_seed)
 
 
 func node_spawned(node):
