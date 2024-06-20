@@ -6,6 +6,8 @@ var mouse_sensitivity = 0.35
 var user_color = Color.ORANGE
 @export
 var user_name = "Player"
+@export
+var ip_address = "127.0.0.1"
 
 func _ready():
 	load_settings()
@@ -16,7 +18,7 @@ func _exit_tree():
 
 func save_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.WRITE)
-	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\"}" % [str(mouse_sensitivity), user_color.to_html(), user_name])
+	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\", \"ip_address\":\"%s\"}" % [str(mouse_sensitivity), user_color.to_html(), user_name, ip_address])
 
 func load_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.READ)
@@ -29,3 +31,5 @@ func load_settings():
 		user_color = Color.from_string(json["user_color"], Color.BLACK)
 	if json.has("user_name"):
 		user_name = json["user_name"]
+	if json.has("ip_address"):
+		ip_address = json["ip_address"]

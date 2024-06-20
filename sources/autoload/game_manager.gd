@@ -1,7 +1,6 @@
 extends Node
 
 const HOST_ID = 1
-const ADDRESS = "127.0.0.1"
 const PORT = 4200
 const GAME_SCENE = preload("res://sources/game/game.tscn")
 const GAME_OVER_SCENE = preload("res://sources/ui/game_over/game_over.tscn")
@@ -80,7 +79,7 @@ func client_receive_all_user_data(json_str:String):
 func join_game(loading_screen:LoadingScreen):
 	loading_screen.label.text = "Connecting..."
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(ADDRESS, PORT)
+	peer.create_client(Settings.ip_address, PORT)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start multiplayer client.")
 		return

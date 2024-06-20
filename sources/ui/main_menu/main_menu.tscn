@@ -22,6 +22,18 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "Play"
 
+[node name="Placeholder" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="IPAddressField" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/minimum_character_width = 6
+text = "127.0.0.1"
+placeholder_text = "IP Address"
+alignment = 1
+max_length = 16
+caret_blink = true
+
 [node name="JoinGameButton" type="Button" parent="VBoxContainer"]
 process_mode = 3
 layout_mode = 2

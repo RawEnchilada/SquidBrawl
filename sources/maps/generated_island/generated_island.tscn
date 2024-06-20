@@ -133,6 +133,7 @@ noise_map = SubResource("FastNoiseLite_11wdv")
 [node name="Terrain" type="Node3D" parent="."]
 
 [node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("PlaneMesh_e4kkm")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
@@ -142,6 +143,7 @@ transform = Transform3D(-0.980172, 0.144905, 0.135147, 0.066746, -0.400741, 0.91
 shadow_enabled = true
 
 [node name="DeathArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 32
 collision_mask = 100
 
