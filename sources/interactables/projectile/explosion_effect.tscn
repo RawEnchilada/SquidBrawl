@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://dyqeifoh7irl5"]
+
+[ext_resource type="Texture2D" uid="uid://c31y14upogwrp" path="res://sources/interactables/projectile/explosion.png" id="1_yc2r0"]
+
+[sub_resource type="Curve" id="Curve_2yvg5"]
+_data = [Vector2(0, 0.505494), 0.0, 0.0, 0, 0, Vector2(0.188406, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.208791), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_vnu8j"]
+curve = SubResource("Curve_2yvg5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fni75"]
+angle_max = 360.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_vnu8j")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjfee"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.588235)
+albedo_texture = ExtResource("1_yc2r0")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_mncnl"]
+material = SubResource("StandardMaterial3D_bjfee")
+size = Vector2(3, 3)
+
+[node name="ExplosionEmitter" type="GPUParticles3D"]
+emitting = false
+amount = 3
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.75
+process_material = SubResource("ParticleProcessMaterial_fni75")
+draw_pass_1 = SubResource("QuadMesh_mncnl")

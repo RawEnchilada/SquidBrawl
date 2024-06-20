@@ -17,7 +17,6 @@ var local_player : Player = null
 func is_host() -> bool:
 	return local_id == HOST_ID
 
-# Host only
 var players_data = []
 
 func host_game(loading_screen:LoadingScreen):
@@ -33,21 +32,38 @@ func host_game(loading_screen:LoadingScreen):
 	add_player_data(local_id,Settings.user_name,Settings.user_color)
 	game_in_progress.add_active_player(local_id,Settings.user_name,Settings.user_color)
 	loading_screen.queue_free()
-	peer.connect("peer_connected",Callable(self,"ask_for_user_data"))
+	peer.connect("peer_connected",Callable(self,"host_ask_for_user_data"))
 	peer.connect("peer_disconnected",Callable(self,"remove_player"))
 
 
-func ask_for_user_data(peer_id:int):
-	rpc_id(peer_id, "host_asked_for_user_data")
+func host_ask_for_user_data(peer_id:int):
+	rpc_id(peer_id, "client_send_user_data")
 
 @rpc
-func host_asked_for_user_data():
-	rpc_id(1, "client_sent_user_data", local_id, Settings.user_name, Settings.user_color)
+func client_send_user_data():
+	rpc_id(1, "host_receive_user_data", local_id, Settings.user_name, Settings.user_color)
 
 @rpc("any_peer")
-func client_sent_user_data(peer_id:int, player_name:String, player_color:Color):
+func host_receive_user_data(peer_id:int, player_name:String, player_color:Color):
 	add_player_data(peer_id, player_name, player_color)
 	game_in_progress.add_active_player(peer_id, player_name, player_color)
+	#rpc("client_receive_all_user_data", JSON.stringify(players_data))
+
+@rpc
+func client_receive_all_user_data(json_str:String):
+	var json = JSON.parse_string(json_str)
+	for data in json:
+		var found = false
+		for existing_data in players_data:
+			if existing_data["id"] == data["id"]:
+				found = true
+				break
+		if !found:
+			var color = Color.from_string(data["color"],Color.WHITE)
+			add_player_data(data["id"], data["name"], color)
+			game_in_progress.add_active_player(data["id"], data["name"], color)
+
+
 
 func join_game(loading_screen:LoadingScreen):
 	loading_screen.label.text = "Connecting..."
@@ -65,7 +81,7 @@ func add_player_data(peer_id:int, player_name:String, player_color:Color):
 	players_data.append({
 		"id": peer_id,
 		"name": player_name,
-		"color": player_color
+		"color": player_color.to_html(false)
 	})
 
 func remove_player(peer_id:int):
@@ -112,7 +128,7 @@ func restart_game_remote():
 	init_game()
 	if(is_host()):
 		for data in players_data:
-			game_in_progress.add_active_player(data["id"], data["name"], data["color"])
+			game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
 
 func init_player(player:Player):
 	player.connect("weapon_cooldown_changed",Callable(game_in_progress.hud,"weapon_cooldown_changed"))

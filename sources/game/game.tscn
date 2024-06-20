@@ -19,8 +19,8 @@ visible = false
 [node name="Synced" type="Node3D" parent="."]
 process_mode = 1
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://sources/characters/player/player.tscn", "res://sources/interactables/projectile/bullet.tscn", "res://sources/interactables/weapons/bazooka.tscn", "res://sources/interactables/weapons/mortar.tscn")
+[node name="Spawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://sources/interactables/projectile/bullet.tscn", "res://sources/interactables/weapons/bazooka.tscn", "res://sources/interactables/weapons/mortar.tscn", "res://sources/characters/player/player.tscn")
 spawn_path = NodePath("../Synced")
 
 [node name="Island" parent="." instance=ExtResource("5_8k1q1")]

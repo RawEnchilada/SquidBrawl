@@ -8,6 +8,9 @@ var winner_name:String = ""
 func _ready():
 	if(winner_name != ""):
 		winner_label.text = winner_name + " Wins!"
+	if(GameManager.is_host()):
+		hbox.visible = true
+	else:
 		hbox.visible = false
 
 

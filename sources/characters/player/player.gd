@@ -21,8 +21,8 @@ signal player_died(player:Player)
 @export var player_name: String = "WURM"
 @export var player_color: Color = Color.WHITE
 
-@rpc("call_local")
-func set_id(value):
+
+func set_authority(value):
 	id = value
 	set_multiplayer_authority(value)
 	if(GameManager.local_id == id):
@@ -34,15 +34,6 @@ func set_id(value):
 		collision_layer = 4
 		nametag.visible = false
 
-@rpc("call_local")
-func set_player_name(value):
-	player_name = value
-	nametag.text = player_name
-
-@rpc("call_local")
-func set_player_color(value):
-	player_color = value
-	player_model.set_color(player_color)
 
 @export var speed: float = 7.5
 @export var jump_velocity: float = 6.0
@@ -55,6 +46,8 @@ var skill: BaseSkill = GrapplingHookSkill.new()
 func _ready():
 	set_physics_process(false)
 	set_process_input(false)
+	player_model.set_color(player_color)
+	nametag.text = player_name
 
 
 func _input(event):

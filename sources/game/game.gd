@@ -3,29 +3,41 @@ extends Node3D
 
 const PLAYER_SCENE = preload("res://sources/characters/player/player.tscn")
 const FREE_CAM_SCENE = preload("res://sources/characters/debug_camera/debug_camera.tscn")
+const EXPLOSION_EFFECT_SCENE = preload("res://sources/interactables/projectile/explosion_effect.tscn")
 
 
 @onready var hud = $CanvasLayer/Hud
 @onready var ingame_menu = $CanvasLayer/IngameMenu
 @onready var synced_node = $Synced
 @onready var island = $Island
+@onready var spawner = $Spawner
 
-# only for the host
 var players = []
 
+func _ready():
+	spawner.connect("spawned",Callable(self,"node_spawned"))
+	pass
+
+
+func node_spawned(node):
+	if(node is Player):
+		print("player spawned "+node.name+" at "+str(GameManager.local_id))
+		node.set_authority(node.id)
 
 func add_active_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
 	var area = SpawnArea.get_spawn_point(id)
-	var w = area.get_weapon()
-	w.position = area.global_position
-	synced_node.add_child(w)
+	if(GameManager.is_host()):
+		var w = area.get_weapon()
+		w.position = area.global_position
+		synced_node.add_child(w)
 	player.name = str(id)
 	player.position = area.global_position
+	player.player_name = player_name
+	player.player_color = player_color
+	player.id = id
 	synced_node.add_child(player)
-	player.rpc("set_player_name", player_name)
-	player.rpc("set_player_color", player_color)
-	player.rpc("set_id", id)
+	player.set_authority(id)
 	player.connect("player_died",Callable(self,"on_player_death"))
 	players.append(player)
 
@@ -69,5 +81,13 @@ func player_died_remote(player_id:int,player_pos:Vector3):
 		GameManager.game_over(players[0])
 
 
-func register_projectile(projectile:Bullet):
-	projectile.bullet_exploded.connect(Callable(island,"on_bullet_exploded"))
+
+@rpc("call_local")
+func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
+	var emitter = EXPLOSION_EFFECT_SCENE.instantiate()
+	(emitter.draw_pass_1 as QuadMesh).size = Vector2(explosion_radius,explosion_radius) * 3
+	emitter.position = center_position
+	synced_node.add_child(emitter)
+	emitter.emitting = true
+	emitter.finished.connect(Callable(emitter,"queue_free"))
+	island.on_bullet_exploded(center_position,explosion_radius)

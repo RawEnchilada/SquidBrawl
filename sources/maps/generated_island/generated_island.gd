@@ -110,7 +110,7 @@ func on_bullet_exploded(explosion_position:Vector3,explosion_radius:float):
 		for x in range(chunk_size):
 			for y in range(chunk_size):
 				for z in range(chunk_size):
-					var voxel_pos = chunk_pos + Vector3(x, y, z)
+					var voxel_pos = terrain.global_position + chunk_pos + Vector3(x, y, z)
 					if (voxel_pos - explosion_position).length() <= explosion_radius:
 						value_field[x][y][z] = -1.0
 		
