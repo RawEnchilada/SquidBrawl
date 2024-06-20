@@ -15,12 +15,16 @@ const GROUND_MATERIAL = preload("res://sources/shaders/ground.tres")
 
 @export var chunks = Vector3(8, 6, 8)
 @export var chunk_size:int = 12
+@export var map_seed:int = 1
 
 var chunk_data = []
 
 func _ready():
-	generate()
+	generate(map_seed)
 	spawn_areas()
+	var center = Vector3(chunks.x * chunk_size / 2, 0, chunks.z * chunk_size / 2)
+	terrain.global_position = -center
+	static_body.global_position = -center
 
 func generate(rseed = 1):
 	noise_map.seed = rseed
@@ -126,14 +130,15 @@ const AREA_SCENE = preload("res://sources/maps/areas/spawn_area.tscn")
 
 func spawn_areas():
 	var valid_points = []
+	var center = Vector3(chunks.x * chunk_size / 2, 0, chunks.z * chunk_size / 2)
 	
-	for x in range(chunks.x):
-		for z in range(chunks.z):
+	for x in range(1,chunks.x-1):
+		for z in range(1,chunks.z-1):
 			var chunk_pos = Vector3(x, 0, z)
 			var value = noise_map.get_noise_3d(x * (chunk_size - 1) + chunk_size / 2.0, chunks.y * (chunk_size - 1), z * (chunk_size - 1) + chunk_size / 2.0)
 
 			if value > 0.0:
-				valid_points.append(chunk_pos * chunk_size + Vector3(chunk_size / 2.0, chunks.y * chunk_size, chunk_size / 2.0))
+				valid_points.append(chunk_pos * chunk_size + Vector3(chunk_size / 2.0, chunks.y * chunk_size, chunk_size / 2.0)-center)
 
 	spawn_areas_on_surfaces(valid_points)
 
@@ -141,10 +146,12 @@ func spawn_areas():
 
 
 func spawn_areas_on_surfaces(surfaces: Array):
+	if(len(surfaces) == 0):
+		surfaces.append(Vector3.UP*chunks.y*chunk_size)
 	for surface in surfaces:
-		var index = int(surface.x + surface.y + surface.z)
+		var index = int(surface.x * surface.z / surface.y)
 		var instance = AREA_SCENE.instantiate()
 		instance.random_seed = index
-		instance.global_position = surface + Vector3(0, 1, 0) # Adjust the y-offset as needed
 		add_child(instance)
+		instance.global_position = surface + Vector3(0, 1, 0) # Adjust the y-offset as needed
 	print("Spawned " + str(len(surfaces)) + " areas")

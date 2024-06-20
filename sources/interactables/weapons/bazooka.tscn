@@ -19,15 +19,16 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 properties/2/path = NodePath(".:equipped")
 properties/2/spawn = true
-properties/2/replication_mode = 2
+properties/2/replication_mode = 0
 
 [node name="Bazooka" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_aa8sk")
+weapon_name = "Bazooka"
 fire_rate = 30.0
-bullet_explosion_radius = 3.0
-bullet_explosion_strength = 7.0
+bullet_explosion_radius = 1.5
+bullet_explosion_strength = 5.0
 bullet_speed = 20.0
 
 [node name="Barrel" type="MeshInstance3D" parent="."]

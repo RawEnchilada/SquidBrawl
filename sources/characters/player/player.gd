@@ -75,12 +75,6 @@ func _input(event):
 		elif(event.is_action_released("grapple")):
 			skill.deactivate()
 
-		elif(event.is_action_pressed("debug")):
-			var b = load("res://sources/interactables/weapons/bazooka.tscn")
-			var bazooka = b.instantiate()
-			bazooka.global_position = global_position+Vector3.UP*3
-			GameManager.game_in_progress.synced_node.add_child(bazooka)
-
 
 func use_skill():
 	if(skill.activate(self,raycast)):
@@ -93,9 +87,9 @@ func fire_weapon():
 
 func equip_weapon(weapon: BaseWeapon):
 	if(equipped_weapon):
-		equipped_weapon.enable_physics()
+		equipped_weapon.drop()
 	equipped_weapon = weapon
-	equipped_weapon.disable_physics()
+	weapon.equip(self)
 	
 
 
@@ -139,7 +133,7 @@ func _physics_process(delta:float):
 		move_and_slide()
 
 		# Update weapon_cooldown
-		if(weapon_cooldown < 100.0):
+		if(weapon_cooldown < 100.0 && equipped_weapon != null):
 			weapon_cooldown += (100.0/(60.0 / equipped_weapon.fire_rate))*delta
 		else:
 			weapon_cooldown = 100.0
@@ -152,16 +146,15 @@ func _physics_process(delta:float):
 			skill_cooldown = 100.0
 		emit_signal("skill_cooldown_changed", skill_cooldown)
 
-		if(equipped_weapon):
-			equipped_weapon.global_position = weapon_holder.global_position
-			equipped_weapon.global_rotation = weapon_holder.global_rotation
-
 
 func get_look_target() -> Vector3:	
 	return camera.get_global_transform().origin + camera.get_global_transform().basis.z
 
-func apply_impulse(impulse:Vector3):
+@rpc("call_local","any_peer")
+func apply_impulse_remote(impulse:Vector3):
 	velocity += impulse
 
 func _on_death_area_area_entered(_area:Area3D):
+	if(equipped_weapon != null):
+		equipped_weapon.drop()
 	emit_signal("player_died",self)

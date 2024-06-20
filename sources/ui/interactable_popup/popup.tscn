@@ -1,10 +1,16 @@
 [gd_scene load_steps=4 format=3 uid="uid://chx76m43qh42g"]
 
 [ext_resource type="Script" path="res://sources/ui/interactable_popup/popup.gd" id="1_rqr0a"]
-[ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="2_el662"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ehdmj"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oslnm"]
+bg_color = Color(0, 0, 0, 0.588235)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Popup" type="Node3D"]
 script = ExtResource("1_rqr0a")
@@ -36,7 +42,7 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme = ExtResource("2_el662")
+theme_override_styles/normal = SubResource("StyleBoxFlat_oslnm")
 text = "sziasztok majmokk"
 horizontal_alignment = 1
 vertical_alignment = 2

@@ -131,7 +131,6 @@ plant_noise_map = SubResource("FastNoiseLite_ibhxt")
 noise_map = SubResource("FastNoiseLite_11wdv")
 
 [node name="Terrain" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="Water" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e4kkm")

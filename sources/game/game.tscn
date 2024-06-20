@@ -24,4 +24,5 @@ _spawnable_scenes = PackedStringArray("res://sources/characters/player/player.ts
 spawn_path = NodePath("../Synced")
 
 [node name="Island" parent="." instance=ExtResource("5_8k1q1")]
-chunks = Vector3(3, 4, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+chunks = Vector3(4, 4, 4)
