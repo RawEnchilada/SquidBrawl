@@ -24,5 +24,4 @@ _spawnable_scenes = PackedStringArray("res://sources/interactables/projectile/bu
 spawn_path = NodePath("../Synced")
 
 [node name="Island" parent="." instance=ExtResource("5_8k1q1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 chunks = Vector3(4, 4, 4)

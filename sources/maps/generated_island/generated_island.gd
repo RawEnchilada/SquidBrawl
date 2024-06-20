@@ -90,11 +90,12 @@ func _remove_chunk(chunk:Dictionary):
 
 func on_bullet_exploded(explosion_position:Vector3,explosion_radius:float):
 	var half_chunk_size = chunk_size / 2
+	var relative_explosion_position = explosion_position - terrain.global_position
 
 	# Find the 8 closest chunks
 	var closest_chunks = []
 	for chunk in chunk_data:
-		var distance = (chunk["center"] - explosion_position).length()
+		var distance = (chunk["center"] - relative_explosion_position).length()
 		closest_chunks.append({"chunk": chunk, "distance": distance})
 
 	closest_chunks.sort_custom(_sort_by_distance)
@@ -110,8 +111,8 @@ func on_bullet_exploded(explosion_position:Vector3,explosion_radius:float):
 		for x in range(chunk_size):
 			for y in range(chunk_size):
 				for z in range(chunk_size):
-					var voxel_pos = terrain.global_position + chunk_pos + Vector3(x, y, z)
-					if (voxel_pos - explosion_position).length() <= explosion_radius:
+					var voxel_pos = chunk_pos + Vector3(x, y, z)
+					if (voxel_pos - relative_explosion_position).length() <= explosion_radius:
 						value_field[x][y][z] = -1.0
 		
 		# Regenerate the chunk
