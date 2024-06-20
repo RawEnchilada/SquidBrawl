@@ -32,7 +32,9 @@ func _physics_process(delta):
 	if(collision && ((collision.get_collider() is Player && collision.get_collider().id != ignore_player) || collision.get_collider() is StaticBody3D)):
 		var bodies = explosion_area.get_overlapping_bodies()
 		for player in bodies:
-			var impulse = ((player.global_position+Vector3.UP)-global_position).normalized() * explosion_strength
+			var distance = player.global_position.distance_to(global_position)
+			var impulse_distance_falloff = 2.0 - min(distance / explosion_radius, 1.0)
+			var impulse = ((player.global_position+Vector3.UP)-global_position).normalized() * impulse_distance_falloff * explosion_strength
 			player.rpc_id(player.id,"apply_impulse_remote",impulse)
 		GameManager.game_in_progress.rpc("create_explosion_at_remote",global_position,explosion_radius)
 		queue_free()

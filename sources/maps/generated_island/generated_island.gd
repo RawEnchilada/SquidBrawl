@@ -176,9 +176,7 @@ func spawn_areas_on_surfaces(surfaces: Array):
 	if(len(surfaces) == 0):
 		surfaces.append(Vector3.UP*chunks.y*chunk_size)
 	for surface in surfaces:
-		var index = int(surface.x * surface.z / surface.y)
 		var instance = AREA_SCENE.instantiate()
-		instance.random_seed = index
 		add_child(instance)
 		instance.global_position = surface + Vector3(0, 1, 0) # Adjust the y-offset as needed
 	print("Spawned " + str(len(surfaces)) + " areas")

@@ -26,10 +26,10 @@ collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_aa8sk")
 weapon_name = "Bazooka"
-fire_rate = 30.0
+fire_rate = 60.0
 bullet_explosion_radius = 2.0
 bullet_explosion_strength = 5.0
-bullet_speed = 20.0
+bullet_speed = 25.0
 
 [node name="Barrel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

@@ -33,7 +33,7 @@ func add_active_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
 	var area = SpawnArea.get_spawn_point(id)
 	if(GameManager.is_host()):
-		var w = area.get_weapon()
+		var w = area.get_weapon(id+map_seed)
 		w.position = area.global_position
 		synced_node.add_child(w)
 	player.name = str(id)
