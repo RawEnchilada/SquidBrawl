@@ -37,11 +37,6 @@ func _on_join_game_button_pressed():
 	GameManager.join_game()
 	lobby.show_lobby()
 	vbox_container.visible = false
-	
-func _on_lobby_exited():
-	GameManager.leave_game()
-	lobby.visible = false
-	vbox_container.visible = true
 
 func _on_settings_button_pressed():
 	var settings = SETTINGS_SCENE.instantiate()
@@ -51,3 +46,13 @@ func _on_settings_button_pressed():
 
 func _on_quit_button_pressed():
 	get_tree().quit()
+
+
+func _on_lobby_start_game():
+	if(GameManager.is_host()):
+		GameManager.restart_game()
+	
+func _on_lobby_exited():
+	GameManager.leave_game()
+	lobby.visible = false
+	vbox_container.visible = true

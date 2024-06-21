@@ -28,13 +28,14 @@ func set_authority(value):
 	id = value
 	set_multiplayer_authority(value)
 	if(GameManager.local_id == id):
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		GameManager.init_player(self)
 		camera.current = true
 		set_physics_process(true)
 		set_process_input(true)
 		collision_layer = 4
 		nametag.visible = false
+		interact_area.connect("body_entered",Callable(interact_area,"on_interactable_entered"))
+		interact_area.connect("body_exited",Callable(interact_area,"on_interactable_exited"))
 
 
 @export var speed: float = 7.5

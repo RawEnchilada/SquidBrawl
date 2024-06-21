@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://sources/characters/player/interact_area.gd" id="2_cb6x0"]
 [ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="2_qvorq"]
 [ext_resource type="FontFile" uid="uid://dk765wy6unjxu" path="res://sources/ui/theme/BoyzRGrossNF.ttf" id="5_x0wfm"]
-[ext_resource type="AudioStream" uid="uid://bvjooamv5q8b1" path="res://sources/characters/player/yippee.mp3" id="7_ud8qe"]
+[ext_resource type="AudioStream" uid="uid://bvjooamv5q8b1" path="res://sources/characters/player/yippee.mp3" id="6_12nmd"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dejq8"]
 properties/0/path = NodePath(".:position")
@@ -98,12 +98,10 @@ font_size = 96
 outline_size = 18
 
 [node name="JumpingAudioPlayer" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("7_ud8qe")
+stream = ExtResource("6_12nmd")
 attenuation_model = 3
 volume_db = -7.5
 pitch_scale = 1.6
 
 [connection signal="weapon_equipped" from="." to="CameraBase/CameraPivot/InteractArea" method="on_weapon_equipped"]
-[connection signal="body_entered" from="CameraBase/CameraPivot/InteractArea" to="CameraBase/CameraPivot/InteractArea" method="on_interactable_entered"]
-[connection signal="body_exited" from="CameraBase/CameraPivot/InteractArea" to="CameraBase/CameraPivot/InteractArea" method="on_interactable_exited"]
 [connection signal="area_entered" from="DeathArea" to="." method="_on_death_area_area_entered"]

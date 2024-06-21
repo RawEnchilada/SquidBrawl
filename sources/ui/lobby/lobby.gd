@@ -1,6 +1,7 @@
 extends MarginContainer
 
 signal leave_lobby
+signal start_game
 
 @onready var start_game_button = $VBoxContainer/StartButton
 @onready var players_label = $VBoxContainer/PlayersLabel
@@ -23,5 +24,4 @@ func _on_leave_button_pressed():
 
 
 func _on_start_button_pressed():
-	if(GameManager.is_host()):
-		GameManager.restart_game()
+	emit_signal("start_game")

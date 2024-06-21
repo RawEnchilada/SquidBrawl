@@ -55,3 +55,4 @@ visible = false
 layout_mode = 2
 
 [connection signal="leave_lobby" from="Lobby" to="." method="_on_lobby_exited"]
+[connection signal="start_game" from="Lobby" to="." method="_on_lobby_start_game"]
