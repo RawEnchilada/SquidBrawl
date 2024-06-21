@@ -10,7 +10,7 @@ var grappling_strength = 3.0
 var hook_node:Node3D = null
 
 func _ready():
-	use_rate = 4.0
+	use_rate = 10.0
 
 
 # Returns true if the skill was activated
@@ -20,8 +20,9 @@ func activate(player:Player,raycast:RayCast3D):
 		target_position = raycast.get_collision_point()
 		target_length = (target_position - player.global_position).length()+1.0
 		hook_node = hook_scene.instantiate()
-		GameManager.game_in_progress.add_child(hook_node)
-		hook_node.global_position = target_position
+		hook_node.position = target_position+raycast.get_collision_normal()*0.2
+		hook_node.target = player.global_position
+		GameManager.game_in_progress.synced_node.add_child(hook_node)
 		return true
 	return false
 
@@ -44,17 +45,4 @@ func update(player:Player, delta:float):
 
 			player.velocity += cancelling_vector
 		player.velocity += direction_to_target * grappling_strength * player.speed * delta
-
-		update_rope(target_position,player.global_position)
-		
-
-
-
-func update_rope(node_position:Vector3,player_position:Vector3):
-	if(hook_node != null):
-		var rope_mesh = hook_node.get_node("RopeMesh").mesh as ImmediateMesh
-		rope_mesh.clear_surfaces()
-		rope_mesh.surface_begin(Mesh.PRIMITIVE_LINES, null)
-		rope_mesh.surface_add_vertex(hook_node.to_local(node_position))
-		rope_mesh.surface_add_vertex(hook_node.to_local(player_position))
-		rope_mesh.surface_end()
+		hook_node.target = player.global_position

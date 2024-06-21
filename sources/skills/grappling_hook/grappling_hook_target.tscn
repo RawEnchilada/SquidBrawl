@@ -1,22 +1,38 @@
-[gd_scene load_steps=4 format=3 uid="uid://bki5um47hrs62"]
+[gd_scene load_steps=6 format=3 uid="uid://bki5um47hrs62"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ndsc4"]
+[ext_resource type="Script" path="res://sources/skills/grappling_hook/grappling_hook_target.gd" id="1_0mxb1"]
+[ext_resource type="PackedScene" uid="uid://b4soslvuvmwab" path="res://sources/skills/grappling_hook/GHook.gltf" id="1_jm020"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgpxp"]
 shading_mode = 0
-albedo_color = Color(0.932956, 0, 0.2199, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_he4j8"]
-material = SubResource("StandardMaterial3D_ndsc4")
-radius = 0.1
-height = 0.2
-radial_segments = 8
-rings = 4
+albedo_color = Color(0.518468, 0.427426, 0.209141, 1)
+heightmap_scale = 9.473
+grow_amount = 0.25
+point_size = 5.0
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_en6j4"]
 
-[node name="GrapplingHookTarget" type="Node3D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3j8iu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 0
+properties/2/path = NodePath(".:target")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
-[node name="HookMesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_he4j8")
+[node name="GrapplingHookTarget" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 2.98023e-08, 1, 0, -1, 2.98023e-08, 0, 0, 0)
+script = ExtResource("1_0mxb1")
 
 [node name="RopeMesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_dgpxp")
 mesh = SubResource("ImmediateMesh_en6j4")
+
+[node name="GHook" parent="." instance=ExtResource("1_jm020")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_3j8iu")

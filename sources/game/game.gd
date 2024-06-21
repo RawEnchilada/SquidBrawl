@@ -4,6 +4,7 @@ extends Node3D
 const PLAYER_SCENE = preload("res://sources/characters/player/player.tscn")
 const FREE_CAM_SCENE = preload("res://sources/characters/debug_camera/debug_camera.tscn")
 const EXPLOSION_EFFECT_SCENE = preload("res://sources/interactables/projectile/explosion_effect.tscn")
+const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn")
 
 
 @onready var hud = $CanvasLayer/Hud
@@ -78,21 +79,22 @@ func player_died_remote(player_id:int,player_pos:Vector3):
 	if(player_id == GameManager.local_id):
 		var free_cam = FREE_CAM_SCENE.instantiate()
 		add_child(free_cam)
-		free_cam.global_position = player_pos
+		free_cam.position = player_pos + Vector3.UP
 		hud.visible = false
 	remove_active_player(player_id)
 	if(GameManager.is_host() && players.size() == 1):
 		print("game over")
 		GameManager.game_over(players[0])
+	var splash = SPLASH_EFFECT_SCENE.instantiate()
+	splash.position = player_pos + Vector3.UP
+	add_child(splash)
 
 
 
 @rpc("call_local")
 func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	var emitter = EXPLOSION_EFFECT_SCENE.instantiate()
-	(emitter.draw_pass_1 as QuadMesh).size = Vector2(explosion_radius,explosion_radius) * 3
 	emitter.position = center_position
+	emitter.explosion_radius = explosion_radius
 	synced_node.add_child(emitter)
-	emitter.emitting = true
-	emitter.finished.connect(Callable(emitter,"queue_free"))
 	island.on_bullet_exploded(center_position,explosion_radius)

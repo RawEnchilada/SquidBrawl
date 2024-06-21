@@ -8,6 +8,8 @@ var user_color = Color.ORANGE
 var user_name = "Player"
 @export
 var ip_address = "127.0.0.1"
+@export
+var sound_level = 0.5
 
 func _ready():
 	load_settings()
@@ -18,7 +20,7 @@ func _exit_tree():
 
 func save_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.WRITE)
-	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\", \"ip_address\":\"%s\"}" % [str(mouse_sensitivity), user_color.to_html(), user_name, ip_address])
+	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\", \"ip_address\":\"%s\", \"sound_level\":%s}" % [str(mouse_sensitivity), user_color.to_html(), user_name, ip_address, str(sound_level)])
 
 func load_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.READ)
@@ -33,3 +35,5 @@ func load_settings():
 		user_name = json["user_name"]
 	if json.has("ip_address"):
 		ip_address = json["ip_address"]
+	if json.has("sound_level"):
+		sound_level = json["sound_level"]

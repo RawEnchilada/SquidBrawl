@@ -11,6 +11,7 @@ const BULLET_SCENE = preload("res://sources/interactables/projectile/bullet.tscn
 @export var bullet_explosion_strength:float = 1.0
 @export var bullet_speed:float = 1.0
 @export var bullet_gravity:float = 0.0
+@export var bullet_bounce:int = 0
 @export var equipped:bool = false
 var equipped_by:Node3D = null
 
@@ -45,6 +46,7 @@ func shoot_remote(from:Vector3, direction:Vector3):
 	bullet.explosion_strength = bullet_explosion_strength
 	bullet.speed = bullet_speed
 	bullet.gravity = bullet_gravity
+	bullet.bounce = bullet_bounce
 	bullet.ignore_player = get_multiplayer_authority()
 	GameManager.game_in_progress.synced_node.add_child(bullet)
 	

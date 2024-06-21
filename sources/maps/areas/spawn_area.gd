@@ -6,6 +6,7 @@ static var spawner_areas = []
 const WEAPON_SCENES = [
 	preload("res://sources/interactables/weapons/bazooka.tscn"),
 	preload("res://sources/interactables/weapons/mortar.tscn"),
+    preload("res://sources/interactables/weapons/grenade.tscn"),
 ]
 
 

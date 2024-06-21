@@ -16,6 +16,8 @@ signal player_died(player:Player)
 @onready var camera: Camera3D = $CameraBase/CameraPivot/SpringArm3D/Camera3D
 @onready var raycast: RayCast3D = $CameraBase/CameraPivot/SpringArm3D/Camera3D/RayCast3D
 @onready var weapon_holder: Node3D = $CameraBase/CameraPivot/WeaponHolder
+@onready var jumping_audio_player: AudioStreamPlayer3D = $JumpingAudioPlayer
+
 
 @export var id: int = -1
 @export var player_name: String = "WURM"
@@ -105,6 +107,8 @@ func _physics_process(delta:float):
 		if is_on_floor():
 			if Input.is_action_just_pressed("jump"):
 				velocity.y = jump_velocity
+				jumping_audio_player.pitch_scale = randf_range(1.4, 1.8)
+				jumping_audio_player.play()
 
 			velocity.x = move_toward(velocity.x, target_x, delta * speed * 10.0)
 			velocity.z = move_toward(velocity.z, target_z, delta * speed * 10.0)

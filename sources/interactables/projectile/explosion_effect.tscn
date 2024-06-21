@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dyqeifoh7irl5"]
+[gd_scene load_steps=9 format=3 uid="uid://dyqeifoh7irl5"]
 
+[ext_resource type="Script" path="res://sources/interactables/projectile/explosion_effect.gd" id="1_x3q5k"]
 [ext_resource type="Texture2D" uid="uid://c31y14upogwrp" path="res://sources/interactables/projectile/explosion.png" id="1_yc2r0"]
+[ext_resource type="AudioStream" uid="uid://dntqcpkeaix5o" path="res://sources/interactables/projectile/explosion.mp3" id="3_v2mo1"]
 
 [sub_resource type="Curve" id="Curve_2yvg5"]
 _data = [Vector2(0, 0.505494), 0.0, 0.0, 0, 0, Vector2(0.188406, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.208791), 0.0, 0.0, 0, 0]
@@ -31,7 +33,10 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_bjfee")
 size = Vector2(3, 3)
 
-[node name="ExplosionEmitter" type="GPUParticles3D"]
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_x3q5k")
+
+[node name="ExplosionEmitter" type="GPUParticles3D" parent="."]
 emitting = false
 amount = 3
 lifetime = 0.5
@@ -39,3 +44,6 @@ one_shot = true
 explosiveness = 0.75
 process_material = SubResource("ParticleProcessMaterial_fni75")
 draw_pass_1 = SubResource("QuadMesh_mncnl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_v2mo1")
