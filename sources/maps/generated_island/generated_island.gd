@@ -179,4 +179,3 @@ func spawn_areas_on_surfaces(surfaces: Array):
 		var instance = AREA_SCENE.instantiate()
 		add_child(instance)
 		instance.global_position = surface + Vector3(0, 1, 0) # Adjust the y-offset as needed
-	print("Spawned " + str(len(surfaces)) + " areas")
