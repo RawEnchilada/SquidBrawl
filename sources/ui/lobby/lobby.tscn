@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://cupbrbut83ok"]
+
+[ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="1_r54fd"]
+[ext_resource type="Script" path="res://sources/ui/lobby/lobby.gd" id="2_28n12"]
+
+[node name="Lobby" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_r54fd")
+script = ExtResource("2_28n12")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Hosting
+"
+horizontal_alignment = 1
+
+[node name="PlayersLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Connected Players:
+- me"
+
+[node name="LeaveButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Leave Lobby"
+
+[node name="StartButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Start Game"

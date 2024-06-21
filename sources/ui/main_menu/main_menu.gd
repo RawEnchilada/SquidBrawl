@@ -11,6 +11,7 @@ const SETTINGS_SCENE = preload("res://sources/ui/settings/settings.tscn")
 @onready var settings_button = $VBoxContainer/SettingsButton
 @onready var quit_button = $VBoxContainer/QuitButton
 
+@onready var lobby = $Lobby
 
 func _ready():
     play_game_button.connect("pressed",Callable(self,"_on_play_game_button_pressed"))
@@ -19,6 +20,7 @@ func _ready():
     settings_button.connect("pressed",Callable(self,"_on_settings_button_pressed"))
     quit_button.connect("pressed",Callable(self,"_on_quit_button_pressed"))
     ip_address_field.text = Settings.ip_address
+    lobby.visible = false
     get_tree().paused = false
 
 
