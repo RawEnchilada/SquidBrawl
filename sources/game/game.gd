@@ -16,19 +16,10 @@ const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn
 var players = []
 var map_seed:int = 0
 
-func _ready():
-	spawner.connect("spawned",Callable(self,"node_spawned"))
-
 func init_map(map_state = null):
 	if(map_state != null):
 		island.load_chunk_data_serialized(map_state)
 	island.create_island(map_seed)
-
-
-func node_spawned(node):
-	if(node is Player):
-		print("player spawned "+node.name+" at "+str(GameManager.local_id))
-		node.set_authority(node.id)
 
 func add_active_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
@@ -74,7 +65,7 @@ func on_player_death(player:Player):
 	print("player " + str(player.id) + " died on instance " + str(GameManager.local_id))
 	rpc("player_died_remote", player.id, player.global_position)
 
-@rpc("call_local")
+@rpc("call_local","any_peer")
 func player_died_remote(player_id:int,player_pos:Vector3):
 	if(player_id == GameManager.local_id):
 		var free_cam = FREE_CAM_SCENE.instantiate()

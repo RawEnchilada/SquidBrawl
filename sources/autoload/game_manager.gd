@@ -18,8 +18,7 @@ func is_host() -> bool:
 
 var players_data = []
 
-func host_game(loading_screen:LoadingScreen):
-	loading_screen.label.text = "Creating server..."
+func host_game():
 	peer = ENetMultiplayerPeer.new()
 	peer.create_server(PORT)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
@@ -27,27 +26,20 @@ func host_game(loading_screen:LoadingScreen):
 		return
 	multiplayer.multiplayer_peer = peer
 	local_id = multiplayer.get_unique_id()
-	create_game()
-	init_game(randi())
 	add_player_data(local_id,Settings.user_name,Settings.user_color)
-	game_in_progress.add_active_player(local_id,Settings.user_name,Settings.user_color)
-	loading_screen.queue_free()
 	peer.connect("peer_connected",Callable(self,"on_client_connected"))
 	peer.connect("peer_disconnected",Callable(self,"remove_player"))
 
+func join_game():
+	peer = ENetMultiplayerPeer.new()
+	peer.create_client(Settings.ip_address, PORT)
+	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		OS.alert("Failed to start multiplayer client.")
+		return
+	multiplayer.multiplayer_peer = peer
+	local_id = multiplayer.get_unique_id()
 
 func on_client_connected(peer_id:int):
-	rpc_id(peer_id, "client_receive_map_data",peer_id,game_in_progress.map_seed, game_in_progress.island.save_chunk_data_serialized())
-
-
-@rpc
-func client_receive_map_data(peer_id:int, map_seed:int, map_state = null):
-	init_game(map_seed, map_state)
-	rpc_id(HOST_ID, "client_finished_map_generation", peer_id)
-
-
-@rpc("any_peer")
-func client_finished_map_generation(peer_id:int):
 	rpc_id(peer_id, "client_send_user_data")
 
 @rpc
@@ -57,8 +49,7 @@ func client_send_user_data():
 @rpc("any_peer")
 func host_receive_user_data(peer_id:int, player_name:String, player_color:Color):
 	add_player_data(peer_id, player_name, player_color)
-	game_in_progress.add_active_player(peer_id, player_name, player_color)
-	#rpc("client_receive_all_user_data", JSON.stringify(players_data))
+	rpc("client_receive_all_user_data", JSON.stringify(players_data))
 
 @rpc
 func client_receive_all_user_data(json_str:String):
@@ -72,22 +63,7 @@ func client_receive_all_user_data(json_str:String):
 		if !found:
 			var color = Color.from_string(data["color"],Color.WHITE)
 			add_player_data(data["id"], data["name"], color)
-			game_in_progress.add_active_player(data["id"], data["name"], color)
-
-
-
-func join_game(loading_screen:LoadingScreen):
-	loading_screen.label.text = "Connecting..."
-	peer = ENetMultiplayerPeer.new()
-	peer.create_client(Settings.ip_address, PORT)
-	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
-		OS.alert("Failed to start multiplayer client.")
-		return
-	multiplayer.multiplayer_peer = peer
-	local_id = multiplayer.get_unique_id()
-	create_game()
-	loading_screen.queue_free()
-
+	
 func add_player_data(peer_id:int, player_name:String, player_color:Color):
 	players_data.append({
 		"id": peer_id,
@@ -102,7 +78,8 @@ func remove_player(peer_id:int):
 			to_remove = data
 			break
 	players_data.erase(to_remove)
-	game_in_progress.remove_active_player(peer_id)
+	if(game_in_progress != null):
+		game_in_progress.remove_active_player(peer_id)
 
 func leave_game():
 	if(local_id == HOST_ID):
@@ -115,22 +92,27 @@ func leave_game():
 
 @rpc("call_local")
 func leave_game_remote():
+	if(game_in_progress != null):
+		game_in_progress.queue_free()
+		SpawnArea.spawner_areas.clear()
+		game_in_progress = null
+		get_tree().change_scene_to_file("res://sources/main.tscn")
 	game_ended = true
 	paused = true
-	game_in_progress.queue_free()
-	SpawnArea.spawner_areas.clear()
-	game_in_progress = null
 	local_id = -1
 	local_player = null
-	get_tree().change_scene_to_file("res://sources/main.tscn")
-
-func create_game():
-	game_in_progress = GAME_SCENE.instantiate()
-	get_tree().get_root().add_child(game_in_progress)
+	players_data = []
 
 func init_game(map_seed:int, map_state = null):
+	game_in_progress = GAME_SCENE.instantiate()
+	var root = get_tree().get_root()
+	for child in root.get_children():
+		root.remove_child(child)
+	root.add_child(game_in_progress)
 	game_in_progress.map_seed = map_seed
 	game_in_progress.init_map(map_state)
+	for data in players_data:
+		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
 	game_ended = false
 	paused = false
 
@@ -139,13 +121,10 @@ func restart_game():
 
 @rpc("call_local")
 func restart_game_remote(map_seed:int):
-	game_in_progress.queue_free()
-	SpawnArea.spawner_areas.clear()
-	create_game()
+	if(game_in_progress != null):
+		game_in_progress.queue_free()
+		SpawnArea.spawner_areas.clear()
 	init_game(map_seed)
-	if(is_host()):
-		for data in players_data:
-			game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
 
 func init_player(player:Player):
 	player.connect("weapon_cooldown_changed",Callable(game_in_progress.hud,"weapon_cooldown_changed"))

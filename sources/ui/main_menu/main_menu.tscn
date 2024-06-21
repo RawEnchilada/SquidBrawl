@@ -53,3 +53,5 @@ text = "Quit
 [node name="Lobby" parent="." instance=ExtResource("3_2o1m7")]
 visible = false
 layout_mode = 2
+
+[connection signal="leave_lobby" from="Lobby" to="." method="_on_lobby_exited"]
