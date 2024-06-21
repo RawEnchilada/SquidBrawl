@@ -6,17 +6,19 @@ var closest_interactable = null
 
 
 func on_interactable_entered(body:BaseWeapon):
-	if(closest_interactable == null):
-		set_interactable(body)
-	elif(body.global_position.distance_to(global_position) < closest_interactable.global_position.distance_to(global_position)):
-		remove_interactable()
-		set_interactable(body)
+	if(GameManager.local_id == body.get_multiplayer_authority()):
+		if(closest_interactable == null):
+			set_interactable(body)
+		elif(body.global_position.distance_to(global_position) < closest_interactable.global_position.distance_to(global_position)):
+			remove_interactable()
+			set_interactable(body)
 
 
 
 func on_interactable_exited(body:BaseWeapon):
-	if(body == closest_interactable):
-		remove_interactable()
+	if(GameManager.local_id == body.get_multiplayer_authority()):
+		if(body == closest_interactable):
+			remove_interactable()
 
 
 func set_interactable(body:BaseWeapon):
