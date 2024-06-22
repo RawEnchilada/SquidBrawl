@@ -34,7 +34,7 @@ func _physics_process(delta):
 	if(collision && ((collision.get_collider() is Player && collision.get_collider().id != ignore_player) || collision.get_collider() is StaticBody3D)):
 		if bounce > 0:
 			bounce -= 1
-			_force = _force - collision.get_normal() * _force.dot(collision.get_normal())
+			_force = _force - 1.25 * _force.dot(collision.get_normal()) * collision.get_normal()
 		else:
 			var bodies = explosion_area.get_overlapping_bodies()
 			for player in bodies:
