@@ -1,5 +1,7 @@
 # Wurm
 
+![Wurm Title Card](https://github.com/RawEnchilada/Wurm/raw/main/.docs/TitleCard.png)
+
 Wurm is a direct multiplayer tps game about destroying terrain and knocking your friends into the water using various weapons.
 
 This is a small totally original game made just for fun, please don't sue me Team 17.

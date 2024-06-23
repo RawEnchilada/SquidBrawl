@@ -44,4 +44,5 @@ func _physics_process(delta):
 				player.rpc_id(player.id,"apply_impulse_remote",impulse)
 			GameManager.game_in_progress.rpc("create_explosion_at_remote",global_position,explosion_radius)
 			queue_free()
-
+	elif(global_position.length() > 1000.0):
+		queue_free()
