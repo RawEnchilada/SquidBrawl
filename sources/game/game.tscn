@@ -20,6 +20,7 @@ visible = false
 process_mode = 1
 
 [node name="Spawner" type="MultiplayerSpawner" parent="."]
+process_mode = 1
 _spawnable_scenes = PackedStringArray("res://sources/skills/grappling_hook/grappling_hook_target.tscn", "res://sources/interactables/projectile/bullet.tscn", "res://sources/interactables/weapons/bazooka.tscn", "res://sources/interactables/weapons/mortar.tscn", "res://sources/interactables/weapons/grenade.tscn")
 spawn_path = NodePath("../Synced")
 

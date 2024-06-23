@@ -89,3 +89,9 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	emitter.explosion_radius = explosion_radius
 	synced_node.add_child(emitter)
 	island.OnBulletExploded(center_position,explosion_radius)
+
+func disable_synchronization():
+	synced_node.set_process(false)
+	synced_node.set_physics_process(false)
+	spawner.set_process(false)
+	spawner.set_physics_process(false)

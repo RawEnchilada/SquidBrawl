@@ -113,7 +113,6 @@ func init_game(map_seed:int, map_state = null):
 	game_in_progress.init_map(map_state)
 	for data in players_data:
 		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	game_ended = false
 	paused = false
 
@@ -123,6 +122,7 @@ func restart_game():
 @rpc("call_local")
 func restart_game_remote(map_seed:int):
 	if(game_in_progress != null):
+		game_in_progress.disable_synchronization()
 		game_in_progress.queue_free()
 		SpawnArea.spawner_areas.clear()
 	init_game(map_seed)

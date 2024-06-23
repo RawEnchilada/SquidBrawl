@@ -117,7 +117,6 @@ size = Vector3(1000, 20, 1000)
 [node name="GeneratedIsland" type="Node3D"]
 script = ExtResource("1_1cyr3")
 noiseMap = SubResource("FastNoiseLite_uourk")
-chunkSize = 32
 
 [node name="Terrain" type="Node3D" parent="."]
 

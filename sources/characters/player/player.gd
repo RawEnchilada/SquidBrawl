@@ -51,6 +51,8 @@ func _ready():
 	set_process_input(false)
 	player_model.set_color(player_color)
 	nametag.text = player_name
+	if get_window().has_focus():
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
 func _input(event):
