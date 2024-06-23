@@ -62,7 +62,6 @@ func _input(event):
 		GameManager.paused = false
 		
 func on_player_death(player:Player):
-	print("player " + str(player.id) + " died on instance " + str(GameManager.local_id))
 	rpc("player_died_remote", player.id, player.global_position)
 
 @rpc("call_local","any_peer")
@@ -87,12 +86,11 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	var emitter = EXPLOSION_EFFECT_SCENE.instantiate()
 	emitter.position = center_position
 	emitter.explosion_radius = explosion_radius
-	synced_node.add_child(emitter)
+	add_child(emitter)
 	island.OnBulletExploded(center_position,explosion_radius)
 
 func clear_synced_nodes():
 	for node in synced_node.get_children():
 		if(node.get_multiplayer_authority() == multiplayer.get_unique_id()):
 			node.queue_free()
-			print("deleted " + str(node) + " on instance " + str(GameManager.local_id))
 	

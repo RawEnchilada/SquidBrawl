@@ -258,7 +258,7 @@ public partial class GeneratedIsland : Node3D
         {
             Node3D instance = (Node3D)AreaScene.Instantiate();
             AddChild(instance);
-            instance.GlobalPosition = surface + new Vector3(0, 1, 0);
+            instance.GlobalPosition = surface+Vector3.Up*0.1f;
         }
     }
 }
