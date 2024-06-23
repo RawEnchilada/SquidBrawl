@@ -122,7 +122,7 @@ func restart_game():
 @rpc("call_local")
 func restart_game_remote(map_seed:int):
 	if(game_in_progress != null):
-		game_in_progress.disable_synchronization()
+		game_in_progress.clear_synced_nodes()
 		game_in_progress.queue_free()
 		SpawnArea.spawner_areas.clear()
 	init_game(map_seed)
@@ -147,3 +147,6 @@ func game_over_remote(winner_id:int, winner_name:String):
 	var game_over_ui = GAME_OVER_SCENE.instantiate()
 	game_over_ui.winner_name = player_name
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
+	if(local_player != null):
+		local_player.queue_free()
+		local_player = null

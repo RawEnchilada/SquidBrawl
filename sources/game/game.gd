@@ -11,7 +11,7 @@ const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn
 @onready var ingame_menu = $CanvasLayer/IngameMenu
 @onready var synced_node = $Synced
 @onready var island = $Island
-@onready var spawner = $Spawner
+@onready var spawner = $Spawner as MultiplayerSpawner
 
 var players = []
 var map_seed:int = 0
@@ -90,8 +90,9 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	synced_node.add_child(emitter)
 	island.OnBulletExploded(center_position,explosion_radius)
 
-func disable_synchronization():
-	synced_node.set_process(false)
-	synced_node.set_physics_process(false)
-	spawner.set_process(false)
-	spawner.set_physics_process(false)
+func clear_synced_nodes():
+	for node in synced_node.get_children():
+		if(node.get_multiplayer_authority() == multiplayer.get_unique_id()):
+			node.queue_free()
+			print("deleted " + str(node) + " on instance " + str(GameManager.local_id))
+	
