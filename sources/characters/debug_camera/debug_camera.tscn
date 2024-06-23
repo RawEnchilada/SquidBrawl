@@ -11,3 +11,4 @@ move_speed = 10.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraBase"]
 environment = ExtResource("2_kpxhj")
+fov = 90.0

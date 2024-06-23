@@ -18,8 +18,8 @@ var map_seed:int = 0
 
 func init_map(map_state = null):
 	if(map_state != null):
-		island.load_chunk_data_serialized(map_state)
-	island.create_island(map_seed)
+		island.LoadChunkDataSerialized(map_state)
+	island.CreateIsland(map_seed)
 
 func add_active_player(id:int,player_name:String,player_color:Color):
 	var player = PLAYER_SCENE.instantiate()
@@ -88,4 +88,4 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	emitter.position = center_position
 	emitter.explosion_radius = explosion_radius
 	synced_node.add_child(emitter)
-	island.on_bullet_exploded(center_position,explosion_radius)
+	island.OnBulletExploded(center_position,explosion_radius)

@@ -65,6 +65,7 @@ func _input(event):
 
 		elif(interact_area.closest_interactable != null && event.is_action_pressed("interact")):
 			equip_weapon(interact_area.closest_interactable)
+			interact_area.on_interactable_exited(interact_area.closest_interactable)
 
 		elif(event.is_action_pressed("grapple") && skill_cooldown >= 100.0):
 			use_skill()

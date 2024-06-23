@@ -24,4 +24,3 @@ _spawnable_scenes = PackedStringArray("res://sources/skills/grappling_hook/grapp
 spawn_path = NodePath("../Synced")
 
 [node name="Island" parent="." instance=ExtResource("5_8k1q1")]
-chunks = Vector3(4, 4, 4)
