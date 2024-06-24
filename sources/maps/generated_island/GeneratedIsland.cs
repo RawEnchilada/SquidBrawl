@@ -33,10 +33,6 @@ public partial class GeneratedIsland : Node3D
     {
         terrain = GetNode<Node3D>("Terrain");
         staticBody = GetNode<StaticBody3D>("StaticBody3D");
-
-        Vector3 center = new(chunks.X * chunkSize / 2, 0, chunks.Z * chunkSize / 2);
-        terrain.GlobalPosition = -center;
-        staticBody.GlobalPosition = -center;
     }
 
     public void LoadChunkDataSerialized(byte[] data)
@@ -68,6 +64,9 @@ public partial class GeneratedIsland : Node3D
 
     public void CreateIsland(int mapSeed)
     {
+        Vector3 center = new(chunks.X * chunkSize / 2, 0, chunks.Z * chunkSize / 2);
+        terrain.GlobalPosition = -center;
+        staticBody.GlobalPosition = -center;
         if (chunkData.Count == 0)
         {
             Generate(mapSeed);
@@ -238,7 +237,7 @@ public partial class GeneratedIsland : Node3D
 
                 if (value > 0.0f)
                 {
-                    validPoints.Add(chunkPos * chunkSize + new Vector3(chunkSize / 2.0f, chunks.Y * chunkSize, chunkSize / 2.0f) - center);
+                    validPoints.Add(GlobalPosition +chunkPos * chunkSize + new Vector3(chunkSize / 2.0f, chunks.Y * chunkSize, chunkSize / 2.0f) - center);
                 }
             }
         }
