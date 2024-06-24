@@ -9,8 +9,7 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="MainMenu" parent="CanvasLayer" node_paths=PackedStringArray("main_scene") instance=ExtResource("2_8wfkb")]
-main_scene = NodePath("../..")
+[node name="MainMenu" parent="CanvasLayer" instance=ExtResource("2_8wfkb")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.781041, 0, 0.62448, 0, 1, 0, -0.62448, 0, -0.781041, 3.67508, 7.08946, -15.8262)
