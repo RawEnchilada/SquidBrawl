@@ -80,7 +80,7 @@ func use_skill():
 		skill_cooldown = 0.0
 
 func fire_weapon():
-	equipped_weapon.shoot(weapon_holder.global_position,-camera.global_transform.basis.z)
+	equipped_weapon.shoot(weapon_holder.global_position,-camera.global_transform.basis.z, id)
 	weapon_cooldown = 0.0
 
 

@@ -12,6 +12,7 @@ const BULLET_SCENE = preload("res://sources/interactables/projectile/bullet.tscn
 @export var bullet_speed:float = 1.0
 @export var bullet_gravity:float = 0.0
 @export var bullet_bounce:int = 0
+@export var bullet_cluster:int = 0
 @export var equipped:bool = false
 var equipped_by:Node3D = null
 
@@ -33,22 +34,22 @@ func get_interaction_hint():
 	return "E to equip " + weapon_name
 
 
-func shoot(from:Vector3, direction:Vector3):
-	rpc_id(GameManager.HOST_ID,"shoot_remote", from, direction)
+func shoot(from:Vector3, direction:Vector3, player_id:int):
+	rpc_id(GameManager.HOST_ID,"shoot_remote", from, direction, player_id)
 
 @rpc("any_peer","call_local")
-func shoot_remote(from:Vector3, direction:Vector3):
-	var bullet = BULLET_SCENE.instantiate()
-	bullet.direction = direction
-	bullet.position = from
-
-	bullet.explosion_radius = bullet_explosion_radius
-	bullet.explosion_strength = bullet_explosion_strength
-	bullet.speed = bullet_speed
-	bullet.gravity = bullet_gravity
-	bullet.bounce = bullet_bounce
-	bullet.ignore_player = get_multiplayer_authority()
-	GameManager.game_in_progress.synced_node.add_child(bullet)
+func shoot_remote(from:Vector3, direction:Vector3, player_id:int):
+	Bullet.create_bullet(
+		direction,
+		from,
+		bullet_explosion_radius,
+		bullet_explosion_strength,
+		bullet_speed,
+		bullet_gravity,
+		bullet_bounce,
+		bullet_cluster,
+		player_id
+	)
 	
 
 func equip(owned_by:Player):

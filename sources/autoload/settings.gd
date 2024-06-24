@@ -10,6 +10,8 @@ var user_name = "Player"
 var ip_address = "127.0.0.1"
 @export
 var sound_level = 0.5
+@export
+var chunks = Vector3(6,2,6)
 
 func _ready():
 	load_settings()

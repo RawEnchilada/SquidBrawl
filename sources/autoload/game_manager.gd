@@ -103,28 +103,28 @@ func leave_game_remote():
 	local_player = null
 	players_data = []
 
-func init_game(map_seed:int, map_state = null):
+func init_game(map_seed:int, chunks:Vector3, map_state = null):
 	game_in_progress = GAME_SCENE.instantiate()
 	var root = get_tree().get_root()
 	if(root.has_node("Main")):
 		root.remove_child(root.get_node("Main"))
 	root.add_child(game_in_progress)
 	game_in_progress.map_seed = map_seed
-	game_in_progress.init_map(map_state)
+	game_in_progress.init_map(chunks,map_state)
 	for data in players_data:
 		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
 	game_ended = false
 	paused = false
 
 func restart_game():
-	rpc("restart_game_remote",randi())
+	rpc("restart_game_remote",randi(),Settings.chunks)
 
 @rpc("call_local")
-func restart_game_remote(map_seed:int):
+func restart_game_remote(map_seed:int, island_chunks:Vector3):
 	if(game_in_progress != null):
 		game_in_progress.queue_free()
 		SpawnArea.spawner_areas.clear()
-	init_game(map_seed)
+	init_game(map_seed,island_chunks)
 
 func init_player(player:Player):
 	player.connect("weapon_cooldown_changed",Callable(game_in_progress.hud,"weapon_cooldown_changed"))

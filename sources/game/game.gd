@@ -16,9 +16,10 @@ const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn
 var players = []
 var map_seed:int = 0
 
-func init_map(map_state = null):
+func init_map(chunks:Vector3,map_state = null):
 	if(map_state != null):
 		island.LoadChunkDataSerialized(map_state)
+	island.chunks = chunks
 	island.CreateIsland(map_seed)
 
 func add_active_player(id:int,player_name:String,player_color:Color):

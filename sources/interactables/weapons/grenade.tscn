@@ -31,8 +31,8 @@ fire_rate = 45.0
 bullet_explosion_radius = 3.0
 bullet_explosion_strength = 10.0
 bullet_speed = 20.0
-bullet_gravity = -1.0
-bullet_bounce = 3
+bullet_gravity = -4.0
+bullet_cluster = 3
 
 [node name="Barrel" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
