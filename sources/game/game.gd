@@ -36,7 +36,8 @@ func add_active_player(id:int,player_name:String,player_color:Color):
 	player.id = id
 	synced_node.add_child(player)
 	player.set_authority(id)
-	player.connect("player_died",Callable(self,"on_player_death"))
+	if(id == GameManager.local_id):
+		player.connect("player_died",Callable(self,"on_player_death"))
 	players.append(player)
 
 
@@ -72,7 +73,7 @@ func player_died_remote(player_id:int,player_pos:Vector3):
 		add_child(free_cam)
 		free_cam.position = player_pos + Vector3.UP
 		hud.visible = false
-	remove_active_player(player_id)
+	remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
 	if(GameManager.is_host() && players.size() == 1):
 		print("game over")
 		GameManager.game_over(players[0])
@@ -90,8 +91,15 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	add_child(emitter)
 	island.OnBulletExploded(center_position,explosion_radius)
 
-func clear_synced_nodes():
+
+func free_authority_nodes():
+	# player nodes are not spawned using MultiplayerSpawner, so queue_free is called on each peer
+	# everything else is spawned using MultiplayerSpawner, so despawn is synchronized
 	for node in synced_node.get_children():
-		if(node.get_multiplayer_authority() == multiplayer.get_unique_id()):
+		if(node is Player):
+			remove_active_player(node.id)
+			print(str(GameManager.local_id)+" calling free on player "+str(node.name))
+		elif(node.get_multiplayer_authority() == GameManager.local_id):
+			print(str(GameManager.local_id)+" calling free on "+str(node.name))
 			node.queue_free()
 	

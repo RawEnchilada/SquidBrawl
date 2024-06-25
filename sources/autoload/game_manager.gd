@@ -38,6 +38,7 @@ func join_game():
 		return
 	multiplayer.multiplayer_peer = peer
 	local_id = multiplayer.get_unique_id()
+	peer.connect("peer_disconnected",Callable(self,"leave_game"))
 
 func on_client_connected(peer_id:int):
 	rpc_id(peer_id, "client_send_user_data")
@@ -81,27 +82,30 @@ func remove_player(peer_id:int):
 	if(game_in_progress != null):
 		game_in_progress.remove_active_player(peer_id)
 
-func leave_game():
-	if(local_id == HOST_ID):
-		rpc("leave_game_remote")
+func reset_game():
+	game_in_progress.queue_free()
+	SpawnArea.clear_spawns()
+	Bullet.BULLET_COUNT = 0
+	BaseWeapon.WEAPON_COUNT = 0
+	game_in_progress = null
+
+func leave_game(_leaving_peer_id = 0):
+	if(is_host()):
+		peer.disconnect("peer_disconnected",Callable(self,"remove_player"))
 	else:
-		leave_game_remote()
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		peer.disconnect("peer_disconnected",Callable(self,"leave_game"))
 	peer.close()
 	peer = null
-
-@rpc("call_local")
-func leave_game_remote():
 	if(game_in_progress != null):
-		game_in_progress.queue_free()
-		SpawnArea.spawner_areas.clear()
-		game_in_progress = null
+		reset_game()
 		get_tree().change_scene_to_file("res://sources/main.tscn")
 	game_ended = true
 	paused = true
 	local_id = -1
 	local_player = null
 	players_data = []
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 
 func init_game(map_seed:int, chunks:Vector3, map_state = null):
 	game_in_progress = GAME_SCENE.instantiate()
@@ -117,13 +121,13 @@ func init_game(map_seed:int, chunks:Vector3, map_state = null):
 	paused = false
 
 func restart_game():
+	peer.refuse_new_connections = true
 	rpc("restart_game_remote",randi(),Settings.chunks)
 
 @rpc("call_local")
 func restart_game_remote(map_seed:int, island_chunks:Vector3):
 	if(game_in_progress != null):
-		game_in_progress.queue_free()
-		SpawnArea.spawner_areas.clear()
+		reset_game()
 	init_game(map_seed,island_chunks)
 
 func init_player(player:Player):
@@ -146,7 +150,5 @@ func game_over_remote(winner_id:int, winner_name:String):
 	var game_over_ui = GAME_OVER_SCENE.instantiate()
 	game_over_ui.winner_name = player_name
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
-	game_in_progress.clear_synced_nodes()
-	if(local_player != null):
-		local_player.queue_free()
-		local_player = null
+	game_in_progress.free_authority_nodes()
+	local_player = null

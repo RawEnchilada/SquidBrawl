@@ -83,7 +83,7 @@ shape = SubResource("ConvexPolygonShape3D_sojdp")
 
 [node name="ExplosionArea" type="Area3D" parent="."]
 collision_layer = 0
-collision_mask = 14
+collision_mask = 6
 monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ExplosionArea"]

@@ -6,9 +6,14 @@ static var spawner_areas = []
 const WEAPON_SCENES = [
 	preload("res://sources/interactables/weapons/bazooka.tscn"),
 	preload("res://sources/interactables/weapons/mortar.tscn"),
-    preload("res://sources/interactables/weapons/grenade.tscn"),
+	preload("res://sources/interactables/weapons/grenade.tscn"),
+
 ]
 
+static func clear_spawns():
+	for spawner_area in spawner_areas:
+		spawner_area.queue_free()
+	spawner_areas.clear()
 
 func _ready():
 	spawner_areas.append(self)
