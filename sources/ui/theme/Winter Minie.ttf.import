@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dk765wy6unjxu"
-path="res://.godot/imported/BoyzRGrossNF.ttf-ffd04cb08842ba16c7e69d60e5a04895.fontdata"
+uid="uid://m065thk0l7f1"
+path="res://.godot/imported/Winter Minie.ttf-f5df404d993ea6bdb90910057638c476.fontdata"
 
 [deps]
 
-source_file="res://sources/ui/theme/BoyzRGrossNF.ttf"
-dest_files=["res://.godot/imported/BoyzRGrossNF.ttf-ffd04cb08842ba16c7e69d60e5a04895.fontdata"]
+source_file="res://sources/ui/theme/Winter Minie.ttf"
+dest_files=["res://.godot/imported/Winter Minie.ttf-f5df404d993ea6bdb90910057638c476.fontdata"]
 
 [params]
 

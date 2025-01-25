@@ -1,25 +1,39 @@
-[gd_scene load_steps=7 format=3 uid="uid://bnx88th7kphdj"]
+[gd_scene load_steps=9 format=3 uid="uid://bnx88th7kphdj"]
 
-[ext_resource type="PackedScene" uid="uid://cvhv4hvtqc46b" path="res://sources/characters/player/wurm.glb" id="1_yuwl1"]
-[ext_resource type="Script" path="res://sources/characters/character_model.gd" id="2_efm6j"]
+[ext_resource type="PackedScene" uid="uid://dbov8oxqd5d0r" path="res://sources/characters/player/Squid.glb" id="1_ghmnr"]
+[ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_bone.gd" id="2_pxxjo"]
+[ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_properties.gd" id="3_l8an7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1o4n4"]
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.05
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8whvg"]
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.05
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c2rl0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tr0qy"]
 resource_local_to_scene = true
-vertex_color_use_as_albedo = true
-albedo_color = Color(0.979743, 0.700282, 0.642277, 1)
-rim = 0.0
+albedo_color = Color(0.0980392, 0.105882, 1, 1)
+roughness = 0.38
+clearcoat_enabled = true
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1r4b7"]
+[sub_resource type="Resource" id="Resource_l0mnf"]
+script = ExtResource("3_l8an7")
+mode = 0
+stiffness = 0.1
+damping = 0.85
+gravity = Vector3(0, -0.05, 0)
+length = 0.1
+max_distance = 0.1
+max_degrees = 45.0
+
+[sub_resource type="Resource" id="Resource_tw2j8"]
+script = ExtResource("3_l8an7")
+mode = 0
+stiffness = 0.1
+damping = 0.5
+gravity = Vector3(0, 0, 0)
+length = 0.1
+max_distance = 0.1
+max_degrees = 30.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bca08"]
+resource_local_to_scene = true
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u3640"]
 properties/0/path = NodePath("Armature/HeadIKTarget:rotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
@@ -27,36 +41,28 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="CharacterModel" node_paths=PackedStringArray("skeleton", "skeletonik", "head_ik_target") instance=ExtResource("1_yuwl1")]
-script = ExtResource("2_efm6j")
-skeleton = NodePath("Armature/Skeleton3D")
-skeletonik = NodePath("Armature/Skeleton3D/SkeletonIK3D")
-head_ik_target = NodePath("Armature/HeadIKTarget")
+[node name="Squid" instance=ExtResource("1_ghmnr")]
+transform = Transform3D(0.25, 0, 0, 0, 0.249649, -0.0132495, 0, 0.0132495, 0.249649, 0, 0, 0)
 
-[node name="Armature" parent="." index="0"]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+[node name="Cylinder" parent="Armature/Skeleton3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_tr0qy")
 
-[node name="HeadIKTarget" type="Node3D" parent="Armature" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.44089e-16, 3.73763, -0.0625634)
+[node name="HeadWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1"]
+transform = Transform3D(1, 5.68434e-14, -2.38419e-07, 2.29566e-07, 0.269966, 0.96287, 6.43651e-08, -0.96287, 0.269966, -2.02945e-16, 2.22839, -0.218554)
+bone_name = "Bone.001"
+bone_idx = 1
+script = ExtResource("2_pxxjo")
+properties = SubResource("Resource_l0mnf")
 
-[node name="Skeleton3D" parent="Armature" index="1"]
-bones/4/scale = Vector3(1, 1, 1)
+[node name="TentacleWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="2"]
+transform = Transform3D(1, -3.41061e-13, 2.38418e-07, -2.37088e-07, -0.105499, 0.99442, 2.51526e-08, -0.99442, -0.105499, -6.56987e-14, -1.27219, -0.446768)
+bone_name = "Bone.004"
+bone_idx = 3
+script = ExtResource("2_pxxjo")
+properties = SubResource("Resource_tw2j8")
 
-[node name="SkeletonIK3D" type="SkeletonIK3D" parent="Armature/Skeleton3D" index="0"]
-process_priority = 1
-root_bone = &"Bone.001"
-tip_bone = &"Bone.005"
-target_node = NodePath("../../HeadIKTarget")
-max_iterations = 5
+[node name="Cylinder_001" parent="." index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_bca08")
 
-[node name="Cylinder_002" parent="Armature/Skeleton3D" index="3"]
-surface_material_override/0 = SubResource("StandardMaterial3D_1o4n4")
-
-[node name="Cylinder_003" parent="Armature/Skeleton3D" index="4"]
-surface_material_override/0 = SubResource("StandardMaterial3D_8whvg")
-
-[node name="Sphere" parent="Armature/Skeleton3D" index="5"]
-surface_material_override/0 = SubResource("StandardMaterial3D_c2rl0")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="1"]
-replication_config = SubResource("SceneReplicationConfig_1r4b7")
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="2"]
+replication_config = SubResource("SceneReplicationConfig_u3640")

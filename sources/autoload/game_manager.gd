@@ -26,7 +26,7 @@ func host_game():
 		return
 	multiplayer.multiplayer_peer = peer
 	local_id = multiplayer.get_unique_id()
-	add_player_data(local_id,Settings.user_name,Settings.user_color)
+	add_player_data(local_id,Settings.user_name,Settings.user_color,Settings.weapon_type)
 	peer.connect("peer_connected",Callable(self,"on_client_connected"))
 	peer.connect("peer_disconnected",Callable(self,"remove_player"))
 
@@ -45,11 +45,11 @@ func on_client_connected(peer_id:int):
 
 @rpc
 func client_send_user_data():
-	rpc_id(HOST_ID, "host_receive_user_data", local_id, Settings.user_name, Settings.user_color)
+	rpc_id(HOST_ID, "host_receive_user_data", local_id, Settings.user_name, Settings.user_color, Settings.weapon_type)
 
 @rpc("any_peer")
-func host_receive_user_data(peer_id:int, player_name:String, player_color:Color):
-	add_player_data(peer_id, player_name, player_color)
+func host_receive_user_data(peer_id:int, player_name:String, player_color:Color, weapon_type:Enums.WeaponType):
+	add_player_data(peer_id, player_name, player_color, weapon_type)
 	rpc("client_receive_all_user_data", JSON.stringify(players_data))
 
 @rpc
@@ -63,13 +63,14 @@ func client_receive_all_user_data(json_str:String):
 				break
 		if !found:
 			var color = Color.from_string(data["color"],Color.WHITE)
-			add_player_data(data["id"], data["name"], color)
+			add_player_data(data["id"], data["name"], color, data["weapon_type"])
 	
-func add_player_data(peer_id:int, player_name:String, player_color:Color):
+func add_player_data(peer_id:int, player_name:String, player_color:Color, weapon_type:Enums.WeaponType):
 	players_data.append({
 		"id": peer_id,
 		"name": player_name,
-		"color": player_color.to_html(false)
+		"color": player_color.to_html(false),
+		"weapon_type": weapon_type
 	})
 
 func remove_player(peer_id:int):
@@ -107,28 +108,28 @@ func leave_game(_leaving_peer_id = 0):
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 
-func init_game(map_seed:int, chunks:Vector3, map_state = null):
+func init_game(map_seed:int,map_name:String):
 	game_in_progress = GAME_SCENE.instantiate()
 	var root = get_tree().get_root()
 	if(root.has_node("Main")):
 		root.remove_child(root.get_node("Main"))
 	root.add_child(game_in_progress)
 	game_in_progress.map_seed = map_seed
-	game_in_progress.init_map(chunks,map_state)
+	game_in_progress.init_map(map_name)
 	for data in players_data:
-		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE))
+		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE),data["weapon_type"])
 	game_ended = false
 	paused = false
 
 func restart_game():
 	peer.refuse_new_connections = true
-	rpc("restart_game_remote",randi(),Settings.chunks)
+	rpc("restart_game_remote",randi(),Settings.map_name)
 
 @rpc("call_local")
-func restart_game_remote(map_seed:int, island_chunks:Vector3):
+func restart_game_remote(map_seed:int, map_name:String):
 	if(game_in_progress != null):
 		reset_game()
-	init_game(map_seed,island_chunks)
+	init_game(map_seed,map_name)
 
 func init_player(player:Player):
 	player.connect("weapon_cooldown_changed",Callable(game_in_progress.hud,"weapon_cooldown_changed"))

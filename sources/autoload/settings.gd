@@ -11,7 +11,9 @@ var ip_address = "127.0.0.1"
 @export
 var sound_level = 0.5
 @export
-var chunks = Vector3(6,2,6)
+var map_name = "default"
+@export
+var weapon_type = Enums.WeaponType.BAZOOKA
 
 func _ready():
 	load_settings()

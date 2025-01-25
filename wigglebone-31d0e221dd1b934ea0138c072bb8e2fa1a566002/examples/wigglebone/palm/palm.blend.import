@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dskvdmcodu6jb"
-path="res://.godot/imported/wurm.blend-2c812e42e592d63df8c9cd189fe55227.scn"
+uid="uid://bj55mlgawqx35"
+path="res://.godot/imported/palm.blend-91177eb57fb96e3f66af966642d42f11.scn"
 
 [deps]
 
-source_file="res://sources/characters/player/wurm.blend"
-dest_files=["res://.godot/imported/wurm.blend-2c812e42e592d63df8c9cd189fe55227.scn"]
+source_file="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/examples/wigglebone/palm/palm.blend"
+dest_files=["res://.godot/imported/palm.blend-91177eb57fb96e3f66af966642d42f11.scn"]
 
 [params]
 

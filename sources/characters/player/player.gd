@@ -22,6 +22,7 @@ signal player_died(player:Player)
 @export var id: int = -1
 @export var player_name: String = "WURM"
 @export var player_color: Color = Color.WHITE
+@export var weapon_type: Enums.WeaponType = Enums.WeaponType.BAZOOKA
 
 
 func set_authority(value):
@@ -103,9 +104,7 @@ func _physics_process(delta:float):
 			target_x = direction.x * speed
 			target_z = direction.z * speed
 		
-		if(input_dir.length() > 0.0):
-			player_model.turn_to_target(direction,delta)
-		player_model.look_at_target(get_look_target())
+		player_model.turn_to_target(direction,delta)
 			
 		# Handle ground movement
 		if is_on_floor():

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://sources/game/game.gd" id="1_2tqxi"]
 [ext_resource type="PackedScene" uid="uid://dn2wuuctgmm0p" path="res://sources/ui/hud/hud.tscn" id="3_isr1v"]
 [ext_resource type="PackedScene" uid="uid://d25hwl0a848au" path="res://sources/ui/ingame_menu/ingame_menu.tscn" id="4_wghfy"]
-[ext_resource type="PackedScene" uid="uid://khg45re5xoun" path="res://sources/maps/generated_island/generated_island.tscn" id="5_8k1q1"]
+[ext_resource type="PackedScene" uid="uid://khg45re5xoun" path="res://sources/maps/map.tscn" id="5_8k1q1"]
 
 [node name="Game" type="Node3D"]
 process_mode = 3
@@ -19,9 +19,9 @@ visible = false
 [node name="Synced" type="Node3D" parent="."]
 process_mode = 1
 
+[node name="Map" parent="." instance=ExtResource("5_8k1q1")]
+
 [node name="Spawner" type="MultiplayerSpawner" parent="."]
 process_mode = 1
 _spawnable_scenes = PackedStringArray("res://sources/skills/grappling_hook/grappling_hook_target.tscn", "res://sources/interactables/projectile/bullet.tscn", "res://sources/interactables/weapons/bazooka.tscn", "res://sources/interactables/weapons/mortar.tscn", "res://sources/interactables/weapons/grenade.tscn")
 spawn_path = NodePath("../Synced")
-
-[node name="Island" parent="." instance=ExtResource("5_8k1q1")]

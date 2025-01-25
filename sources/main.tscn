@@ -1,23 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bohooet24ltyw"]
+[gd_scene load_steps=3 format=3 uid="uid://bohooet24ltyw"]
 
 [ext_resource type="PackedScene" uid="uid://ca4drbyl78ic4" path="res://sources/ui/main_menu/main_menu.tscn" id="2_8wfkb"]
 [ext_resource type="PackedScene" uid="uid://cbm23xsrihklr" path="res://sources/maps/menu_island/menu_island.tscn" id="2_knbuh"]
-[ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="2_xcy8a"]
-[ext_resource type="PackedScene" uid="uid://c802lvfwvb1ly" path="res://sources/maps/assets/coconut/coconut.tscn" id="4_656om"]
 
 [node name="Main" type="Node3D"]
+
+[node name="MenuIsland" parent="." instance=ExtResource("2_knbuh")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" parent="CanvasLayer" instance=ExtResource("2_8wfkb")]
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.781041, 0, 0.62448, 0, 1, 0, -0.62448, 0, -0.781041, 3.67508, 7.08946, -15.8262)
-environment = ExtResource("2_xcy8a")
-current = true
-fov = 60.0
-
-[node name="MenuIsland" parent="." instance=ExtResource("2_knbuh")]
-
-[node name="Coconut" parent="MenuIsland" instance=ExtResource("4_656om")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.905504, 10.7981, -4.92337)

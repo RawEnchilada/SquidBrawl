@@ -1,8 +1,8 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://dyjmdnoxxa73m"]
 
 [ext_resource type="Shader" uid="uid://bbonetvsq5tva" path="res://sources/shaders/terrain.tres" id="1_e3qin"]
-[ext_resource type="Texture2D" uid="uid://bsybo5l327bs1" path="res://sources/maps/sand.jpg" id="1_my8hd"]
-[ext_resource type="Texture2D" uid="uid://da8p3aw2x8ubp" path="res://sources/maps/grass.jpg" id="2_577id"]
+[ext_resource type="Texture2D" uid="uid://bsybo5l327bs1" path="res://sources/maps/assets/materials/sand.jpg" id="1_my8hd"]
+[ext_resource type="Texture2D" uid="uid://da8p3aw2x8ubp" path="res://sources/maps/assets/materials/grass.jpg" id="2_577id"]
 
 [resource]
 render_priority = 0

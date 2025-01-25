@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctb51unhrb4fc"]
+
+[ext_resource type="Script" path="res://sources/maps/editor/Editor.cs" id="1_ik7hp"]
+[ext_resource type="PackedScene" uid="uid://khg45re5xoun" path="res://sources/maps/map.tscn" id="2_molje"]
+
+[node name="Editor" type="Node3D"]
+script = ExtResource("1_ik7hp")
+
+[node name="CSGCombiner" type="CSGCombiner3D" parent="."]
+
+[node name="MaterialAreas" type="Node3D" parent="."]
+
+[node name="Map" parent="." instance=ExtResource("2_molje")]

@@ -1,12 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://khg45re5xoun"]
+[gd_scene load_steps=6 format=3 uid="uid://khg45re5xoun"]
 
-[ext_resource type="Script" path="res://sources/maps/generated_island/GeneratedIsland.cs" id="1_1cyr3"]
-[ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="2_wffex"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_uourk"]
-noise_type = 3
-frequency = 0.025
-fractal_type = 0
+[ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="1_0gv7n"]
 
 [sub_resource type="Shader" id="Shader_cwm2x"]
 code = "shader_type spatial;
@@ -115,9 +109,7 @@ size = Vector2(1000, 1000)
 [sub_resource type="BoxShape3D" id="BoxShape3D_wib2s"]
 size = Vector3(1000, 20, 1000)
 
-[node name="GeneratedIsland" type="Node3D"]
-script = ExtResource("1_1cyr3")
-noiseMap = SubResource("FastNoiseLite_uourk")
+[node name="Map" type="Node3D"]
 
 [node name="Terrain" type="Node3D" parent="."]
 
@@ -142,5 +134,5 @@ shape = SubResource("BoxShape3D_wib2s")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 100, 100, 100)
-environment = ExtResource("2_wffex")
+environment = ExtResource("1_0gv7n")
 fov = 90.0

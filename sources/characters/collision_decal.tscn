@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bep0c7rfdkt08"]
+
+[ext_resource type="Texture2D" uid="uid://dqpsjsoqe157c" path="res://sources/characters/player/splatter.png" id="1_sfi20"]
+[ext_resource type="Script" path="res://sources/characters/collision_decal.gd" id="2_0lsa4"]
+
+[node name="Decal" type="Decal"]
+layers = 2
+texture_albedo = ExtResource("1_sfi20")
+cull_mask = 2
+script = ExtResource("2_0lsa4")

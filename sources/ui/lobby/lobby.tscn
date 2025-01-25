@@ -17,37 +17,17 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 40
-
-[node name="ChunkLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Chunks:"
-
-[node name="SpinBoxX" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-max_value = 99.0
-value = 8.0
-alignment = 1
-
-[node name="SpinBoxY" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-max_value = 99.0
-value = 6.0
-alignment = 1
-
-[node name="SpinBoxZ" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-max_value = 99.0
-value = 8.0
-alignment = 1
-
 [node name="StatusLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Hosting
 "
 horizontal_alignment = 1
+
+[node name="MapNameSelector" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="WeaponTypeSelector" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
 
 [node name="PlayersLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
@@ -63,5 +43,7 @@ text = "Leave Lobby"
 layout_mode = 2
 text = "Start Game"
 
+[connection signal="item_selected" from="VBoxContainer/MapNameSelector" to="." method="_on_map_name_selector_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/WeaponTypeSelector" to="." method="_on_weapon_type_selector_item_selected"]
 [connection signal="pressed" from="VBoxContainer/LeaveButton" to="." method="_on_leave_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

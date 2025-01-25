@@ -3,24 +3,38 @@ extends MarginContainer
 signal leave_lobby
 signal start_game
 
-@onready var chunk_settings_container = $VBoxContainer/HBoxContainer
-@onready var spin_box_x = $VBoxContainer/HBoxContainer/SpinBoxX
-@onready var spin_box_y = $VBoxContainer/HBoxContainer/SpinBoxY
-@onready var spin_box_z = $VBoxContainer/HBoxContainer/SpinBoxZ
+@onready var map_name_selector = $VBoxContainer/MapNameSelector
+@onready var weapon_type_selector = $VBoxContainer/WeaponTypeSelector
 @onready var start_game_button = $VBoxContainer/StartButton
 @onready var players_label = $VBoxContainer/PlayersLabel
 
+const MAP_FOLDER = "res://maps/"
+
 func show_lobby():
 	visible = true
+	
+	var maps = []
+	var dir = DirAccess.open(MAP_FOLDER)
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if file_name.ends_with(".map"):
+			maps.append(file_name.replace(".map",""))
+		file_name = dir.get_next()
+	dir.list_dir_end()
+	
+	for map in maps:
+		map_name_selector.add_item(map)
+
+	var weapon_types = Enums.WeaponType.keys()
+	for weapon_type in weapon_types:
+		weapon_type_selector.add_item(weapon_type)
+		
 	if(GameManager.is_host()):
 		start_game_button.visible = true
-		chunk_settings_container.visible = true
-		spin_box_x.connect("value_changed",Callable(self,"_on_spin_box_x_value_changed"))
-		spin_box_y.connect("value_changed",Callable(self,"_on_spin_box_y_value_changed"))
-		spin_box_z.connect("value_changed",Callable(self,"_on_spin_box_z_value_changed"))
 	else:
 		start_game_button.visible = false
-		chunk_settings_container.visible = false
+		map_name_selector.disabled = true
 
 
 func _physics_process(_delta):
@@ -36,11 +50,11 @@ func _on_leave_button_pressed():
 func _on_start_button_pressed():
 	emit_signal("start_game")
 
-func _on_spin_box_x_value_changed(new_value):
-	Settings.chunks.x = new_value
 
-func _on_spin_box_y_value_changed(new_value):
-	Settings.chunks.y = new_value
 
-func _on_spin_box_z_value_changed(new_value):
-	Settings.chunks.z = new_value
+func _on_map_name_selector_item_selected(index:int) -> void:
+	Settings.map_name = map_name_selector.get_item_text(index)
+
+
+func _on_weapon_type_selector_item_selected(index:int) -> void:
+	Settings.weapon_type = Enums.WeaponType[weapon_type_selector.get_item_text(index)]

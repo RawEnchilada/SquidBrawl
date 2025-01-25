@@ -1,3 +1,4 @@
+class_name SplashEffect
 extends Node3D
 
 

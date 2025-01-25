@@ -10,19 +10,16 @@ const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn
 @onready var hud = $CanvasLayer/Hud
 @onready var ingame_menu = $CanvasLayer/IngameMenu
 @onready var synced_node = $Synced
-@onready var island = $Island
+@onready var map = $Map
 @onready var spawner = $Spawner as MultiplayerSpawner
 
 var players = []
 var map_seed:int = 0
 
-func init_map(chunks:Vector3,map_state = null):
-	if(map_state != null):
-		island.LoadChunkDataSerialized(map_state)
-	island.chunks = chunks
-	island.CreateIsland(map_seed)
+func init_map(map_name:String):
+	map.LoadMap(map_name)
 
-func add_active_player(id:int,player_name:String,player_color:Color):
+func add_active_player(id:int,player_name:String,player_color:Color,player_weapon:Enums.WeaponType):
 	var player = PLAYER_SCENE.instantiate()
 	var area = SpawnArea.get_spawn_point(id)
 	if(GameManager.is_host()):
@@ -34,6 +31,7 @@ func add_active_player(id:int,player_name:String,player_color:Color):
 	player.player_name = player_name
 	player.player_color = player_color
 	player.id = id
+	player.weapon_type = player_weapon
 	synced_node.add_child(player)
 	player.set_authority(id)
 	if(id == GameManager.local_id):
@@ -89,7 +87,7 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 	emitter.position = center_position
 	emitter.explosion_radius = explosion_radius
 	add_child(emitter)
-	island.OnBulletExploded(center_position,explosion_radius)
+	map.OnBulletExploded(center_position,explosion_radius)
 
 
 func free_authority_nodes():
