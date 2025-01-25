@@ -9,9 +9,9 @@ signal model_hit(damage:int)
 @export var collision_mask:int = 3  # b00000000_00000000_00000000_00000011
 
 @onready
-var body: MeshInstance3D = $Squid/Armature/Skeleton3D/Cylinder
+var body: MeshInstance3D = $Armature/Skeleton3D/Cylinder
 @onready
-var eyes: MeshInstance3D = $Squid/Cylinder_001
+var eyes: MeshInstance3D = $Armature/Skeleton3D/Cylinder_001/Cylinder_001
 
 func turn_to_target(target:Vector3,delta:float):
 	var next_step_to_target = (global_transform.basis * Vector3.BACK).lerp(-target, delta*10.0)

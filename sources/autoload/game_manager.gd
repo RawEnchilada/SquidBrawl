@@ -85,7 +85,6 @@ func remove_player(peer_id:int):
 
 func reset_game():
 	game_in_progress.queue_free()
-	SpawnArea.clear_spawns()
 	Bullet.BULLET_COUNT = 0
 	BaseWeapon.WEAPON_COUNT = 0
 	game_in_progress = null
@@ -108,14 +107,13 @@ func leave_game(_leaving_peer_id = 0):
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 
-func init_game(map_seed:int,map_name:String):
+func init_game(map_name:String):
 	game_in_progress = GAME_SCENE.instantiate()
+	game_in_progress.map_name = map_name
 	var root = get_tree().get_root()
 	if(root.has_node("Main")):
 		root.remove_child(root.get_node("Main"))
 	root.add_child(game_in_progress)
-	game_in_progress.map_seed = map_seed
-	game_in_progress.init_map(map_name)
 	for data in players_data:
 		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE),data["weapon_type"])
 	game_ended = false
@@ -123,13 +121,13 @@ func init_game(map_seed:int,map_name:String):
 
 func restart_game():
 	peer.refuse_new_connections = true
-	rpc("restart_game_remote",randi(),Settings.map_name)
+	rpc("restart_game_remote",Settings.map_name)
 
 @rpc("call_local")
-func restart_game_remote(map_seed:int, map_name:String):
+func restart_game_remote(map_name:String):
 	if(game_in_progress != null):
 		reset_game()
-	init_game(map_seed,map_name)
+	init_game(map_name)
 
 func init_player(player:Player):
 	player.connect("weapon_cooldown_changed",Callable(game_in_progress.hud,"weapon_cooldown_changed"))

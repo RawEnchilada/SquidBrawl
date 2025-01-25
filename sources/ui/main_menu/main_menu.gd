@@ -49,6 +49,7 @@ func _on_quit_button_pressed():
 
 
 func _on_lobby_start_game():
+	visible = false
 	if(GameManager.is_host()):
 		GameManager.restart_game()
 	

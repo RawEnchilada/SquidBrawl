@@ -2,9 +2,7 @@ class_name RagdollSquid
 extends RigidBody3D
 
 @onready
-var body: MeshInstance3D = $Squid/Armature/Skeleton3D/Cylinder
-@onready
-var eyes: MeshInstance3D = $Squid/Cylinder_001
+var model: CharacterModel = $Squid
 @onready
 var squish_sound_effect: AudioStreamPlayer3D = $SquishAudio
 
@@ -17,8 +15,7 @@ func _physics_process(_delta: float) -> void:
 
 func set_color(c: Color)->void:
 	color = c
-	body.get_surface_override_material(0).albedo_color = color
-	eyes.get_surface_override_material(0).albedo_color = color
+	model.set_color(c)
 
 
 func _on_body_entered(body: Node) -> void:

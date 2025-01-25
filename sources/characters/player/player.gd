@@ -8,7 +8,7 @@ signal skill_cooldown_changed(cooldown:float)
 signal weapon_equipped(weapon:BaseWeapon)
 signal player_died(player:Player)
 
-@onready var player_model: CharacterModel = $CharacterModel
+@onready var player_model: CharacterModel = $Squid
 @onready var interact_area: Area3D = $CameraBase/CameraPivot/InteractArea
 @onready var nametag: Label3D = $Label3D
 @onready var camera_base: Node3D = $CameraBase

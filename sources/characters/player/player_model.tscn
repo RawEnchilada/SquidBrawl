@@ -1,13 +1,15 @@
 [gd_scene load_steps=9 format=3 uid="uid://bnx88th7kphdj"]
 
 [ext_resource type="PackedScene" uid="uid://dbov8oxqd5d0r" path="res://sources/characters/player/Squid.glb" id="1_ghmnr"]
+[ext_resource type="Script" path="res://sources/characters/character_model.gd" id="2_cui6b"]
 [ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_bone.gd" id="2_pxxjo"]
 [ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_properties.gd" id="3_l8an7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tr0qy"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vho1n"]
 resource_local_to_scene = true
-albedo_color = Color(0.0980392, 0.105882, 1, 1)
-roughness = 0.38
+metallic = 0.1
+metallic_specular = 0.95
+roughness = 0.3
 clearcoat_enabled = true
 
 [sub_resource type="Resource" id="Resource_l0mnf"]
@@ -30,9 +32,6 @@ length = 0.1
 max_distance = 0.1
 max_degrees = 30.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bca08"]
-resource_local_to_scene = true
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u3640"]
 properties/0/path = NodePath("Armature/HeadIKTarget:rotation")
 properties/0/spawn = true
@@ -42,13 +41,20 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Squid" instance=ExtResource("1_ghmnr")]
-transform = Transform3D(0.25, 0, 0, 0, 0.249649, -0.0132495, 0, 0.0132495, 0.249649, 0, 0, 0)
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+script = ExtResource("2_cui6b")
 
-[node name="Cylinder" parent="Armature/Skeleton3D" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_tr0qy")
+[node name="Armature" parent="." index="0"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2, 0)
+
+[node name="Cylinder_001" parent="Armature/Skeleton3D" index="0"]
+transform = Transform3D(1, -4.42815e-17, -3.60047e-18, 4.42815e-17, 0.979913, 0.160985, -4.46026e-18, -0.199426, 0.791028, 0.0409325, -0.455745, -1.47455)
+
+[node name="Cylinder_001" parent="Armature/Skeleton3D/Cylinder_001" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")
 
 [node name="HeadWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1"]
-transform = Transform3D(1, 5.68434e-14, -2.38419e-07, 2.29566e-07, 0.269966, 0.96287, 6.43651e-08, -0.96287, 0.269966, -2.02945e-16, 2.22839, -0.218554)
+transform = Transform3D(1, 7.10543e-14, -2.38419e-07, 2.31095e-07, 0.245953, 0.969282, 5.86399e-08, -0.969282, 0.245953, -2.02945e-16, 2.22839, -0.218554)
 bone_name = "Bone.001"
 bone_idx = 1
 script = ExtResource("2_pxxjo")
@@ -61,8 +67,8 @@ bone_idx = 3
 script = ExtResource("2_pxxjo")
 properties = SubResource("Resource_tw2j8")
 
-[node name="Cylinder_001" parent="." index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bca08")
+[node name="Cylinder" parent="Armature/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="2"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="1"]
 replication_config = SubResource("SceneReplicationConfig_u3640")

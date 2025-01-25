@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://khg45re5xoun"]
+[gd_scene load_steps=7 format=3 uid="uid://khg45re5xoun"]
 
 [ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="1_0gv7n"]
+[ext_resource type="Script" path="res://sources/maps/Map.cs" id="1_yagin"]
 
 [sub_resource type="Shader" id="Shader_cwm2x"]
 code = "shader_type spatial;
@@ -95,7 +96,7 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cmjl5"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ihjbc"]
 render_priority = 0
 shader = SubResource("Shader_cwm2x")
 shader_parameter/uv_scale = 10.0
@@ -103,13 +104,14 @@ shader_parameter/uv_offset = 1.0
 shader_parameter/color_alpha = 0.9
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e4kkm"]
-material = SubResource("ShaderMaterial_cmjl5")
+material = SubResource("ShaderMaterial_ihjbc")
 size = Vector2(1000, 1000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wib2s"]
 size = Vector3(1000, 20, 1000)
 
 [node name="Map" type="Node3D"]
+script = ExtResource("1_yagin")
 
 [node name="Terrain" type="Node3D" parent="."]
 
@@ -136,3 +138,5 @@ shape = SubResource("BoxShape3D_wib2s")
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 100, 100, 100)
 environment = ExtResource("1_0gv7n")
 fov = 90.0
+
+[node name="SpawnAreas" type="Node3D" parent="."]

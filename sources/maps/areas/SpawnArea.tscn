@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://g5o1a4254dlg"]
+
+[ext_resource type="Script" path="res://sources/maps/areas/SpawnArea.cs" id="1_kjis3"]
+
+[node name="SpawnArea" type="Node3D"]
+script = ExtResource("1_kjis3")

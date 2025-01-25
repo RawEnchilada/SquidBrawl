@@ -13,21 +13,17 @@ const SPLASH_EFFECT_SCENE = preload("res://sources/characters/splash_effect.tscn
 @onready var map = $Map
 @onready var spawner = $Spawner as MultiplayerSpawner
 
+var map_name:String = ""
 var players = []
-var map_seed:int = 0
 
-func init_map(map_name:String):
+func _ready() -> void:
 	map.LoadMap(map_name)
 
 func add_active_player(id:int,player_name:String,player_color:Color,player_weapon:Enums.WeaponType):
 	var player = PLAYER_SCENE.instantiate()
-	var area = SpawnArea.get_spawn_point(id)
-	if(GameManager.is_host()):
-		var w = area.get_weapon(id+map_seed)
-		w.position = area.global_position
-		synced_node.add_child(w)
+	var spawn_point = map.GetSpawnPoint(id)
 	player.name = str(id)
-	player.position = area.global_position
+	player.position = spawn_point
 	player.player_name = player_name
 	player.player_color = player_color
 	player.id = id

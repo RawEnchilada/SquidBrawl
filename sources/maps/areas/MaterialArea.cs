@@ -2,8 +2,9 @@ using Godot;
 
 namespace Terrain;
 
+[Tool]
 public partial class MaterialArea : CsgBox3D
 {
-    [Export]
-    public Material apply_material;
+    [Export(PropertyHint.File)]
+    public string apply_material;
 }

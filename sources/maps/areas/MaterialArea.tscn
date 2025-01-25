@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://7h21wv3r1flj"]
+
+[ext_resource type="Script" path="res://sources/maps/areas/MaterialArea.cs" id="1_hbcej"]
+
+[node name="MaterialArea" type="CSGBox3D"]
+script = ExtResource("1_hbcej")
