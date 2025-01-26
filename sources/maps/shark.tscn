@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://sgntfo7wkch6"]
+
+[ext_resource type="PackedScene" uid="uid://cilh3hchgx3oi" path="res://sources/maps/assets/Shark.glb" id="1_yf63l"]
+[ext_resource type="Script" path="res://sources/maps/shark.gd" id="2_bfrun"]
+
+[node name="Shark" instance=ExtResource("1_yf63l")]
+script = ExtResource("2_bfrun")
+
+[node name="Skeleton3D" parent="Armature_001" index="0"]
+bones/0/rotation = Quaternion(5.39066e-09, 2.66011e-10, -0.00710492, 0.999975)
+bones/1/rotation = Quaternion(0.991314, 0.00704337, 0.000933049, 0.131327)
+bones/2/rotation = Quaternion(0.262305, -0.633261, 0.672706, 0.278644)
+bones/2/scale = Vector3(-0.0472583, -0.0472583, -0.0028892)
+bones/3/rotation = Quaternion(-0.608117, 3.3363e-08, 2.86937e-08, 0.793847)
+bones/4/rotation = Quaternion(0.793847, 2.86937e-08, -3.3363e-08, 0.608118)
+bones/5/rotation = Quaternion(1.1215e-08, 1.69933e-10, -0.0167576, 0.99986)
+bones/6/rotation = Quaternion(-9.20552e-10, -3.25215e-11, -0.0167576, 0.99986)
+bones/7/rotation = Quaternion(1.37523e-09, 7.92788e-11, -0.0345442, 0.999403)
+bones/9/rotation = Quaternion(0.997134, 0.00708472, -0.000535059, -0.0753228)
+bones/10/rotation = Quaternion(-0.612942, -0.25389, -0.286334, 0.691271)
+bones/10/scale = Vector3(0.0492245, 0.0492246, 0.0028892)
+
+[node name="Cube_002" parent="Armature_001/Skeleton3D" index="0"]
+transform = Transform3D(0.0334166, 0.0334166, -8.88975e-11, 0.0106326, -0.0106326, -0.00273905, 0.03168, -0.03168, 0.00091929, 2.1379e-06, -3.58878, -0.00895179)
+
+[node name="Icosphere" parent="Armature_001/Skeleton3D" index="1"]
+transform = Transform3D(0.0717503, -7.55715e-11, -8.25325e-10, -5.74365e-10, -5.58794e-09, -0.0717503, 3.31895e-11, 0.0717503, -3.72529e-09, 0.385203, -3.62183, 0.000480879)
+
+[node name="Icosphere_001" parent="Armature_001/Skeleton3D" index="2"]
+transform = Transform3D(-0.0717503, -7.55733e-11, -8.25321e-10, 5.74361e-10, 5.96046e-08, -0.0717503, -3.31921e-11, 0.0717503, 6.14673e-08, -0.385202, -3.62183, 0.000480909)
+
+[node name="Cube_001" parent="Armature_001/Skeleton3D" index="3"]
+transform = Transform3D(0.039933, 0.0199613, -6.05959e-09, -0.00190732, 0.417924, -1.25651e-07, 1.09978e-11, 2.49361e-07, 0.211073, 0.050769, -0.0280603, 1.19284)
+
+[node name="Cube_006" parent="Armature_001/Skeleton3D" index="4"]
+transform = Transform3D(0.034807, 0.034807, -2.9108e-09, 0.00930971, -0.00930977, -0.00278394, -0.0335389, 0.0335389, -0.000772767, 4.50238e-07, -3.38981, -0.0202269)
+
+[node name="Cube_007" parent="Armature_001/Skeleton3D" index="5"]
+transform = Transform3D(0.0399745, 0.00594525, 4.25901e-10, -0.000568074, 0.418358, -1.25826e-07, -4.19305e-10, 2.49383e-07, 0.211073, 1.35397, -1.1828, -0.952479)
+
+[node name="Cube_008" parent="Armature_001/Skeleton3D" index="6"]
+transform = Transform3D(0.0399745, 0.00594525, 4.25901e-10, -0.000568074, 0.418358, -1.25826e-07, -4.19305e-10, 2.49383e-07, 0.211073, -1.31603, -1.14486, -0.952479)
+
+[node name="AnimationPlayer" parent="." index="1"]
+autoplay = "Armature_001Action_001"

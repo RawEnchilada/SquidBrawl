@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://o3vmm4b73jr0"]
+[gd_scene load_steps=3 format=3 uid="uid://o3vmm4b73jr0"]
 
 [ext_resource type="Script" path="res://sources/ui/loading/loading.gd" id="1_g2ue4"]
+[ext_resource type="Texture2D" uid="uid://dqpsjsoqe157c" path="res://sources/characters/player/splatter.png" id="2_xs7pu"]
 
 [node name="Loading" type="MarginContainer"]
 process_mode = 3
@@ -10,6 +11,30 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_g2ue4")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+modulate = Color(0.69974, 0.839205, 0.526743, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 583.0
+offset_top = -232.0
+offset_right = 1582.0
+offset_bottom = 676.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 2.01154
+scale = Vector2(0.924279, 0.951629)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_xs7pu")
+stretch_mode = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 2

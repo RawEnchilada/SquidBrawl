@@ -21,6 +21,7 @@ func _ready():
 	quit_button.connect("pressed",Callable(self,"_on_quit_button_pressed"))
 	ip_address_field.text = Settings.ip_address
 	lobby.visible = false
+	$Control/TextureRect.modulate = Settings.user_color
 	get_tree().paused = false
 
 
@@ -57,3 +58,7 @@ func _on_lobby_exited():
 	GameManager.leave_game()
 	lobby.visible = false
 	vbox_container.visible = true
+
+
+func _on_visibility_changed() -> void:
+	$Control/TextureRect.modulate = Settings.user_color

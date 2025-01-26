@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca4drbyl78ic4"]
+[gd_scene load_steps=6 format=3 uid="uid://ca4drbyl78ic4"]
 
 [ext_resource type="Script" path="res://sources/ui/main_menu/main_menu.gd" id="1_s3cxe"]
 [ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="2_5fdgu"]
 [ext_resource type="PackedScene" uid="uid://cupbrbut83ok" path="res://sources/ui/lobby/lobby.tscn" id="3_2o1m7"]
+[ext_resource type="Texture2D" uid="uid://dqpsjsoqe157c" path="res://sources/characters/player/splatter.png" id="3_vgog7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cwpct"]
 content_margin_top = 25.0
@@ -16,6 +17,30 @@ grow_vertical = 2
 theme = ExtResource("2_5fdgu")
 script = ExtResource("1_s3cxe")
 
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+modulate = Color(0.69974, 0.839205, 0.526743, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = -790.0
+offset_right = 813.0
+offset_bottom = 118.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.36834
+scale = Vector2(0.616886, 0.638706)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_vgog7")
+stretch_mode = 3
+
 [node name="Title" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -27,7 +52,7 @@ text = "SquidBrawl"
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 8
 theme_override_constants/separation = 10
 
 [node name="PlayGameButton" type="Button" parent="VBoxContainer"]
@@ -62,9 +87,14 @@ layout_mode = 2
 text = "Quit
 "
 
+[node name="Placeholder2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
 [node name="Lobby" parent="." instance=ExtResource("3_2o1m7")]
 visible = false
 layout_mode = 2
 
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="leave_lobby" from="Lobby" to="." method="_on_lobby_exited"]
 [connection signal="start_game" from="Lobby" to="." method="_on_lobby_start_game"]

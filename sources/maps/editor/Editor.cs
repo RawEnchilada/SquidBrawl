@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
+using System.Data;
 
 
 namespace Terrain;
 
 
-[Tool]
 public partial class Editor : Node3D
 {
     const string mapsFolder = "./maps/";
@@ -18,26 +18,20 @@ public partial class Editor : Node3D
     [Export]
     bool save = false;
 
-    CsgCombiner3D csgCombiner;
+    Node3D meshContainer;
     Node3D materialAreas;
     Node3D spawnAreas;
     
 	public override void _Ready()
 	{
-        csgCombiner = GetNode<CsgCombiner3D>("CSGCombiner");
+        meshContainer = GetNode<Node3D>("Mesh");
         materialAreas = GetNode<Node3D>("MaterialAreas");
         spawnAreas = GetNode<Node3D>("SpawnAreas");
-    }
-    public override void _Process(double delta)
-    {
         if (save)
         {
-            csgCombiner = GetNode<CsgCombiner3D>("CSGCombiner");
-            materialAreas = GetNode<Node3D>("MaterialAreas");
-            spawnAreas = GetNode<Node3D>("SpawnAreas");
-            save = false;
-            SaveMapAs(GetValueField(), GetMaterialAreas(), GetSpawnAreas(), mapName);
+            SaveMapAs(GetValueFieldFromMesh(), GetMaterialAreas(), GetSpawnAreas(), mapName);
         }
+        GetTree().Quit();
     }
 
     public static void SaveMapAs(float[,,] terrainTensor, List<MaterialArea> materialAreas, List<SpawnArea> spawnAreas, string mapname)
@@ -65,6 +59,12 @@ public partial class Editor : Node3D
             {"spawnAreas", spawnAreasSerialized}
         };
         GD.Print("Serialized "+materialAreas.Count+" material areas and "+spawnAreas.Count+" spawn areas to "+mapname+".map");
+
+        if(terrainTensor.GetLength(0) % Map.CHUNK_SIZE > 0 || terrainTensor.GetLength(1) % Map.CHUNK_SIZE > 0 || terrainTensor.GetLength(2) % Map.CHUNK_SIZE > 0){
+            GD.Print("Field dimensions are not divisible by "+Map.CHUNK_SIZE+", aborted saving.");
+            return;
+        }
+
         var solid_count = 0;
         for (int x = 0; x < terrainTensor.GetLength(0); x++)
         {
@@ -81,10 +81,10 @@ public partial class Editor : Node3D
         }
         if (solid_count == 0)
         {
-            GD.Print("Field is empty, aborted saving.");
+            GD.Print("Field is empty, aborted saving. Do you have a static collision shape in the scene?");
             return;
         }else{
-            GD.Print("Field is looking good, it has "+solid_count+" solid points.");
+            GD.Print("Field is looking good with "+solid_count+" solid points.");
         }
         var options = new JsonSerializerOptions();
         options.Converters.Add(new Float3DSerializer());
@@ -121,57 +121,64 @@ public partial class Editor : Node3D
         return areas;
     }
 
-    private float[,,] GetValueField(){
-        // Get all CSG meshes and their transforms
-        var csgMeshes = csgCombiner.GetChildren();
-        
-        // Calculate combined bounding box
-        var aabb = csgCombiner.GetAabb();
+    private float[,,] GetValueFieldFromMesh(){
+        var meshinstance = meshContainer.GetChild<MeshInstance3D>(0);
+        var mesh = meshinstance.Mesh;
+        if (mesh is not ArrayMesh){
+            GD.PrintErr("Mesh is not an ArrayMesh, please convert it first.");
+        }
+        var aabb = mesh.GetAabb();
+        var startingPosition = meshinstance.GlobalPosition + aabb.Position;
+        if(startingPosition.X < 0 || startingPosition.Y < 0 || startingPosition.Z < 0){
+            GD.PrintErr("Bounding box has negative points, please move your MeshInstance to positive coordinates: "+startingPosition);
+        }
 
-        // Create 3D array based on bounding box dimensions
         int sizeX = (int)Mathf.Ceil(aabb.Size.X / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
         int sizeY = (int)Mathf.Ceil(aabb.Size.Y / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
         int sizeZ = (int)Mathf.Ceil(aabb.Size.Z / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
         float[,,] valueField = new float[sizeX, sizeY, sizeZ];
 
-        // Check each point in 3D grid
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
             {
                 for (int z = 0; z < sizeZ; z++)
                 {
-                    Vector3 point = aabb.Position + new Vector3(x, y, z);
-                    bool inside = false;
+                    Vector3 point = startingPosition + new Vector3(x, y, z);
+                    bool inside = IsPointInsideConcave(point);
 
-                    foreach (CsgShape3D csgmesh in csgMeshes.Select(v => (CsgShape3D)v))
-                    {
-                        if(csgmesh is MapSolidShapeInterface solid)
-                        {
-                            inside = solid.IsPointInside(point);
-                            break;
-                        } else {
-                            var elements = csgmesh.GetMeshes();
-                            Vector3 localPoint = ((Transform3D)elements[0]).AffineInverse() * point;
-                            var mesh = (Mesh)elements[1];
-                            var aabbMesh = mesh.GetAabb();
-                            if (localPoint.X >= aabbMesh.Position.X && localPoint.X <= aabbMesh.Position.X + aabbMesh.Size.X &&
-                                localPoint.Y >= aabbMesh.Position.Y && localPoint.Y <= aabbMesh.Position.Y + aabbMesh.Size.Y &&
-                                localPoint.Z >= aabbMesh.Position.Z && localPoint.Z <= aabbMesh.Position.Z + aabbMesh.Size.Z)
-                            {
-                                inside = true;
-                                break;
-                            }
-                        }
-                        
-                    }
-
-                    valueField[x, y, z] = inside ? 1.0f : 0.0f;
+                    valueField[x, y, z] = inside ? 1.0f : -1.0f;
                 }
             }
         }
-
         return valueField;
+    }
+
+
+    public bool IsPointInsideConcave(Vector3 point)
+    {
+        var spaceState = GetWorld3D().DirectSpaceState;
+        var query = new PhysicsRayQueryParameters3D
+        {
+            From = point,
+            To = Vector3.Up * 1000,
+            HitFromInside = true
+        };
+        var result = spaceState.IntersectRay(query);
+        if (result != null && result.ContainsKey("normal"))
+        {
+            Vector3 normal = (Vector3)result["normal"];
+
+            // The normal will be Vector3.Zero in case of a collision from inside.
+            if (normal.IsEqualApprox(Vector3.Zero))
+            {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 

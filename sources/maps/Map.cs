@@ -7,7 +7,7 @@ namespace Terrain;
 
 public partial class Map : Node3D
 {
-
+    const bool DEBUG_MATERIALS = true;
     const string mapsFolder = "./maps/";
 
     public Vector3 chunks = new(8, 6, 8);
@@ -20,6 +20,7 @@ public partial class Map : Node3D
     private Node3D terrain;
     private StaticBody3D staticBody;
     private Node3D spawnAreas;
+    private Node3D shark;
 
     private static readonly Material DefaultMaterial = new StandardMaterial3D();
 
@@ -28,6 +29,7 @@ public partial class Map : Node3D
         terrain = GetNode<Node3D>("Terrain");
         staticBody = GetNode<StaticBody3D>("StaticBody3D");
         spawnAreas = GetNode<Node3D>("SpawnAreas");
+        shark = GetNode<Node3D>("Shark");
     }
 
     public Vector3 GetSpawnPoint(int id)
@@ -43,7 +45,7 @@ public partial class Map : Node3D
 
             var options = new JsonSerializerOptions();
             options.Converters.Add(new Float3DSerializer());
-            options.Converters.Add(new Vector3DSerializer()); // You'll need to implement this
+            options.Converters.Add(new Vector3DSerializer());
 
             var root_dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(data, options);
 
@@ -82,7 +84,7 @@ public partial class Map : Node3D
 
 
 
-    public void CreateFromTensor(float[,,] terrainTensor, List<MaterialArea> materialAreas)
+    private void CreateFromTensor(float[,,] terrainTensor, List<MaterialArea> materialAreas)
     {
         // Calculate chunks from tensor dimensions
         chunks = new Vector3(
@@ -90,18 +92,13 @@ public partial class Map : Node3D
             terrainTensor.GetLength(1) / CHUNK_SIZE,
             terrainTensor.GetLength(2) / CHUNK_SIZE
         );
+        shark.Set("radius", Math.Max(chunks.X * CHUNK_SIZE, chunks.Z * CHUNK_SIZE) / 2.0f + 5.0f);
         this.materialAreas = materialAreas;
 
         Vector3 center = new(chunks.X * CHUNK_SIZE / 2, 0, chunks.Z * CHUNK_SIZE / 2);
         terrain.GlobalPosition = -center;
         staticBody.GlobalPosition = -center;
-        spawnAreas.GlobalPosition = -center;
-
-        GenerateFromTensor(terrainTensor);
-    }
-
-    private void GenerateFromTensor(float[,,] terrainTensor)
-    {
+        spawnAreas.GlobalPosition = -center; 
         chunkData.Clear();
         
         for (int x = 0; x < chunks.X; x++)
@@ -125,10 +122,12 @@ public partial class Map : Node3D
                 }
             }
         }
+        GD.Print("Created "+chunkData.Count+" chunks.");
     }
 
     private float[,,] ExtractChunkFromTensor(float[,,] sourceTensor, Vector3 chunkPos)
     {
+        var maxSize = chunks * CHUNK_SIZE;
         float[,,] chunkData = new float[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
         
         int xStart = (int)chunkPos.X * CHUNK_SIZE;
@@ -141,11 +140,17 @@ public partial class Map : Node3D
             {
                 for (int z = 0; z < CHUNK_SIZE; z++)
                 {
-                    chunkData[x, y, z] = sourceTensor[
-                        xStart + x,
-                        yStart + y,
-                        zStart + z
-                    ];
+                    if(xStart + x == 0 || yStart + y == 0 || zStart + z == 0 || xStart + x == maxSize.X - 1 || yStart + y == maxSize.Y - 1 || zStart + z == maxSize.Z - 1)
+                    {
+                        chunkData[x, y, z] = -1.0f;
+                        continue;
+                    }else{
+                        chunkData[x, y, z] = sourceTensor[
+                            xStart + x,
+                            yStart + y,
+                            zStart + z
+                        ];
+                    }
                 }
             }
         }
@@ -163,16 +168,25 @@ public partial class Map : Node3D
 
     private Material GetMaterialForChunk(Vector3 chunkCenter)
     {
-        foreach (var area in materialAreas)
-        {
-            if (chunkCenter.X >= area.Position.X && chunkCenter.X <= area.Position.X + area.Size.X &&
-                chunkCenter.Z >= area.Position.Z && chunkCenter.Z <= area.Position.Z + area.Size.Z &&
-                chunkCenter.Y >= area.Position.Y && chunkCenter.Y <= area.Position.Y + area.Size.Y)
+        if(DEBUG_MATERIALS){
+            var maxSize = chunks * CHUNK_SIZE;
+            var material = new StandardMaterial3D
             {
-                return ResourceLoader.Load<Material>(area.apply_material);
+                AlbedoColor = new Color(chunkCenter.X/maxSize.X, chunkCenter.Y/maxSize.Y, chunkCenter.Z/maxSize.Z)
+            };
+            return material;
+        }else{
+            foreach (var area in materialAreas)
+            {
+                if (chunkCenter.X >= area.Position.X && chunkCenter.X <= area.Position.X + area.Size.X &&
+                    chunkCenter.Z >= area.Position.Z && chunkCenter.Z <= area.Position.Z + area.Size.Z &&
+                    chunkCenter.Y >= area.Position.Y && chunkCenter.Y <= area.Position.Y + area.Size.Y)
+                {
+                    return ResourceLoader.Load<Material>(area.apply_material);
+                }
             }
+            return DefaultMaterial;
         }
-        return DefaultMaterial;
     }
 
     private Dictionary<string, Node3D> AddMeshAndCollision(ArrayMesh mesh, Vector3 chunkPos)

@@ -54,7 +54,7 @@ transform = Transform3D(1, -4.42815e-17, -3.60047e-18, 4.42815e-17, 0.979913, 0.
 surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")
 
 [node name="HeadWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1"]
-transform = Transform3D(1, 7.10543e-14, -2.38419e-07, 2.31095e-07, 0.245953, 0.969282, 5.86399e-08, -0.969282, 0.245953, -2.02945e-16, 2.22839, -0.218554)
+transform = Transform3D(1, 4.9738e-14, -2.38419e-07, 2.31077e-07, 0.246247, 0.969207, 5.87098e-08, -0.969207, 0.246247, -2.02945e-16, 2.22839, -0.218554)
 bone_name = "Bone.001"
 bone_idx = 1
 script = ExtResource("2_pxxjo")

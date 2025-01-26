@@ -15,6 +15,6 @@ func spawn_squid()->void:
 	squid_instance.global_rotate(random_rotation, randf()*2*PI)
 	squid_instance.apply_central_impulse(Vector3(randf()*0.4-0.25,randf()*0.5+0.5,-1)*20)
 
-func _physics_process(delta: float) -> void:
-	if get_child_count() < 10:
+func _physics_process(_delta: float) -> void:
+	if get_child_count() < 10 and not is_queued_for_deletion():
 		spawn_squid()

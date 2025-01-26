@@ -10,6 +10,7 @@ func _ready():
     back_to_menu_button.connect("pressed",Callable(self,"_on_back_to_menu_button_pressed"))
     settings_button.connect("pressed",Callable(self,"_on_settings_button_pressed"))
     quit_button.connect("pressed",Callable(self,"_on_quit_button_pressed"))
+    $Control/TextureRect.modulate = Settings.user_color
 
 func _on_settings_button_pressed():
     var settings = SETTINGS_SCENE.instantiate()

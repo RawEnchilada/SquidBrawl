@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://khg45re5xoun"]
+[gd_scene load_steps=8 format=3 uid="uid://khg45re5xoun"]
 
 [ext_resource type="Environment" uid="uid://cffnl6ivrng35" path="res://sources/shaders/camera_environment.tres" id="1_0gv7n"]
 [ext_resource type="Script" path="res://sources/maps/Map.cs" id="1_yagin"]
+[ext_resource type="PackedScene" uid="uid://sgntfo7wkch6" path="res://sources/maps/shark.tscn" id="3_7gxwa"]
 
 [sub_resource type="Shader" id="Shader_cwm2x"]
 code = "shader_type spatial;
@@ -140,3 +141,5 @@ environment = ExtResource("1_0gv7n")
 fov = 90.0
 
 [node name="SpawnAreas" type="Node3D" parent="."]
+
+[node name="Shark" parent="." instance=ExtResource("3_7gxwa")]

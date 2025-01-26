@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d25hwl0a848au"]
+[gd_scene load_steps=4 format=3 uid="uid://d25hwl0a848au"]
 
 [ext_resource type="Theme" uid="uid://bxjb6x8f4oty5" path="res://sources/ui/theme/ui_theme.tres" id="1_k0arf"]
 [ext_resource type="Script" path="res://sources/ui/ingame_menu/ingame_menu.gd" id="1_uu18d"]
+[ext_resource type="Texture2D" uid="uid://dqpsjsoqe157c" path="res://sources/characters/player/splatter.png" id="3_csx4b"]
 
 [node name="IngameMenu" type="MarginContainer"]
 anchors_preset = 15
@@ -12,9 +13,29 @@ grow_vertical = 2
 theme = ExtResource("1_k0arf")
 script = ExtResource("1_uu18d")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Control" type="Control" parent="."]
 layout_mode = 2
-color = Color(0, 0, 0, 0.392157)
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+modulate = Color(0.69974, 0.839205, 0.526743, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 876.0
+offset_top = -284.0
+offset_right = 1875.0
+offset_bottom = 624.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 2.01154
+scale = Vector2(1.31439, 1.431)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_csx4b")
+stretch_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -23,13 +44,19 @@ size_flags_vertical = 4
 
 [node name="SettingsButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/outline_size = 5
 text = "Settings"
+flat = true
 
 [node name="BackToMenuButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/outline_size = 5
 text = "Back To Menu"
+flat = true
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/outline_size = 5
 text = "Quit
 "
+flat = true
