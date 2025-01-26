@@ -104,6 +104,7 @@ stream = ExtResource("6_12nmd")
 attenuation_model = 3
 volume_db = -7.5
 pitch_scale = 1.6
+bus = &"Effects"
 
 [connection signal="weapon_equipped" from="." to="CameraBase/CameraPivot/InteractArea" method="on_weapon_equipped"]
 [connection signal="area_entered" from="DeathArea" to="." method="_on_death_area_area_entered"]

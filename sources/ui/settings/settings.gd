@@ -5,7 +5,7 @@ extends MarginContainer
 @onready var player_color_picker = $VBoxContainer/PlayerColor/ColorPicker
 @onready var mouse_sensitivity_slider = $VBoxContainer/MouseSensitivity/HSlider
 @onready var audio_level_slider = $VBoxContainer/SoundLevel/HSlider
-@onready var music_level_slider = $VBoxContainer/MusicSoundLevel/HSlider
+@onready var music_level_slider = $VBoxContainer/MusicLevel/HSlider
 
 var previous_ui_scene:Node = null
 
@@ -30,7 +30,7 @@ func _on_mouse_sensitivity_slider_value_changed(new_value):
 	Settings.save_settings()
 	
 func _on_volume_slider_value_changed(value:float):
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Effects"), linear_to_db(value))
 	Settings.sound_level = value
 	Settings.save_settings()
 

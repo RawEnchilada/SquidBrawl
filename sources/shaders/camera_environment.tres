@@ -17,3 +17,8 @@ sky_material = SubResource("ProceduralSkyMaterial_r58b2")
 [resource]
 background_mode = 2
 sky = SubResource("Sky_fwimp")
+fog_light_color = Color(0.841625, 0.857706, 0.882981, 1)
+fog_sun_scatter = 0.11
+fog_density = 0.002
+fog_aerial_perspective = 0.577
+fog_height = -173.38

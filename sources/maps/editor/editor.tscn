@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://ctb51unhrb4fc"]
+[gd_scene load_steps=37 format=3 uid="uid://ctb51unhrb4fc"]
 
 [ext_resource type="Script" path="res://sources/maps/editor/Editor.cs" id="1_ik7hp"]
 [ext_resource type="ArrayMesh" uid="uid://c0hl73pnxsm2l" path="res://maps/test_tower.obj" id="2_0if38"]
@@ -85,6 +85,10 @@ points = PackedVector3Array(-1.3218, 6.5595, 1.5918, -1.92874, 6.3166, -1.4432, 
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_d0dia"]
 points = PackedVector3Array(1.4704, 7.04473, -1.07898, -1.2208, 4.84846, -1.2207, -1.3783, 6.4449, -1.50461, -1.3783, 6.4449, 1.65321, 1.22055, 4.74774, 1.2207, 1.22055, 7.76406, 1.2207, 1.55253, 5.1637, -1.53247, -1.2208, 7.66334, -1.2207, 1.5929, 6.58564, 1.72495, -1.2208, 4.84846, 1.14414, -1.2208, 7.66334, 1.14414, 1.14408, 7.66345, -1.2208, 1.54502, 4.6576, -0.245235, 1.14408, 4.84835, -1.2208, 1.4704, 4.7387, -0.835962, 1.4704, 6.55904, -1.32169, 1.45602, 7.0366, -1.18706)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d2j11"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.105882)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_myprw"]
 transparency = 1
@@ -288,8 +292,12 @@ shape = SubResource("ConvexPolygonShape3D_pku3b")
 [node name="CollisionShape3D27" type="CollisionShape3D" parent="Mesh/MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_d0dia")
 
+[node name="AABB" type="CSGBox3D" parent="Mesh/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.679688, 5.05603, 0.850525)
+size = Vector3(5.93359, 9.35767, 8.73621)
+material = SubResource("StandardMaterial3D_d2j11")
+
 [node name="MaterialAreas" type="Node3D" parent="."]
-visible = false
 
 [node name="MaterialArea" parent="MaterialAreas" instance=ExtResource("3_7h756")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.68, 13.1152, 18.8517)

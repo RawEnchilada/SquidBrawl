@@ -123,12 +123,13 @@ public partial class Editor : Node3D
 
     private float[,,] GetValueFieldFromMesh(){
         var meshinstance = meshContainer.GetChild<MeshInstance3D>(0);
+        var aabbnode = meshContainer.GetNode<CsgBox3D>("AABB");
+        var aabb = aabbnode.GetAabb();
         var mesh = meshinstance.Mesh;
         if (mesh is not ArrayMesh){
             GD.PrintErr("Mesh is not an ArrayMesh, please convert it first.");
         }
-        var aabb = mesh.GetAabb();
-        var startingPosition = meshinstance.GlobalPosition + aabb.Position;
+        var startingPosition = aabbnode.GlobalPosition + aabb.Position;
         if(startingPosition.X < 0 || startingPosition.Y < 0 || startingPosition.Z < 0){
             GD.PrintErr("Bounding box has negative points, please move your MeshInstance to positive coordinates: "+startingPosition);
         }
