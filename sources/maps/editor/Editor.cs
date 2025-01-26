@@ -122,21 +122,18 @@ public partial class Editor : Node3D
     }
 
     private float[,,] GetValueFieldFromMesh(){
-        var meshinstance = meshContainer.GetChild<MeshInstance3D>(0);
-        var aabbnode = meshContainer.GetNode<CsgBox3D>("AABB");
-        var aabb = aabbnode.GetAabb();
-        var mesh = meshinstance.Mesh;
-        if (mesh is not ArrayMesh){
-            GD.PrintErr("Mesh is not an ArrayMesh, please convert it first.");
-        }
-        var startingPosition = aabbnode.GlobalPosition + aabb.Position;
+        var aabb = meshContainer.GetNode<CsgBox3D>("AABB");
+        var startingPosition = aabb.Position - aabb.Size/2.0f;
+        var endPosition = aabb.Position + aabb.Size / 2.0f;
+        var size = endPosition - startingPosition;
+        GD.Print("Bounding box is from "+aabb.Position + " to "+endPosition);
         if(startingPosition.X < 0 || startingPosition.Y < 0 || startingPosition.Z < 0){
-            GD.PrintErr("Bounding box has negative points, please move your MeshInstance to positive coordinates: "+startingPosition);
+            GD.PrintErr("Bounding box has negative points, please move your MeshInstance to positive coordinates!");
         }
 
-        int sizeX = (int)Mathf.Ceil(aabb.Size.X / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
-        int sizeY = (int)Mathf.Ceil(aabb.Size.Y / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
-        int sizeZ = (int)Mathf.Ceil(aabb.Size.Z / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
+        int sizeX = (int)Mathf.Ceil(size.X / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
+        int sizeY = (int)Mathf.Ceil(size.Y / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
+        int sizeZ = (int)Mathf.Ceil(size.Z / Map.CHUNK_SIZE+1) * Map.CHUNK_SIZE;
         float[,,] valueField = new float[sizeX, sizeY, sizeZ];
 
         for (int x = 0; x < sizeX; x++)
@@ -146,7 +143,7 @@ public partial class Editor : Node3D
                 for (int z = 0; z < sizeZ; z++)
                 {
                     Vector3 point = startingPosition + new Vector3(x, y, z);
-                    bool inside = IsPointInsideConcave(point);
+                    bool inside = IsPointInsideConvex(point);
 
                     valueField[x, y, z] = inside ? 1.0f : -1.0f;
                 }
@@ -156,7 +153,7 @@ public partial class Editor : Node3D
     }
 
 
-    public bool IsPointInsideConcave(Vector3 point)
+    public bool IsPointInsideConvex(Vector3 point)
     {
         var spaceState = GetWorld3D().DirectSpaceState;
         var query = new PhysicsRayQueryParameters3D

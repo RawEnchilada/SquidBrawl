@@ -12,7 +12,7 @@ public partial class Map : Node3D
 
     public Vector3 chunks = new(8, 6, 8);
 
-    public const int CHUNK_SIZE = 12;
+    public const int CHUNK_SIZE = 12; // How big a chunk is in Godot units. For example, a CHUNK_SIZE of 12 means a chunk top corner is at 12,12,12.
 
     private List<Dictionary<string, object>> chunkData = new();
     private List<MaterialArea> materialAreas = new();
