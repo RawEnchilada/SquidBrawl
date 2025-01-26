@@ -11,6 +11,8 @@ var ip_address = "127.0.0.1"
 @export
 var sound_level = 0.5
 @export
+var music_level = 0.5
+@export
 var map_name = "default"
 @export
 var weapon_type = Enums.WeaponType.BAZOOKA
@@ -24,7 +26,7 @@ func _exit_tree():
 
 func save_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.WRITE)
-	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\", \"ip_address\":\"%s\", \"sound_level\":%s}" % [str(mouse_sensitivity), user_color.to_html(), user_name, ip_address, str(sound_level)])
+	file.store_string("{\"mouse_sensitivity\":%s, \"user_color\":\"%s\", \"user_name\":\"%s\", \"ip_address\":\"%s\", \"sound_level\":%s, \"music_level\":%s}" % [str(mouse_sensitivity), user_color.to_html(), user_name, ip_address, str(sound_level), str(music_level)])
 
 func load_settings():
 	var file = FileAccess.open("user://save_game.dat", FileAccess.READ)
@@ -41,3 +43,5 @@ func load_settings():
 		ip_address = json["ip_address"]
 	if json.has("sound_level"):
 		sound_level = json["sound_level"]
+	if json.has("music_level"):
+		music_level = json["music_level"]

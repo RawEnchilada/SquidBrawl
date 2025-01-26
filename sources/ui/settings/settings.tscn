@@ -76,7 +76,7 @@ theme_override_constants/separation = 40
 
 [node name="Label" type="Label" parent="VBoxContainer/SoundLevel"]
 layout_mode = 2
-text = "Volume"
+text = "Effects Volume"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/SoundLevel"]
 custom_minimum_size = Vector2(0, 60)
@@ -84,6 +84,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+value = 0.5
+
+[node name="MusicLevel" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="VBoxContainer/MusicLevel"]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/MusicLevel"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 0.5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -97,4 +115,5 @@ text = "Back"
 [connection signal="color_changed" from="VBoxContainer/PlayerColor/ColorPicker" to="." method="_on_player_color_picker_color_changed"]
 [connection signal="value_changed" from="VBoxContainer/MouseSensitivity/HSlider" to="." method="_on_mouse_sensitivity_slider_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/SoundLevel/HSlider" to="." method="_on_volume_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/MusicLevel/HSlider" to="." method="_on_music_slider_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_back_button_pressed"]

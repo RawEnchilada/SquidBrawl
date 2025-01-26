@@ -43,6 +43,7 @@ folder_colors={
 "res://sources/game/": "gray",
 "res://sources/interactables/": "yellow",
 "res://sources/maps/": "purple",
+"res://sources/music/": "teal",
 "res://sources/relic/": "orange",
 "res://sources/shaders/": "red",
 "res://sources/skills/": "orange",

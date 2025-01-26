@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bohooet24ltyw"]
+[gd_scene load_steps=4 format=3 uid="uid://bohooet24ltyw"]
 
 [ext_resource type="PackedScene" uid="uid://ca4drbyl78ic4" path="res://sources/ui/main_menu/main_menu.tscn" id="2_8wfkb"]
 [ext_resource type="PackedScene" uid="uid://cbm23xsrihklr" path="res://sources/maps/menu_island/menu_island.tscn" id="2_knbuh"]
+[ext_resource type="AudioStream" uid="uid://dnv7wsxv0pq08" path="res://sources/music/Bright Fun World Instrumental Beat Caribbean by Zambolino.mp3" id="3_jqvi1"]
 
 [node name="Main" type="Node3D"]
 
@@ -10,3 +11,10 @@
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" parent="CanvasLayer" instance=ExtResource("2_8wfkb")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_jqvi1")
+volume_db = -20.0
+autoplay = true
+bus = &"Music"
+parameters/looping = true
