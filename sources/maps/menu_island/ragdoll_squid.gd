@@ -11,7 +11,7 @@ var color: Color = Color(1.0,1.0,1.0,1.0)
 func _physics_process(_delta: float) -> void:
 	if(global_position.y < -10):
 		queue_free()
-        
+		
 
 func set_color(c: Color)->void:
 	color = c

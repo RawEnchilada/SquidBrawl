@@ -34,7 +34,8 @@ func _ready():
 func _physics_process(delta):
 	_force += Vector3.UP * gravity * 0.2
 	var collision = move_and_collide(_force * delta)
-	if(collision && ((collision.get_collider() is Player && collision.get_collider().id != ignore_player) || collision.get_collider() is StaticBody3D)):
+	look_at(global_position + _force.normalized(), Vector3.UP)
+	if(collision && ((collision.get_collider() is Player && collision.get_collider().id != ignore_player) || collision.get_collider() is not Player)):
 		if bounce > 0:
 			bounce -= 1
 			_force = _force - 1.5 * _force.dot(collision.get_normal()) * collision.get_normal()
@@ -54,14 +55,17 @@ func _physics_process(delta):
 			queue_free()
 		else:
 			var bodies = explosion_area.get_overlapping_bodies()
-			for player in bodies:
-				var distance = player.global_position.distance_to(global_position)
+			for body in bodies:
+				var distance = body.global_position.distance_to(global_position)
 				var impulse_distance_falloff = 2.0 - min(distance / explosion_radius, 1.0)
-				var impulse = ((player.global_position+Vector3.UP)-global_position).normalized() * impulse_distance_falloff * explosion_strength
-				if(player.id == owner_id):
-					player.rpc_id(player.id,"apply_impulse_remote",impulse)
-				else:
-					player.rpc_id(player.id,"apply_impulse_remote",impulse*2.0)
+				var impulse = ((body.global_position+Vector3.UP)-global_position).normalized() * impulse_distance_falloff * explosion_strength
+				if body is Player:
+					if(body.id == owner_id):
+						body.rpc_id(body.id,"apply_impulse_remote",impulse)
+					else:
+						body.rpc_id(body.id,"apply_impulse_remote",impulse*2.0)
+				elif body is FloatableBody3D:
+					body.apply_impulse(impulse*2.0)
 			GameManager.game_in_progress.rpc("create_explosion_at_remote",global_position,explosion_radius)
 			queue_free()
 	elif(global_position.length() > 1000.0):

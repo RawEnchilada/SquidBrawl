@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dtip3s4d44i5b"]
 
-[ext_resource type="PackedScene" uid="uid://bnx88th7kphdj" path="res://sources/characters/player/player_model.tscn" id="2_1abou"]
 [ext_resource type="Script" path="res://sources/maps/menu_island/ragdoll_squid.gd" id="2_c3cbd"]
+[ext_resource type="PackedScene" uid="uid://dhear4tiamogm" path="res://sources/maps/menu_island/player_model.tscn" id="2_qa7lt"]
 [ext_resource type="AudioStream" uid="uid://dvlvjypplnxr4" path="res://sources/characters/player/squish.mp3" id="3_88wtf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eaguo"]
@@ -18,7 +18,7 @@ script = ExtResource("2_c3cbd")
 transform = Transform3D(1, 0, 0, 0, 0.999889, -0.014922, 0, 0.014922, 0.999889, 0, 0.621312, -0.0121395)
 shape = SubResource("CapsuleShape3D_eaguo")
 
-[node name="Squid" parent="." instance=ExtResource("2_1abou")]
+[node name="Squid" parent="." instance=ExtResource("2_qa7lt")]
 
 [node name="SquishAudio" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_88wtf")

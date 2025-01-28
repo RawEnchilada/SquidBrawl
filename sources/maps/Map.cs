@@ -5,12 +5,27 @@ using System.Text.Json;
 
 namespace Terrain;
 
+[Tool]
 public partial class Map : Node3D
 {
+    static List<PackedScene> clutterScenes = new(){
+        ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/box.tscn"),
+        ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/barrel.tscn"),
+        ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/planks.tscn")
+    };
     const bool DEBUG_MATERIALS = true;
     const string mapsFolder = "./maps/";
 
+    [Export]
+    public FastNoiseLite noiseMap;
+    [Export]
+    public int seed;
+    [Export]
+    public bool generate = false;
+    [Export]
     public Vector3 chunks = new(8, 6, 8);
+    [Export]
+    public int clutterCount = 25;
 
     public const int CHUNK_SIZE = 12; // How big a chunk is in Godot units. For example, a CHUNK_SIZE of 12 means a chunk top corner is at 12,12,12.
 
@@ -32,6 +47,17 @@ public partial class Map : Node3D
         shark = GetNode<Node3D>("Shark");
     }
 
+    public override void _Process(double delta)
+    {
+        if(generate){
+            generate = false;
+            terrain = GetNode<Node3D>("Terrain");
+            staticBody = GetNode<StaticBody3D>("StaticBody3D");
+            var valueField = GenerateFromNoise((int)chunks.X, (int)chunks.Y, (int)chunks.Z, seed);
+            CreateFromTensor(valueField, new List<MaterialArea>());
+        }
+    }
+
     public Vector3 GetSpawnPoint(int id)
     {
         return spawnAreas.GetChild<SpawnArea>(id % spawnAreas.GetChildCount()).GlobalPosition;
@@ -39,59 +65,69 @@ public partial class Map : Node3D
 
     public void LoadMap(string mapname)
     {
-        if (System.IO.File.Exists(mapsFolder + mapname + ".map"))
+        byte[] data = System.IO.File.ReadAllBytes(mapsFolder + mapname + ".map");
+
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new Vector3DSerializer());
+
+        var root_dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(data, options);
+
+        seed = root_dict["seed"].Deserialize<int>(options);
+        chunks = root_dict["chunks"].Deserialize<Vector3>(options);
+
+        materialAreas.Clear(); // Clear existing material areas
+        var materialAreasList = root_dict["materialAreas"].Deserialize<List<Dictionary<string, JsonElement>>>(options);
+        foreach (var dict in materialAreasList)
         {
-            byte[] data = System.IO.File.ReadAllBytes(mapsFolder + mapname + ".map");
-
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new Float3DSerializer());
-            options.Converters.Add(new Vector3DSerializer());
-
-            var root_dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(data, options);
-
-            float[,,] valueField = root_dict["valueField"].Deserialize<float[,,]>(options);
-
-            materialAreas.Clear(); // Clear existing material areas
-            var materialAreasList = root_dict["materialAreas"].Deserialize<List<Dictionary<string, JsonElement>>>(options);
-            foreach (var dict in materialAreasList)
+            MaterialArea area = new()
             {
-                MaterialArea area = new()
-                {
-                    Size = dict["size"].Deserialize<Vector3>(options),
-                    Position = dict["position"].Deserialize<Vector3>(options),
-                    apply_material = dict["apply_material"].GetString()
-                };
-                materialAreas.Add(area);
-            }
-
-            foreach (Node child in spawnAreas.GetChildren())
-            {
-                child.QueueFree();
-            }
-            var spawnAreasList = root_dict["spawnAreas"].Deserialize<List<Vector3>>(options);
-            foreach (Vector3 spawnArea in spawnAreasList)
-            {
-                SpawnArea area = new();
-                spawnAreas.AddChild(area);
-                area.GlobalPosition = spawnArea;
-            }
-            CreateFromTensor(valueField, materialAreas);
-            GD.Print("Map "+mapname+".map loaded, "+chunkData.Count+" chunks have been created.");
-        } else{
-            GD.PrintErr("Map file "+mapname+".map not found.");
+                Size = dict["size"].Deserialize<Vector3>(options),
+                Position = dict["position"].Deserialize<Vector3>(options),
+                apply_material = dict["apply_material"].GetString()
+            };
+            materialAreas.Add(area);
         }
+
+        foreach (Node child in spawnAreas.GetChildren())
+        {
+            child.QueueFree();
+        }
+        var spawnAreasList = root_dict["spawnAreas"].Deserialize<List<Vector3>>(options);
+        foreach (Vector3 spawnArea in spawnAreasList)
+        {
+            SpawnArea area = new();
+            spawnAreas.AddChild(area);
+            area.GlobalPosition = spawnArea;
+        }
+        var valueField = GenerateFromNoise((int)chunks.X, (int)chunks.Y, (int)chunks.Z, seed);
+        CreateFromTensor(valueField, materialAreas);
+    }
+
+    private float[,,] GenerateFromNoise(int cx,int cy,int cz,int _seed){
+        noiseMap.Seed = _seed;
+        float[,,] full_field = new float[cx*CHUNK_SIZE, cy*CHUNK_SIZE, cz*CHUNK_SIZE];
+        for (int x = 0; x < cx*CHUNK_SIZE; x++)
+        {
+            for (int y = 0; y < cy*CHUNK_SIZE; y++)
+            {
+                for (int z = 0; z < cz*CHUNK_SIZE; z++)
+                {
+                    var noiseValue = noiseMap.GetNoise3D(x, y, z);
+                    var modifier_x = 1.0f-MathF.Abs(x - cx*CHUNK_SIZE/2.0f)/cx*CHUNK_SIZE/2.0f;
+                    var modifier_y = 1.0f-MathF.Abs(y - cy*CHUNK_SIZE/2.0f)/cy*CHUNK_SIZE/2.0f;
+                    var modifier_z = 1.0f-MathF.Abs(z - cz*CHUNK_SIZE/2.0f)/cz*CHUNK_SIZE/2.0f;
+                    var mod = (modifier_x+modifier_y+modifier_z) - 0.5f;
+                    full_field[x,y,z] = noiseValue*mod;
+                }
+            }
+        }
+        return full_field;
     }
 
 
 
     private void CreateFromTensor(float[,,] terrainTensor, List<MaterialArea> materialAreas)
     {
-        // Calculate chunks from tensor dimensions
-        chunks = new Vector3(
-            terrainTensor.GetLength(0) / CHUNK_SIZE,
-            terrainTensor.GetLength(1) / CHUNK_SIZE,
-            terrainTensor.GetLength(2) / CHUNK_SIZE
-        );
         shark.Set("radius", Math.Max(chunks.X * CHUNK_SIZE, chunks.Z * CHUNK_SIZE) / 2.0f + 5.0f);
         this.materialAreas = materialAreas;
 
@@ -117,6 +153,7 @@ public partial class Map : Node3D
                     {
                         {"value_field", valueField},
                         {"collision", instances["collision"]},
+                        {"mesh", instances["mesh"]},
                         {"center", chunkCenter}
                     });
                 }
@@ -125,14 +162,10 @@ public partial class Map : Node3D
         GD.Print("Created "+chunkData.Count+" chunks.");
     }
 
+
     private float[,,] ExtractChunkFromTensor(float[,,] sourceTensor, Vector3 chunkPos)
     {
-        var maxSize = chunks * CHUNK_SIZE;
         float[,,] chunkData = new float[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
-        
-        int xStart = (int)chunkPos.X * CHUNK_SIZE;
-        int yStart = (int)chunkPos.Y * CHUNK_SIZE;
-        int zStart = (int)chunkPos.Z * CHUNK_SIZE;
 
         for (int x = 0; x < CHUNK_SIZE; x++)
         {
@@ -140,15 +173,17 @@ public partial class Map : Node3D
             {
                 for (int z = 0; z < CHUNK_SIZE; z++)
                 {
-                    if(xStart + x == 0 || yStart + y == 0 || zStart + z == 0 || xStart + x == maxSize.X - 1 || yStart + y == maxSize.Y - 1 || zStart + z == maxSize.Z - 1)
+                    if (chunkPos.X == 0 && x == 0 || chunkPos.X == chunks.X - 1 && x == CHUNK_SIZE - 1 ||
+                        chunkPos.Y == 0 && y == 0 || chunkPos.Y == chunks.Y - 1 && y == CHUNK_SIZE - 1 ||
+                        chunkPos.Z == 0 && z == 0 || chunkPos.Z == chunks.Z - 1 && z == CHUNK_SIZE - 1)
                     {
                         chunkData[x, y, z] = -1.0f;
                         continue;
                     }else{
                         chunkData[x, y, z] = sourceTensor[
-                            xStart + x,
-                            yStart + y,
-                            zStart + z
+                            (int)(chunkPos.X * (CHUNK_SIZE - 1) + x),
+                            (int)(chunkPos.Y * (CHUNK_SIZE - 1) + y),
+                            (int)(chunkPos.Z * (CHUNK_SIZE - 1) + z)
                         ];
                     }
                 }
@@ -158,9 +193,9 @@ public partial class Map : Node3D
     }
 
 
-    private ArrayMesh CreateMarchedMesh(float[,,] tensor, Vector3 chunkCenter)
+    private ArrayMesh CreateMarchedMesh(float[,,] chunktensor, Vector3 chunkCenter)
     {
-        SurfaceTool st = MarchingCubes.ApplyMarchingCubes(tensor, CHUNK_SIZE);
+        SurfaceTool st = MarchingCubes.ApplyMarchingCubes(chunktensor, CHUNK_SIZE);
         st.SetMaterial(GetMaterialForChunk(chunkCenter));
         ArrayMesh mesh = st.Commit();
         return mesh;
@@ -265,6 +300,18 @@ public partial class Map : Node3D
             var instances = AddMeshAndCollision(mesh, chunkPos);
             chunk["mesh"] = instances["mesh"];
             chunk["collision"] = instances["collision"];
+        }
+    }
+
+    private void LoadClutter(int count,Node parent = null){
+        Vector3 spawnpoint = new Vector3(0.0f,(chunks.Y+1)*CHUNK_SIZE,0.0f);
+        var random = new RandomNumberGenerator();
+        for(int i = 0; i < count; i++){
+            int index = random.RandiRange(0,clutterScenes.Count-1);
+            Node3D clutter = clutterScenes[index].Instantiate() as Node3D;
+            parent.AddChild(clutter);
+            clutter.Position = spawnpoint;
+            spawnpoint += new Vector3(0.0f,1.0f,0.0f);
         }
     }
 }

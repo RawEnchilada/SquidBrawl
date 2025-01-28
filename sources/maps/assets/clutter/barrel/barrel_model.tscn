@@ -1,0 +1,36 @@
+[gd_scene load_steps=12 format=3 uid="uid://bvc5vh4e1ac3x"]
+
+[ext_resource type="PackedScene" uid="uid://didapedph8jtr" path="res://sources/maps/assets/clutter/barrel/hordo.glb" id="1_xi2w8"]
+[ext_resource type="Texture2D" uid="uid://cjj3b62k6oot3" path="res://sources/maps/assets/clutter/barrel/Hordo_Material_Albedo.png" id="2_oys4d"]
+[ext_resource type="Texture2D" uid="uid://cfimx7t65hrs5" path="res://sources/maps/assets/clutter/barrel/Hordo_Material_Metalness.png" id="3_1mmhg"]
+[ext_resource type="Texture2D" uid="uid://281y2r4r117b" path="res://sources/maps/assets/clutter/barrel/Hordo_Material_Normal.png" id="4_wqifl"]
+[ext_resource type="Texture2D" uid="uid://cqemcffla0rji" path="res://sources/maps/assets/clutter/barrel/Hordo_Material_Roughness.png" id="5_fyfdg"]
+[ext_resource type="Texture2D" uid="uid://rxua1ediv5hu" path="res://sources/maps/assets/clutter/barrel/Hordo_Material.001_Albedo.png" id="6_6pn02"]
+[ext_resource type="Texture2D" uid="uid://b3cnaiq1syaty" path="res://sources/maps/assets/clutter/barrel/Hordo_Material.001_Metalness.png" id="7_qkluq"]
+[ext_resource type="Texture2D" uid="uid://cs2i30ak2rqb8" path="res://sources/maps/assets/clutter/barrel/Hordo_Material.001_Normal.png" id="8_4viq4"]
+[ext_resource type="Texture2D" uid="uid://juk0vvxkcu1j" path="res://sources/maps/assets/clutter/barrel/Hordo_Material.001_Roughness.png" id="9_n7h8k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0kric"]
+albedo_texture = ExtResource("2_oys4d")
+metallic = 1.0
+metallic_texture = ExtResource("3_1mmhg")
+roughness_texture = ExtResource("5_fyfdg")
+normal_enabled = true
+normal_texture = ExtResource("4_wqifl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hunbv"]
+albedo_texture = ExtResource("6_6pn02")
+metallic = 1.0
+metallic_texture = ExtResource("7_qkluq")
+roughness_texture = ExtResource("9_n7h8k")
+normal_enabled = true
+normal_texture = ExtResource("8_4viq4")
+
+[node name="hordo" instance=ExtResource("1_xi2w8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.179, 0, 0)
+
+[node name="Cylinder_001" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_0kric")
+
+[node name="Cylinder_002" parent="." index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_hunbv")

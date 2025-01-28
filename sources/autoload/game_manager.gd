@@ -26,7 +26,7 @@ func host_game():
 		return
 	multiplayer.multiplayer_peer = peer
 	local_id = multiplayer.get_unique_id()
-	add_player_data(local_id,Settings.user_name,Settings.user_color,Settings.weapon_type)
+	add_player_data(local_id,Settings.user_name,Settings.user_color,Enums.WeaponType.BAZOOKA)
 	peer.connect("peer_connected",Callable(self,"on_client_connected"))
 	peer.connect("peer_disconnected",Callable(self,"remove_player"))
 
@@ -45,7 +45,7 @@ func on_client_connected(peer_id:int):
 
 @rpc
 func client_send_user_data():
-	rpc_id(HOST_ID, "host_receive_user_data", local_id, Settings.user_name, Settings.user_color, Settings.weapon_type)
+	rpc_id(HOST_ID, "host_receive_user_data", local_id, Settings.user_name, Settings.user_color, Enums.WeaponType.BAZOOKA)
 
 @rpc("any_peer")
 func host_receive_user_data(peer_id:int, player_name:String, player_color:Color, weapon_type:Enums.WeaponType):
@@ -118,6 +118,20 @@ func init_game(map_name:String):
 		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE),data["weapon_type"])
 	game_ended = false
 	paused = false
+	game_in_progress.start()
+
+func create_weapon_in_game(weapontype:Enums.WeaponType, pos:Vector3 = Vector3.ZERO) -> BaseWeapon:
+	if game_in_progress == null:
+		return
+	print_debug("creating weapon ", weapontype)
+	var base_path:String = "res://sources/interactables/weapons/"
+	var weapon:BaseWeapon = load(base_path + "bazooka.tscn").instantiate()
+	match weapontype:
+		Enums.WeaponType.MORTAR:
+			weapon = load(base_path + "mortar.tscn").instantiate()
+	game_in_progress.synced_node.add_child(weapon)
+	weapon.position = pos
+	return weapon
 
 func restart_game():
 	peer.refuse_new_connections = true
@@ -151,3 +165,12 @@ func game_over_remote(winner_id:int, winner_name:String):
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
 	game_in_progress.free_authority_nodes()
 	local_player = null
+
+func set_player_weapon_type(peer_id:int,weapon_type:Enums.WeaponType):
+	rpc("set_player_weapon_type_remote", peer_id, weapon_type)
+
+@rpc("call_local","any_peer")
+func set_player_weapon_type_remote(peer_id:int,weapon_type:Enums.WeaponType):
+	for data in players_data:
+		if data["id"] == peer_id:
+			data["weapon_type"] = weapon_type

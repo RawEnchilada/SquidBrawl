@@ -1,0 +1,21 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8syfr7es5edm"]
+
+[ext_resource type="PackedScene" uid="uid://btuj0jbgmmii0" path="res://sources/maps/assets/clutter/box/Box.glb" id="1_rg701"]
+[ext_resource type="Texture2D" uid="uid://byur74ruy6p5g" path="res://sources/maps/assets/clutter/box/Box olok_Albedo.png" id="2_6yo4x"]
+[ext_resource type="Texture2D" uid="uid://ce6rmn7ctdh5s" path="res://sources/maps/assets/clutter/box/Box olok_Metalness.png" id="3_xhjrh"]
+[ext_resource type="Texture2D" uid="uid://br5b4tte8h6kd" path="res://sources/maps/assets/clutter/box/Box olok_Normal.png" id="4_glswc"]
+[ext_resource type="Texture2D" uid="uid://c2gmysmr1wc4m" path="res://sources/maps/assets/clutter/box/Box olok_Roughness.png" id="5_3u4ka"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2m84y"]
+albedo_texture = ExtResource("2_6yo4x")
+metallic = 1.0
+metallic_texture = ExtResource("3_xhjrh")
+roughness_texture = ExtResource("5_3u4ka")
+normal_enabled = true
+normal_texture = ExtResource("4_glswc")
+
+[node name="Box" instance=ExtResource("1_rg701")]
+
+[node name="Cube_009" parent="." index="0"]
+transform = Transform3D(-1, 1.50996e-07, 0, -1.50996e-07, -1, 0, 0, 0, 1, 0.00607431, -2.52128e-05, 0.00408244)
+surface_material_override/0 = SubResource("StandardMaterial3D_2m84y")

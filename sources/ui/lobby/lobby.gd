@@ -23,9 +23,11 @@ func show_lobby():
 		file_name = dir.get_next()
 	dir.list_dir_end()
 	
+	map_name_selector.clear()
 	for map in maps:
 		map_name_selector.add_item(map)
 
+	weapon_type_selector.clear()
 	var weapon_types = Enums.WeaponType.keys()
 	for weapon_type in weapon_types:
 		weapon_type_selector.add_item(weapon_type)
@@ -57,4 +59,4 @@ func _on_map_name_selector_item_selected(index:int) -> void:
 
 
 func _on_weapon_type_selector_item_selected(index:int) -> void:
-	Settings.weapon_type = Enums.WeaponType[weapon_type_selector.get_item_text(index)]
+	GameManager.set_player_weapon_type(GameManager.local_id,Enums.WeaponType[weapon_type_selector.get_item_text(index)])

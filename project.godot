@@ -33,7 +33,7 @@ project/assembly_name="Game"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/floatable_body/plugin.cfg", "res://addons/wigglebone/plugin.cfg")
 
 [file_customization]
 
@@ -134,6 +134,7 @@ debug={
 3d_physics/layer_6="Death"
 3d_physics/layer_7="Remote Player"
 3d_physics/layer_8="Joints"
+3d_physics/layer_9="Floating"
 
 [rendering]
 

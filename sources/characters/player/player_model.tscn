@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://dbov8oxqd5d0r" path="res://sources/characters/player/Squid.glb" id="1_ghmnr"]
 [ext_resource type="Script" path="res://sources/characters/character_model.gd" id="2_cui6b"]
-[ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_bone.gd" id="2_pxxjo"]
-[ext_resource type="Script" path="res://wigglebone-31d0e221dd1b934ea0138c072bb8e2fa1a566002/addons/wigglebone/wiggle_properties.gd" id="3_l8an7"]
+[ext_resource type="Script" path="res://addons/wigglebone/wiggle_bone.gd" id="2_pxxjo"]
+[ext_resource type="Script" path="res://addons/wigglebone/wiggle_properties.gd" id="3_l8an7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vho1n"]
 resource_local_to_scene = true
@@ -33,12 +33,9 @@ max_distance = 0.1
 max_degrees = 30.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u3640"]
-properties/0/path = NodePath("Armature/HeadIKTarget:rotation")
+properties/0/path = NodePath(".:rotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [node name="Squid" instance=ExtResource("1_ghmnr")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
@@ -54,7 +51,7 @@ transform = Transform3D(1, -4.42815e-17, -3.60047e-18, 4.42815e-17, 0.979913, 0.
 surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")
 
 [node name="HeadWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1"]
-transform = Transform3D(1, 4.9738e-14, -2.38419e-07, 2.31077e-07, 0.246247, 0.969207, 5.87098e-08, -0.969207, 0.246247, -2.02945e-16, 2.22839, -0.218554)
+transform = Transform3D(1, 7.10543e-14, -2.38419e-07, 2.31095e-07, 0.245954, 0.969282, 5.86401e-08, -0.969281, 0.245954, -2.02945e-16, 2.22839, -0.218554)
 bone_name = "Bone.001"
 bone_idx = 1
 script = ExtResource("2_pxxjo")

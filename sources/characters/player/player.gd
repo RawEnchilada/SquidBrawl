@@ -23,6 +23,7 @@ signal player_died(player:Player)
 @export var player_name: String = "WURM"
 @export var player_color: Color = Color.WHITE
 @export var weapon_type: Enums.WeaponType = Enums.WeaponType.BAZOOKA
+@export var push_force: float = 1.0
 
 
 func set_authority(value):
@@ -54,6 +55,7 @@ func _ready():
 	nametag.text = player_name
 	if get_window().has_focus():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	equip_weapon(GameManager.create_weapon_in_game(weapon_type))
 
 
 func _input(event):
@@ -130,7 +132,11 @@ func _physics_process(delta:float):
 
 		skill.update(self, delta)
 
-		move_and_slide()
+		if(move_and_slide()):
+			for i in get_slide_collision_count():
+				var c = get_slide_collision(i)
+				if c.get_collider() is FloatableBody3D:
+					c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
 
 		# Update weapon_cooldown
 		if(weapon_cooldown < 100.0 && equipped_weapon != null):

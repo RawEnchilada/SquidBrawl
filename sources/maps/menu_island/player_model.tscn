@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhear4tiamogm"]
+
+[ext_resource type="PackedScene" uid="uid://dbov8oxqd5d0r" path="res://sources/characters/player/Squid.glb" id="1_4f0i7"]
+[ext_resource type="Script" path="res://sources/characters/character_model.gd" id="2_i2ehk"]
+[ext_resource type="Script" path="res://addons/wigglebone/wiggle_bone.gd" id="3_v3ix8"]
+[ext_resource type="Script" path="res://addons/wigglebone/wiggle_properties.gd" id="4_ail0s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vho1n"]
+resource_local_to_scene = true
+metallic = 0.1
+metallic_specular = 0.95
+roughness = 0.3
+clearcoat_enabled = true
+
+[sub_resource type="Resource" id="Resource_l0mnf"]
+script = ExtResource("4_ail0s")
+mode = 0
+stiffness = 0.1
+damping = 0.85
+gravity = Vector3(0, -0.05, 0)
+length = 0.1
+max_distance = 0.1
+max_degrees = 45.0
+
+[sub_resource type="Resource" id="Resource_tw2j8"]
+script = ExtResource("4_ail0s")
+mode = 0
+stiffness = 0.1
+damping = 0.5
+gravity = Vector3(0, 0, 0)
+length = 0.1
+max_distance = 0.1
+max_degrees = 30.0
+
+[node name="Squid" instance=ExtResource("1_4f0i7")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+script = ExtResource("2_i2ehk")
+
+[node name="Armature" parent="." index="0"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2, 0)
+
+[node name="Cylinder_001" parent="Armature/Skeleton3D" index="0"]
+transform = Transform3D(1, -4.42815e-17, -3.60047e-18, 4.42815e-17, 0.979913, 0.160985, -4.46026e-18, -0.199426, 0.791028, 0.0409325, -0.455745, -1.47455)
+
+[node name="Cylinder_001" parent="Armature/Skeleton3D/Cylinder_001" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")
+
+[node name="HeadWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1"]
+transform = Transform3D(1, 4.26326e-14, -2.38419e-07, 2.31093e-07, 0.245984, 0.969274, 5.86473e-08, -0.969274, 0.245984, -2.02945e-16, 2.22839, -0.218554)
+bone_name = "Bone.001"
+bone_idx = 1
+script = ExtResource("3_v3ix8")
+properties = SubResource("Resource_l0mnf")
+
+[node name="TentacleWiggleBone" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="2"]
+transform = Transform3D(1, -3.41061e-13, 2.38418e-07, -2.37088e-07, -0.105499, 0.99442, 2.51526e-08, -0.99442, -0.105499, -6.56987e-14, -1.27219, -0.446768)
+bone_name = "Bone.004"
+bone_idx = 3
+script = ExtResource("3_v3ix8")
+properties = SubResource("Resource_tw2j8")
+
+[node name="Cylinder" parent="Armature/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vho1n")

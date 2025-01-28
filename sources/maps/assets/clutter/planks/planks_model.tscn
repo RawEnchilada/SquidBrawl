@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxk1m2hrwc3mo"]
+
+[ext_resource type="PackedScene" uid="uid://dba4hvvcfvje2" path="res://sources/maps/assets/clutter/planks/raklap.glb" id="1_jswaf"]
+[ext_resource type="Material" uid="uid://db2w166iw2fel" path="res://sources/maps/assets/clutter/planks/planks_model.tres" id="2_7lwe1"]
+
+[node name="raklap" instance=ExtResource("1_jswaf")]
+
+[node name="Cube" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_002" parent="." index="1"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_011" parent="." index="2"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_012" parent="." index="3"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_013" parent="." index="4"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_014" parent="." index="5"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_004" parent="." index="6"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_005" parent="." index="7"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_006" parent="." index="8"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_007" parent="." index="9"]
+surface_material_override/0 = ExtResource("2_7lwe1")
+
+[node name="Cube_003" parent="." index="10"]
+surface_material_override/0 = ExtResource("2_7lwe1")

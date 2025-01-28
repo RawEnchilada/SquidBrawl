@@ -45,6 +45,11 @@ func remove_active_player(id:int):
 		p.queue_free()
 			
 
+func start()->void:
+	if(GameManager.is_host()):
+		map.LoadClutter(25,synced_node)
+
+
 func _input(event):
 	if(!ingame_menu.visible && !GameManager.game_ended && event.is_action_pressed("pause")):
 		ingame_menu.visible = true

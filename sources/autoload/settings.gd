@@ -14,8 +14,6 @@ var sound_level = 0.5
 var music_level = 0.5
 @export
 var map_name = "default"
-@export
-var weapon_type = Enums.WeaponType.BAZOOKA
 
 func _ready():
 	load_settings()
@@ -45,3 +43,5 @@ func load_settings():
 		sound_level = json["sound_level"]
 	if json.has("music_level"):
 		music_level = json["music_level"]
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(music_level))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Effects"), linear_to_db(sound_level))

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cddg8e0yewcy6"]
+
+[ext_resource type="Script" path="res://addons/floatable_body/floatable_body_3d.gd" id="1_3tct3"]
+[ext_resource type="PackedScene" uid="uid://bxk1m2hrwc3mo" path="res://sources/maps/assets/clutter/planks/planks_model.tscn" id="2_4uiop"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_snlf0"]
+size = Vector3(4.98291, 0.637329, 3.38989)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pg6x5"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Planks" type="RigidBody3D"]
+collision_layer = 258
+collision_mask = 327
+mass = 2.0
+script = ExtResource("1_3tct3")
+fluid_damp = 2.0
+
+[node name="raklap" parent="." instance=ExtResource("2_4uiop")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00366211, 0.052063, 0.0321045)
+shape = SubResource("BoxShape3D_snlf0")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_pg6x5")

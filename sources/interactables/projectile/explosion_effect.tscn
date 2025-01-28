@@ -47,3 +47,4 @@ draw_pass_1 = SubResource("QuadMesh_mncnl")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_v2mo1")
+bus = &"Effects"

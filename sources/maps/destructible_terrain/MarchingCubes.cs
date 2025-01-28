@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Terrain;
 
+[Tool]
 public class MarchingCubes
 {
 
