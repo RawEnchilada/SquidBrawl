@@ -51,7 +51,7 @@ vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos
 void fragment() {
 	vec4 albedo_tex_1 = triplanar_texture(texture_albedo, uv1_power_normal, uv1_triplanar_pos);
 	vec4 albedo_tex_2 = triplanar_texture(texture_albedo_2, uv1_power_normal, uv1_triplanar_pos);
-	
+
 	// Blend factor based on the y component of the normal and blend_start
 	float blend_factor = clamp((uv1_power_normal.y - blend_start) / (1.0 - blend_start), 0.0, 1.0);
 	vec4 blended_albedo = mix(albedo_tex_1, albedo_tex_2, blend_factor);

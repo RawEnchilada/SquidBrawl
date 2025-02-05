@@ -33,10 +33,10 @@ radius = 0.983582
 [sub_resource type="SphereShape3D" id="SphereShape3D_t2xtq"]
 
 [node name="Player" type="CharacterBody3D"]
-collision_layer = 68
+collision_layer = 64
 collision_mask = 3
 platform_on_leave = 2
-platform_floor_layers = 3
+platform_floor_layers = 259
 script = ExtResource("1_fggcm")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

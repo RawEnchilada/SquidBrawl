@@ -1,8 +1,8 @@
 [gd_scene load_steps=23 format=3 uid="uid://cbm23xsrihklr"]
 
 [ext_resource type="Shader" uid="uid://crtyhqn4bf2g" path="res://sources/shaders/water.tres" id="1_ohw0q"]
+[ext_resource type="Texture2D" uid="uid://oetdqx8vpqj5" path="res://sources/shaders/Sand_Albedo.png" id="2_450ab"]
 [ext_resource type="Material" uid="uid://dyjmdnoxxa73m" path="res://sources/shaders/ground.tres" id="2_m2l4d"]
-[ext_resource type="Texture2D" uid="uid://bsybo5l327bs1" path="res://sources/maps/assets/materials/sand.jpg" id="3_i4i0u"]
 [ext_resource type="PackedScene" uid="uid://cik78ve780aqn" path="res://sources/maps/assets/trees/palm.glb" id="3_uycdn"]
 [ext_resource type="PackedScene" uid="uid://blpcnk3dxakjy" path="res://sources/maps/assets/trees/plant01.glb" id="4_hkep4"]
 [ext_resource type="PackedScene" uid="uid://dmoqjuale1fef" path="res://sources/maps/assets/trees/plant02.glb" id="5_qy2p5"]
@@ -18,13 +18,14 @@ shader = ExtResource("1_ohw0q")
 shader_parameter/uv_scale = 5.0
 shader_parameter/uv_offset = 1.0
 shader_parameter/color_alpha = 0.9
+shader_parameter/wave_amp = 0.5
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_raayg"]
 material = SubResource("ShaderMaterial_7nsyy")
 size = Vector2(500, 500)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6a3ud"]
-albedo_texture = ExtResource("3_i4i0u")
+albedo_texture = ExtResource("2_450ab")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
@@ -60,7 +61,7 @@ disable_receive_shadows = true
 [node name="MenuIsland" type="Node3D"]
 
 [node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.236, 0, 141.882)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.236, 0.235, 141.882)
 mesh = SubResource("PlaneMesh_raayg")
 
 [node name="Island" type="MeshInstance3D" parent="."]

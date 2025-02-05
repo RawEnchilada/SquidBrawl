@@ -34,7 +34,7 @@ func add_active_player(id:int,player_name:String,player_color:Color,player_weapo
 		player.connect("player_died",Callable(self,"on_player_death"))
 	players.append(player)
 
-
+@rpc("call_local")
 func remove_active_player(id:int):
 	var p = null
 	for player in players:
@@ -48,6 +48,7 @@ func remove_active_player(id:int):
 func start()->void:
 	if(GameManager.is_host()):
 		map.LoadClutter(25,synced_node)
+	print("game started")
 
 
 func _input(event):
@@ -67,12 +68,12 @@ func on_player_death(player:Player):
 
 @rpc("call_local","any_peer")
 func player_died_remote(player_id:int,player_pos:Vector3):
-	if(player_id == GameManager.local_id):
+	remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
+	if(player_id == GameManager.local_id && players.size() > 1):
 		var free_cam = FREE_CAM_SCENE.instantiate()
 		add_child(free_cam)
 		free_cam.position = player_pos + Vector3.UP
 		hud.visible = false
-	remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
 	if(GameManager.is_host() && players.size() == 1):
 		print("game over")
 		GameManager.game_over(players[0])
@@ -94,11 +95,12 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 func free_authority_nodes():
 	# player nodes are not spawned using MultiplayerSpawner, so queue_free is called on each peer
 	# everything else is spawned using MultiplayerSpawner, so despawn is synchronized
-	for node in synced_node.get_children():
-		if(node is Player):
-			remove_active_player(node.id)
-			print(str(GameManager.local_id)+" calling free on player "+str(node.name))
-		elif(node.get_multiplayer_authority() == GameManager.local_id):
-			print(str(GameManager.local_id)+" calling free on "+str(node.name))
-			node.queue_free()
+	if(GameManager.is_host()):
+		for node in synced_node.get_children():
+			if(node is Player):
+				rpc("remove_active_player",node.id)
+				print(str(GameManager.local_id)+" calling free on player "+str(node.name))
+			elif(node.get_multiplayer_authority() == GameManager.local_id):
+				print(str(GameManager.local_id)+" calling free on "+str(node.name))
+				node.queue_free()
 	

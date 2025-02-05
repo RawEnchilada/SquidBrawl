@@ -309,7 +309,7 @@ public partial class Map : Node3D
         for(int i = 0; i < count; i++){
             int index = random.RandiRange(0,clutterScenes.Count-1);
             Node3D clutter = clutterScenes[index].Instantiate() as Node3D;
-            parent.AddChild(clutter);
+            parent.AddChild(clutter,true);
             clutter.Position = spawnpoint;
             spawnpoint += new Vector3(0.0f,1.0f,0.0f);
         }

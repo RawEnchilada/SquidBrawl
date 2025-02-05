@@ -27,7 +27,7 @@ script = ExtResource("1_e33k6")
 weapon_name = "Mortar"
 fire_rate = 30.0
 bullet_explosion_radius = 4.0
-bullet_explosion_strength = 6.0
+bullet_explosion_strength = 7.0
 bullet_speed = 15.0
 bullet_gravity = -1.0
 

@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://dtip3s4d44i5b"]
 
 [ext_resource type="Script" path="res://sources/maps/menu_island/ragdoll_squid.gd" id="2_c3cbd"]
-[ext_resource type="PackedScene" uid="uid://dhear4tiamogm" path="res://sources/maps/menu_island/player_model.tscn" id="2_qa7lt"]
+[ext_resource type="PackedScene" uid="uid://coujkd5m5ic6j" path="res://sources/maps/menu_island/character_model.tscn" id="2_qa7lt"]
 [ext_resource type="AudioStream" uid="uid://dvlvjypplnxr4" path="res://sources/characters/player/squish.mp3" id="3_88wtf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eaguo"]
-radius = 0.226509
-height = 1.15299
+radius = 0.176648
+height = 1.13842
 
 [node name="RagdollSquid" type="RigidBody3D"]
 collision_layer = 4
@@ -14,11 +14,11 @@ contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("2_c3cbd")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999889, -0.014922, 0, 0.014922, 0.999889, 0, 0.621312, -0.0121395)
-shape = SubResource("CapsuleShape3D_eaguo")
-
 [node name="Squid" parent="." instance=ExtResource("2_qa7lt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999889, -0.014922, 0, 0.014922, 0.999889, 0, 0.426484, -0.0121395)
+shape = SubResource("CapsuleShape3D_eaguo")
 
 [node name="SquishAudio" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_88wtf")

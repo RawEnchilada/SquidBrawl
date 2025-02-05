@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bim7tw18c4ntt"]
+[gd_scene load_steps=5 format=3 uid="uid://dq4s31mwn37k4"]
 
-[ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_aa8sk"]
-[ext_resource type="PackedScene" uid="uid://dp38xwhsjdme1" path="res://sources/interactables/weapons/RocketLauncher1.glb" id="2_4pyjf"]
+[ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_kjqs3"]
+[ext_resource type="PackedScene" uid="uid://bt7jgkpmk74rj" path="res://sources/interactables/weapons/DirectHit.glb" id="2_a4kxv"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_74gx5"]
 margin = 0.1
-height = 0.823841
+height = 0.70171
 radius = 0.071979
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_o5uep"]
@@ -19,22 +19,22 @@ properties/2/path = NodePath(".:equipped")
 properties/2/spawn = true
 properties/2/replication_mode = 0
 
-[node name="Bazooka" type="RigidBody3D"]
+[node name="Direct" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 3
 continuous_cd = true
-script = ExtResource("1_aa8sk")
+script = ExtResource("1_kjqs3")
 weapon_name = "Bazooka"
-fire_rate = 60.0
-bullet_explosion_radius = 3.0
-bullet_explosion_strength = 8.0
-bullet_speed = 25.0
+fire_rate = 70.0
+bullet_explosion_radius = 2.0
+bullet_explosion_strength = 9.0
+bullet_speed = 40.0
 
-[node name="RocketLauncher1" parent="." instance=ExtResource("2_4pyjf")]
-transform = Transform3D(-0.19029, 0, -1.66357e-08, 0, 0.19029, 0, 1.66357e-08, 0, -0.19029, -0.285159, -0.42666, 5.96046e-08)
+[node name="DirectHit" parent="." instance=ExtResource("2_a4kxv")]
+transform = Transform3D(-0.181709, 0, -1.58855e-08, 0, 0.181709, 0, 1.58855e-08, 0, -0.181709, 0, 0, -0.020887)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 9.93609e-05, 0, -0.0965048)
 shape = SubResource("CylinderShape3D_74gx5")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

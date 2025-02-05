@@ -2,9 +2,11 @@ class_name RagdollSquid
 extends RigidBody3D
 
 @onready
-var model: CharacterModel = $Squid
+var model: RagdollCharacterModel = $Squid
 @onready
 var squish_sound_effect: AudioStreamPlayer3D = $SquishAudio
+@export
+var create_splatter: bool = true
 
 var color: Color = Color(1.0,1.0,1.0,1.0)
 
@@ -19,11 +21,11 @@ func set_color(c: Color)->void:
 
 
 func _on_body_entered(body: Node) -> void:
-	var normal_vector = (global_position - body.global_position).normalized()
-	var basis = Basis.looking_at(normal_vector, Vector3.UP)  # Align -Z axis with normal
-	var rotation_radians = basis.get_euler()
-	var rotation_degrees = rotation_radians * (180.0 / PI)
-	SplatterDecal.create_splatter(get_parent().get_parent(),global_transform.origin,color,rotation_degrees)
-	if(squish_sound_effect.playing == false):
-		squish_sound_effect.play()
-
+	if(create_splatter):
+		var normal_vector = (global_position - body.global_position).normalized()
+		var basis = Basis.looking_at(normal_vector, Vector3.UP)  # Align -Z axis with normal
+		var rotation_radians = basis.get_euler()
+		var rotation_degrees = rotation_radians * (180.0 / PI)
+		SplatterDecal.create_splatter(get_parent().get_parent(),global_transform.origin,color,rotation_degrees)
+		if(squish_sound_effect.playing == false):
+			squish_sound_effect.play()

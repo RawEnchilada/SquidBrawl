@@ -88,6 +88,7 @@ func reset_game():
 	Bullet.BULLET_COUNT = 0
 	BaseWeapon.WEAPON_COUNT = 0
 	game_in_progress = null
+	print("game node deleted")
 
 func leave_game(_leaving_peer_id = 0):
 	if(is_host()):
@@ -129,6 +130,8 @@ func create_weapon_in_game(weapontype:Enums.WeaponType, pos:Vector3 = Vector3.ZE
 	match weapontype:
 		Enums.WeaponType.MORTAR:
 			weapon = load(base_path + "mortar.tscn").instantiate()
+		Enums.WeaponType.SPEAR:
+			weapon = load(base_path + "direct.tscn").instantiate()
 	game_in_progress.synced_node.add_child(weapon)
 	weapon.position = pos
 	return weapon
@@ -163,7 +166,8 @@ func game_over_remote(winner_id:int, winner_name:String):
 	var game_over_ui = GAME_OVER_SCENE.instantiate()
 	game_over_ui.winner_name = player_name
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
-	game_in_progress.free_authority_nodes()
+	if(GameManager.is_host()):
+		game_in_progress.free_authority_nodes()
 	local_player = null
 
 func set_player_weapon_type(peer_id:int,weapon_type:Enums.WeaponType):
