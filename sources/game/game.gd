@@ -95,12 +95,11 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 func free_authority_nodes():
 	# player nodes are not spawned using MultiplayerSpawner, so queue_free is called on each peer
 	# everything else is spawned using MultiplayerSpawner, so despawn is synchronized
-	if(GameManager.is_host()):
-		for node in synced_node.get_children():
-			if(node is Player):
-				rpc("remove_active_player",node.id)
-				print(str(GameManager.local_id)+" calling free on player "+str(node.name))
-			elif(node.get_multiplayer_authority() == GameManager.local_id):
-				print(str(GameManager.local_id)+" calling free on "+str(node.name))
-				node.queue_free()
+	for node in synced_node.get_children():
+		if(node is Player and GameManager.is_host()):
+			rpc("remove_active_player",node.id)
+			print(str(GameManager.local_id)+" calling free on player "+str(node.name))
+		elif(node.get_multiplayer_authority() == GameManager.local_id):
+			print(str(GameManager.local_id)+" calling free on "+str(node.name))
+			node.queue_free()
 	

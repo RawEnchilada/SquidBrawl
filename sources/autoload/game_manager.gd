@@ -84,11 +84,12 @@ func remove_player(peer_id:int):
 		game_in_progress.remove_active_player(peer_id)
 
 func reset_game():
-	game_in_progress.queue_free()
-	Bullet.BULLET_COUNT = 0
-	BaseWeapon.WEAPON_COUNT = 0
-	game_in_progress = null
-	print("game node deleted")
+	if game_in_progress != null:
+		game_in_progress.queue_free()
+		Bullet.BULLET_COUNT = 0
+		BaseWeapon.WEAPON_COUNT = 0
+		game_in_progress = null
+		print("game node deleted")
 
 func leave_game(_leaving_peer_id = 0):
 	if(is_host()):
@@ -144,6 +145,7 @@ func restart_game():
 func restart_game_remote(map_name:String):
 	if(game_in_progress != null):
 		reset_game()
+		await get_tree().create_timer(1.0).timeout
 	init_game(map_name)
 
 func init_player(player:Player):
@@ -166,8 +168,7 @@ func game_over_remote(winner_id:int, winner_name:String):
 	var game_over_ui = GAME_OVER_SCENE.instantiate()
 	game_over_ui.winner_name = player_name
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
-	if(GameManager.is_host()):
-		game_in_progress.free_authority_nodes()
+	game_in_progress.free_authority_nodes()
 	local_player = null
 
 func set_player_weapon_type(peer_id:int,weapon_type:Enums.WeaponType):
