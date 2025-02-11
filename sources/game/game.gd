@@ -41,6 +41,7 @@ func remove_active_player(id:int):
 		if(player.id == id):
 			p = player
 	if(p != null):
+		print("Removing player ",id," for the peer ",GameManager.local_id)
 		players.erase(p)
 		p.queue_free()
 			
@@ -68,15 +69,18 @@ func on_player_death(player:Player):
 
 @rpc("call_local","any_peer")
 func player_died_remote(player_id:int,player_pos:Vector3):
-	remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
-	if(player_id == GameManager.local_id && players.size() > 1):
-		var free_cam = FREE_CAM_SCENE.instantiate()
-		add_child(free_cam)
-		free_cam.position = player_pos + Vector3.UP
-		hud.visible = false
-	if(GameManager.is_host() && players.size() == 1):
+	if(players.size() > 2):
+		if(player_id == GameManager.local_id):
+			var free_cam = FREE_CAM_SCENE.instantiate()
+			add_child(free_cam)
+			free_cam.position = player_pos + Vector3.UP
+			hud.visible = false
+		remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
+	if(GameManager.is_host() and players.size() == 2):
 		print("game over")
-		GameManager.game_over(players[0])
+		var winner = players[0] if player_id == players[1].id else players[1]
+		GameManager.game_over(winner)
+			
 	var splash = SPLASH_EFFECT_SCENE.instantiate()
 	splash.position = player_pos + Vector3.UP
 	add_child(splash)
@@ -98,8 +102,6 @@ func free_authority_nodes():
 	for node in synced_node.get_children():
 		if(node is Player and GameManager.is_host()):
 			rpc("remove_active_player",node.id)
-			print(str(GameManager.local_id)+" calling free on player "+str(node.name))
-		elif(node.get_multiplayer_authority() == GameManager.local_id):
-			print(str(GameManager.local_id)+" calling free on "+str(node.name))
+		elif(node is not Player and node.get_multiplayer_authority() == GameManager.local_id):
 			node.queue_free()
 	

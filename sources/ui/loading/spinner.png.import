@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7gt20bhqgcqn"
-path="res://.godot/imported/Sand_Normal.png-f638348dbb3250fcbbbe5960b049126f.ctex"
+uid="uid://c8jvv357a7is7"
+path="res://.godot/imported/spinner.png-a0aea2f6d8c6a4d3cabb0d4fcec9a1e3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sources/shaders/Sand_Normal.png"
-dest_files=["res://.godot/imported/Sand_Normal.png-f638348dbb3250fcbbbe5960b049126f.ctex"]
+source_file="res://sources/ui/loading/spinner.png"
+dest_files=["res://.godot/imported/spinner.png-a0aea2f6d8c6a4d3cabb0d4fcec9a1e3.ctex"]
 
 [params]
 

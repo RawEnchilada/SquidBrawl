@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text.Json;
 
 namespace Terrain;
@@ -14,6 +15,7 @@ public partial class Map : Node3D
         ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/planks.tscn")
     };
     const bool DEBUG_MATERIALS = true;
+    const int CHUNK_RECALCULATION_FRAMES = 30; // How many times per second the map recalculates chunks
     const string mapsFolder = "./maps/";
 
     [Export]
@@ -31,7 +33,10 @@ public partial class Map : Node3D
 
     private List<Dictionary<string, object>> chunkData = new();
     private List<MaterialArea> materialAreas = new();
-    private bool modified = false;
+    private HashSet<Dictionary<string, object>> chunksChanged = new();
+
+    private Queue<Dictionary<string, object>> explosionQueue = new();
+    private double timeSinceLastChunkRecalculation = 0.0;
     private Node3D terrain;
     private StaticBody3D staticBody;
     private Node3D spawnAreas;
@@ -55,6 +60,16 @@ public partial class Map : Node3D
             staticBody = GetNode<StaticBody3D>("StaticBody3D");
             var valueField = GenerateFromNoise((int)chunks.X, (int)chunks.Y, (int)chunks.Z, seed);
             CreateFromTensor(valueField, new List<MaterialArea>());
+        }
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if(explosionQueue.Count > 0 && timeSinceLastChunkRecalculation > 1.0/CHUNK_RECALCULATION_FRAMES){
+            timeSinceLastChunkRecalculation = 0.0;
+            ProcessExplosionBatch();
+        } else {
+            timeSinceLastChunkRecalculation += delta;
         }
     }
 
@@ -255,52 +270,81 @@ public partial class Map : Node3D
 
     public void OnBulletExploded(Vector3 explosionPosition, float explosionRadius)
     {
-        modified = true;
-        float halfChunkSize = CHUNK_SIZE / 2.0f;
         Vector3 relativeExplosionPosition = explosionPosition - terrain.GlobalPosition;
+        explosionQueue.Enqueue(new Dictionary<string, object> {
+            {"position", relativeExplosionPosition},
+            {"radius", explosionRadius}
+        });
+        timeSinceLastChunkRecalculation = 0.0;
+    }
 
-        var closestChunks = new List<Dictionary<string, object>>();
-        foreach (var chunk in chunkData)
+    private void ProcessExplosionBatch()
+    {
+        float halfChunkSize = CHUNK_SIZE / 2.0f;
+        // Process all queued explosions
+        foreach (var explosion in explosionQueue)
         {
-            float distance = ((Vector3)chunk["center"] - relativeExplosionPosition).Length();
-            closestChunks.Add(new Dictionary<string, object>
+            Vector3 explosionPos = (Vector3)explosion["position"];
+            float radius = (float)explosion["radius"];
+
+            // Find affected chunks
+            foreach (var chunk in chunkData)
             {
-                {"chunk", chunk},
-                {"distance", distance}
-            });
+                Vector3 chunkCenter = (Vector3)chunk["center"];
+                float distance = (chunkCenter - explosionPos).Length();
+                
+                if (distance <= radius + CHUNK_SIZE * Mathf.Sqrt(3))
+                {
+                    chunksChanged.Add(chunk);
+                }
+            }
         }
 
-        closestChunks.Sort((a, b) => ((float)a["distance"]).CompareTo((float)b["distance"]));
-        closestChunks = closestChunks.GetRange(0, Math.Min(8, closestChunks.Count));
-
-        foreach (var entry in closestChunks)
+        // Process unique affected chunks
+        foreach (var chunk in chunksChanged)
         {
-            var chunk = (Dictionary<string, object>)entry["chunk"];
             Vector3 chunkCenter = (Vector3)chunk["center"];
             Vector3 chunkPos = chunkCenter - new Vector3(halfChunkSize, halfChunkSize, halfChunkSize);
             float[,,] valueField = (float[,,])chunk["value_field"];
 
-            for (int x = 0; x < CHUNK_SIZE; x++)
+            // Reset modification state
+            bool modified = false;
+
+            // Check all explosions against this chunk
+            foreach (var explosion in explosionQueue)
             {
-                for (int y = 0; y < CHUNK_SIZE; y++)
+                Vector3 explosionPos = (Vector3)explosion["position"];
+                float radius = (float)explosion["radius"];
+
+                for (int x = 0; x < CHUNK_SIZE; x++)
                 {
-                    for (int z = 0; z < CHUNK_SIZE; z++)
+                    for (int y = 0; y < CHUNK_SIZE; y++)
                     {
-                        Vector3 voxelPos = chunkPos + new Vector3(x, y, z);
-                        if ((voxelPos - relativeExplosionPosition).Length() <= explosionRadius)
+                        for (int z = 0; z < CHUNK_SIZE; z++)
                         {
-                            valueField[x, y, z] = -1.0f;
+                            Vector3 voxelPos = chunkPos + new Vector3(x, y, z);
+                            if ((voxelPos - explosionPos).Length() <= radius)
+                            {
+                                valueField[x, y, z] = -1.0f;
+                                modified = true;
+                            }
                         }
                     }
                 }
             }
 
-            ArrayMesh mesh = CreateMarchedMesh(valueField,chunkCenter);
-            RemoveChunk(chunk);
-            var instances = AddMeshAndCollision(mesh, chunkPos);
-            chunk["mesh"] = instances["mesh"];
-            chunk["collision"] = instances["collision"];
+            if (modified)
+            {
+                ArrayMesh mesh = CreateMarchedMesh(valueField, chunkCenter);
+                RemoveChunk(chunk);
+                var instances = AddMeshAndCollision(mesh, chunkPos);
+                chunk["mesh"] = instances["mesh"];
+                chunk["collision"] = instances["collision"];
+            }
         }
+
+        explosionQueue.Clear();
+        chunksChanged.Clear();
     }
 
     private void LoadClutter(int count,Node parent = null){

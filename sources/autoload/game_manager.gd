@@ -3,7 +3,10 @@ extends Node
 const HOST_ID = 1
 const PORT = 4200
 const GAME_SCENE = preload("res://sources/game/game.tscn")
+const LOADING_SCENE = preload("res://sources/ui/loading/loading.tscn")
 const GAME_OVER_SCENE = preload("res://sources/ui/game_over/game_over.tscn")
+
+var loading_scene = null
 
 var peer:ENetMultiplayerPeer = null
 var game_in_progress:Game = null
@@ -90,6 +93,12 @@ func reset_game():
 		BaseWeapon.WEAPON_COUNT = 0
 		game_in_progress = null
 		print("game node deleted")
+	if loading_scene == null:
+		loading_scene = LOADING_SCENE.instantiate()
+		get_tree().get_root().add_child(loading_scene)
+	else:
+		loading_scene.show()
+	
 
 func leave_game(_leaving_peer_id = 0):
 	if(is_host()):
@@ -107,6 +116,7 @@ func leave_game(_leaving_peer_id = 0):
 	local_player = null
 	players_data = []
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	loading_scene.queue_free()
 	
 
 func init_game(map_name:String):
@@ -116,6 +126,8 @@ func init_game(map_name:String):
 	if(root.has_node("Main")):
 		root.remove_child(root.get_node("Main"))
 	root.add_child(game_in_progress)
+	if loading_scene != null:
+		loading_scene.hide()
 	for data in players_data:
 		game_in_progress.add_active_player(data["id"], data["name"], Color.from_string(data["color"],Color.WHITE),data["weapon_type"])
 	game_ended = false
@@ -129,6 +141,8 @@ func create_weapon_in_game(weapontype:Enums.WeaponType, pos:Vector3 = Vector3.ZE
 	var base_path:String = "res://sources/interactables/weapons/"
 	var weapon:BaseWeapon = load(base_path + "bazooka.tscn").instantiate()
 	match weapontype:
+		Enums.WeaponType.HAILSTORM:
+			weapon = load(base_path + "hailstorm.tscn").instantiate()
 		Enums.WeaponType.MORTAR:
 			weapon = load(base_path + "mortar.tscn").instantiate()
 		Enums.WeaponType.SPEAR:
@@ -137,15 +151,27 @@ func create_weapon_in_game(weapontype:Enums.WeaponType, pos:Vector3 = Vector3.ZE
 	weapon.position = pos
 	return weapon
 
+var peers_ready_to_play = []
+
 func restart_game():
 	peer.refuse_new_connections = true
-	rpc("restart_game_remote",Settings.map_name)
+	peers_ready_to_play = []
+	rpc("restart_game_remote")
 
 @rpc("call_local")
-func restart_game_remote(map_name:String):
+func restart_game_remote():
 	if(game_in_progress != null):
 		reset_game()
-		await get_tree().create_timer(1.0).timeout
+	rpc_id(HOST_ID, "peer_ready_remote", local_id)
+	
+@rpc("any_peer","call_local")
+func peer_ready_remote(peer_id:int):
+	peers_ready_to_play.append(peer_id)
+	if(peers_ready_to_play.size() == players_data.size()):
+		rpc("start_game_remote",Settings.map_name)
+	
+@rpc("call_local")
+func start_game_remote(map_name:String):
 	init_game(map_name)
 
 func init_player(player:Player):

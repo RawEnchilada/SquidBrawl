@@ -19,6 +19,8 @@ script = ExtResource("1_s3cxe")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
 modulate = Color(0.69974, 0.839205, 0.526743, 1)
@@ -28,10 +30,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -186.0
-offset_top = -790.0
-offset_right = 813.0
-offset_bottom = 118.0
+offset_left = -203.0
+offset_top = -278.0
+offset_right = 796.0
+offset_bottom = 630.0
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 0.36834

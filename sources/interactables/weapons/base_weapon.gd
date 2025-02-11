@@ -13,6 +13,8 @@ const BULLET_SCENE = preload("res://sources/interactables/projectile/bullet.tscn
 @export var bullet_gravity:float = 0.0
 @export var bullet_bounce:int = 0
 @export var bullet_cluster:int = 0
+@export var projectile_count:int = 1
+@export var accuracy:float = 1.0
 @export var equipped:bool = false
 var equipped_by:Node3D = null
 
@@ -39,17 +41,20 @@ func shoot(from:Vector3, direction:Vector3, player_id:int):
 
 @rpc("any_peer","call_local")
 func shoot_remote(from:Vector3, direction:Vector3, player_id:int):
-	Bullet.create_bullet(
-		direction,
-		from,
-		bullet_explosion_radius,
-		bullet_explosion_strength,
-		bullet_speed,
-		bullet_gravity,
-		bullet_bounce,
-		bullet_cluster,
-		player_id
-	)
+	var offset:float = 1.0 - accuracy
+	for i in range(projectile_count):
+		var adjusted_direction = direction.rotated(Vector3.UP, randf_range(-offset,offset))
+		Bullet.create_bullet(
+			adjusted_direction,
+			from,
+			bullet_explosion_radius,
+			bullet_explosion_strength,
+			bullet_speed,
+			bullet_gravity,
+			bullet_bounce,
+			bullet_cluster,
+			player_id
+		)
 	
 
 func equip(owned_by:Player):
