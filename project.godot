@@ -14,8 +14,9 @@ config/name="SquidBrawl"
 run/main_scene="res://sources/main.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 boot_splash/image="res://.docs/TitleCard.png"
-boot_splash/fullsize=false
-config/icon="res://icon.svg"
+config/icon="res://squid.png"
+config/windows_native_icon="res://squid.ico"
+config/fullsize=true
 
 [autoload]
 

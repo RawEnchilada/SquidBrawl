@@ -1,36 +1,41 @@
-[gd_scene load_steps=5 format=3 uid="uid://ctb51unhrb4fc"]
+[gd_scene load_steps=6 format=3 uid="uid://ctb51unhrb4fc"]
 
 [ext_resource type="Script" path="res://sources/maps/editor/Editor.cs" id="1_ik7hp"]
 [ext_resource type="PackedScene" uid="uid://7h21wv3r1flj" path="res://sources/maps/areas/MaterialArea.tscn" id="3_7h756"]
 [ext_resource type="PackedScene" uid="uid://g5o1a4254dlg" path="res://sources/maps/areas/SpawnArea.tscn" id="4_er232"]
 [ext_resource type="PackedScene" uid="uid://bnx88th7kphdj" path="res://sources/characters/player/player_model.tscn" id="4_q443m"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohpxv"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.407843)
+
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_ik7hp")
-mapName = "yipee"
-seed = 4
-chunks = Vector3(10, 2, 10)
+mapName = "line"
+seed = 39
+chunks = Vector3(16, 5, 2)
 
 [node name="MaterialAreas" type="Node3D" parent="."]
 
 [node name="MaterialArea" parent="MaterialAreas" instance=ExtResource("3_7h756")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3098, 9.66645, 0)
-size = Vector3(103.476, 49.5509, 50.785)
-apply_material = "res://sources/shaders/test.tres"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.1599, 27.741, -34.7322)
+size = Vector3(159.491, 69.2582, 50.3842)
+material = SubResource("StandardMaterial3D_ohpxv")
+apply_material = "res://sources/shaders/rocky.tres"
 
 [node name="SpawnAreas" type="Node3D" parent="."]
 
 [node name="SpawnArea" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4443, 30.76, 19.4461)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82.6535, 58.6142, -36.9402)
 
 [node name="SpawnArea2" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1307, 26.7564, 12.733)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5866, 56.5156, -35.3237)
 
 [node name="SpawnArea3" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.1667, 25.784, -19.7601)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.6829, 56.8388, -32.2259)
 
 [node name="SpawnArea4" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4651, 26.0024, -21.9126)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.3036, 56.677, -32.9059)
 
 [node name="Squid" parent="." instance=ExtResource("4_q443m")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 32.241, 34.218)

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://8d0gb3aq1312"]
+
+[ext_resource type="Texture2D" uid="uid://bgvy1hxcknu1" path="res://sources/shaders/arcade_carpet_1_512.png" id="1_a8prn"]
+
+[resource]
+albedo_texture = ExtResource("1_a8prn")
+rim_enabled = true
+rim = 0.55

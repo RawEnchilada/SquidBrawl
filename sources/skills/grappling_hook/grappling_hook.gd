@@ -9,8 +9,11 @@ var target_length = 0.0
 var grappling_strength = 3.0
 var hook_node:Node3D = null
 
+var max_time:float = 2.5
+var time:float = 0.0
+
 func _ready():
-	use_rate = 10.0
+	use_rate = 6.0
 
 
 # Returns true if the skill was activated
@@ -23,6 +26,7 @@ func activate(player:Player,raycast:RayCast3D):
 		hook_node.position = target_position+raycast.get_collision_normal()*0.2
 		hook_node.target = player.global_position
 		GameManager.game_in_progress.synced_node.add_child(hook_node)
+		time = 0
 		return true
 	return false
 
@@ -34,6 +38,9 @@ func deactivate():
 # Called every frame when the skill is active, before moving the player with the final velocity
 func update(player:Player, delta:float):
 	if(is_active):
+		time += delta
+		if(time > max_time):
+			deactivate()
 		var direction_to_target = (target_position - player.global_position).normalized()
 		var distance_to_target = (target_position - player.global_position).length()
 		

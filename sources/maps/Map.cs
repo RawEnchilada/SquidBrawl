@@ -236,9 +236,9 @@ public partial class Map : Node3D
         }else{
             foreach (var area in materialAreas)
             {
-                if (chunkCenter.X >= area.Position.X && chunkCenter.X <= area.Position.X + area.Size.X &&
-                    chunkCenter.Z >= area.Position.Z && chunkCenter.Z <= area.Position.Z + area.Size.Z &&
-                    chunkCenter.Y >= area.Position.Y && chunkCenter.Y <= area.Position.Y + area.Size.Y)
+                if (chunkCenter.X >= area.Position.X - area.Size.X && chunkCenter.X <= area.Position.X + area.Size.X &&
+                    chunkCenter.Z >= area.Position.Z - area.Size.Z && chunkCenter.Z <= area.Position.Z + area.Size.Z &&
+                    chunkCenter.Y >= area.Position.Y - area.Size.Y && chunkCenter.Y <= area.Position.Y + area.Size.Y)
                 {
                     return ResourceLoader.Load<Material>(area.apply_material);
                 }

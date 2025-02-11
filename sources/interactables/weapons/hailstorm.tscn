@@ -26,7 +26,7 @@ weapon_name = "Bazooka"
 fire_rate = 70.0
 bullet_explosion_radius = 2.0
 bullet_explosion_strength = 3.0
-bullet_speed = 25.0
+bullet_speed = 20.0
 projectile_count = 4
 accuracy = 0.85
 

@@ -62,7 +62,7 @@ public partial class Editor : Node3D
             materialAreasSerialized.Add(new Dictionary<string, object>
             {
                 {"size", area.Size},
-                {"position", area.Position-area.Size/2.0f},
+                {"position", area.Position},
                 {"apply_material", area.apply_material}
             });
         }
