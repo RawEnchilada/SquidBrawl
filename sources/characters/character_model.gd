@@ -15,10 +15,9 @@ var eyes: MeshInstance3D = $Armature/Skeleton3D/Cylinder_001/Cylinder_001
 
 func turn_to_target(target:Vector3,delta:float):
 	var next_step_to_target = (global_transform.basis * Vector3.BACK).lerp(-target, delta*10.0)
-	if global_position.distance_to(next_step_to_target) > 0.01:
-		look_at(global_position-next_step_to_target)
-		rotation.x = 0.0
-		rotation.z = 0.0
+	look_at(global_position-next_step_to_target*1.01)
+	rotation.x = 0.0
+	rotation.z = 0.0
 
 
 func set_color(color: Color)->void:

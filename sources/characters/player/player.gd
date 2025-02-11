@@ -17,6 +17,8 @@ signal player_died(player:Player)
 @onready var raycast: RayCast3D = $CameraBase/CameraPivot/SpringArm3D/Camera3D/RayCast3D
 @onready var weapon_holder: Node3D = $CameraBase/CameraPivot/WeaponHolder
 @onready var jumping_audio_player: AudioStreamPlayer3D = $JumpingAudioPlayer
+@onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+@onready var model_synchronizer: MultiplayerSynchronizer = $Squid/MultiplayerSynchronizer
 
 
 @export var id: int = -1
@@ -94,6 +96,9 @@ func equip_weapon(weapon: BaseWeapon):
 	equipped_weapon = weapon
 	weapon.equip(self)
 	
+func disable_sync():
+	synchronizer.set_visibility_for(0,false)
+	model_synchronizer.set_visibility_for(0,false)
 
 
 func _physics_process(delta:float):

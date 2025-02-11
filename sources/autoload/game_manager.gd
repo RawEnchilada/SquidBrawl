@@ -14,7 +14,6 @@ var paused = false
 var game_ended = false
 
 var local_id = -1
-var local_player : Player = null
 
 func is_host() -> bool:
 	return local_id == HOST_ID
@@ -113,7 +112,6 @@ func leave_game(_leaving_peer_id = 0):
 	game_ended = true
 	paused = true
 	local_id = -1
-	local_player = null
 	players_data = []
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	loading_scene.queue_free()
@@ -180,10 +178,9 @@ func init_player(player:Player):
 
 
 func game_over(winner:Player):
-	if(local_id == HOST_ID):
-		rpc("game_over_remote", winner.id, winner.player_name)
+	rpc.call_deferred("game_over_remote", winner.id, winner.player_name)
 
-@rpc("call_local")
+@rpc("call_local", "reliable")
 func game_over_remote(winner_id:int, winner_name:String):
 	game_ended = true
 	paused = true
@@ -195,7 +192,6 @@ func game_over_remote(winner_id:int, winner_name:String):
 	game_over_ui.winner_name = player_name
 	game_in_progress.get_node("CanvasLayer").add_child(game_over_ui)
 	game_in_progress.free_authority_nodes()
-	local_player = null
 
 func set_player_weapon_type(peer_id:int,weapon_type:Enums.WeaponType):
 	rpc("set_player_weapon_type_remote", peer_id, weapon_type)

@@ -34,7 +34,7 @@ func add_active_player(id:int,player_name:String,player_color:Color,player_weapo
 		player.connect("player_died",Callable(self,"on_player_death"))
 	players.append(player)
 
-@rpc("call_local")
+@rpc("call_local", "reliable")
 func remove_active_player(id:int):
 	var p = null
 	for player in players:
@@ -42,6 +42,7 @@ func remove_active_player(id:int):
 			p = player
 	if(p != null):
 		print("Removing player ",id," for the peer ",GameManager.local_id)
+		p.disable_sync()
 		players.erase(p)
 		p.queue_free()
 			
@@ -67,16 +68,17 @@ func _input(event):
 func on_player_death(player:Player):
 	rpc("player_died_remote", player.id, player.global_position)
 
-@rpc("call_local","any_peer")
+@rpc("call_local","any_peer","reliable")
 func player_died_remote(player_id:int,player_pos:Vector3):
-	if(players.size() > 2):
+	var player_count := players.size()
+	if(player_count > 2):
 		if(player_id == GameManager.local_id):
 			var free_cam = FREE_CAM_SCENE.instantiate()
 			add_child(free_cam)
 			free_cam.position = player_pos + Vector3.UP
 			hud.visible = false
-		remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so queue_free is called on each peer
-	if(GameManager.is_host() and players.size() == 2):
+		remove_active_player(player_id) # player is not spawned using MultiplayerSpawner, so free is called on each peer
+	if(GameManager.is_host() and player_count == 2):
 		print("game over")
 		var winner = players[0] if player_id == players[1].id else players[1]
 		GameManager.game_over(winner)
@@ -97,12 +99,13 @@ func create_explosion_at_remote(center_position:Vector3,explosion_radius:float):
 
 
 func free_authority_nodes():
-	# player nodes are not spawned using MultiplayerSpawner, so queue_free is called on each peer
+	# player nodes are not spawned using MultiplayerSpawner, so free is called on each peer
 	# everything else is spawned using MultiplayerSpawner, so despawn is synchronized
+	for player in players:
+		player.disable_sync()
+		player.free()
+	players.clear()
 	for node in synced_node.get_children():
-		if(node is Player):
-			if(GameManager.is_host()):
-				rpc("remove_active_player",node.id)
-		elif(node.get_multiplayer_authority() == GameManager.local_id):
-			node.queue_free()
+		if(node is not Player and node.get_multiplayer_authority() == GameManager.local_id):
+			node.free()
 	
