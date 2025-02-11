@@ -38,10 +38,9 @@ size = Vector3(1000, 20, 1000)
 [node name="Map" type="Node3D"]
 script = ExtResource("1_yagin")
 noiseMap = SubResource("FastNoiseLite_njn4u")
-chunks = Vector3(6, 10, 6)
 
 [node name="Terrain" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, -36)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 0, -48)
 
 [node name="Water" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e4kkm")
@@ -56,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -500, 0)
 shape = SubResource("BoxShape3D_a0vkv")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, -36)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 0, -48)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.980172, 0.144905, 0.135147, 0.066746, -0.400741, 0.913757, 0.186567, 0.90466, 0.383123, 8.56742, 130.844, 5.61154)
@@ -77,7 +76,7 @@ environment = ExtResource("1_0gv7n")
 fov = 90.0
 
 [node name="SpawnAreas" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, -36)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 0, -48)
 
 [node name="Shark" parent="." instance=ExtResource("3_7gxwa")]
-radius = 41.0
+radius = 53.0

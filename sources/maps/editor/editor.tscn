@@ -1,163 +1,36 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctb51unhrb4fc"]
+[gd_scene load_steps=5 format=3 uid="uid://ctb51unhrb4fc"]
 
 [ext_resource type="Script" path="res://sources/maps/editor/Editor.cs" id="1_ik7hp"]
 [ext_resource type="PackedScene" uid="uid://7h21wv3r1flj" path="res://sources/maps/areas/MaterialArea.tscn" id="3_7h756"]
 [ext_resource type="PackedScene" uid="uid://g5o1a4254dlg" path="res://sources/maps/areas/SpawnArea.tscn" id="4_er232"]
 [ext_resource type="PackedScene" uid="uid://bnx88th7kphdj" path="res://sources/characters/player/player_model.tscn" id="4_q443m"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d2j11"]
-transparency = 1
-albedo_color = Color(1, 0, 0, 0.105882)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_myprw"]
-transparency = 1
-albedo_color = Color(1, 0.873333, 0.24, 0.835294)
-
-[sub_resource type="Shader" id="Shader_ju010"]
-code = "shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
-
-uniform float uv_scale : hint_range(0.0, 10.0, 0.1) = 1.0;
-uniform float uv_offset : hint_range(0.0, 10.0, 0.1) = 1.0;
-uniform float color_alpha : hint_range(0.0, 1.0, 0.1) = 1.0;
-
-#define iResolution 1.0/SCREEN_PIXEL_SIZE
-#define iTime TIME
-
-vec2 hash(vec2 p) {
-    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
-    return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
-}
-
-float noise(in vec2 p) {
-    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
-    const float K2 = 0.211324865; // (3-sqrt(3))/6;
-
-    vec2 i = floor(p + (p.x + p.y) * K1);
-    vec2 a = p - i + (i.x + i.y) * K2;
-    float m = step(a.y, a.x);
-    vec2 o = vec2(m, 1.0 - m);
-    vec2 b = a - o + K2;
-    vec2 c = a - 1.0 + 2.0 * K2;
-    vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
-    vec3 n = h * h * h * h * vec3(dot(a, hash(i + 0.0)), dot(b, hash(i + o)), dot(c, hash(i + 1.0)));
-    return dot(n, vec3(70.0));
-}
-
-#define MAX_WAVES 4
-#define SUPERPOSITION 4
-#define TAU 6.28318
-#define PHI 1.618
-
-float height(vec2 p, float t) {
-    float acc = 0.0;
-    for (int i = 0; i < MAX_WAVES; i++) {
-        for (int j = 0; j < SUPERPOSITION; j++) {
-            int seed = i + 5 * j;
-            float theta = TAU * PHI * 10.0 * float(seed);
-            float up = cos(theta) * p.x - sin(theta) * p.y;
-            float vp = sin(theta) * p.x + cos(theta) * p.y;
-            float initial_phase = TAU * PHI * float(seed);
-            float k = pow(2.0, float(i));
-            float phase = initial_phase + up * k + cos(vp) + 3.0 * t + 0.5 * k * t;
-            float A = cos(phase) / (k * k);
-            acc += A;
-        }
-    }
-    return acc;
-}
-
-vec4 hn_fdm(vec2 p, float t) {
-    float h = height(p, t);
-    vec2 vx = vec2(0.1, 0.0);
-    vec2 vy = vec2(0.0, 0.1);
-    float hx = height(p + vx, t);
-    float hy = height(p + vy, t);
-    float dx = (hx - h);
-    float dy = (hy - h);
-    vec3 v1 = normalize(vec3(vx.x, 0.0, dx));
-    vec3 v2 = normalize(vec3(0.0, vy.y, dy));
-    vec3 norm = cross(v1, v2);
-    return vec4(norm, h);
-}
-
-void vertex() {
-    UV = UV * uv_scale + uv_offset;
-}
-
-void fragment() {
-    vec2 uv = UV;
-    vec2 uv_screen = (uv - 0.5) * uv_scale;
-    vec4 nh = hn_fdm(uv_screen * 10.0, iTime * 1.0);
-    float h = nh.w;
-    vec3 norm = nh.xyz;
-    vec3 sun_dir = normalize(vec3(-0.2, 0.4, 1.0));
-    vec4 water_colour = vec4(0.2, 0.4, 0.6, 1.0);
-    vec4 foam_colour = vec4(0.8, 0.9, 1.0, 1.0);
-    vec4 sky_colour = vec4(0.2, 0.6, 0.8, 1.0);
-    vec4 specular_colour = vec4(1.0, 1.0, 1.0, 1.0);
-
-    if (dot(sun_dir, norm) > 0.98) {
-        ALBEDO = specular_colour.rgb;
-    } else {
-        ALBEDO = mix(water_colour.rgb, sky_colour.rgb, dot(norm, normalize(vec3(0.0, 0.2, 1.0))));
-    }
-    ALPHA = color_alpha;
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cmjl5"]
-render_priority = 0
-shader = SubResource("Shader_ju010")
-shader_parameter/uv_scale = 10.0
-shader_parameter/uv_offset = 1.0
-shader_parameter/color_alpha = 0.9
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_iqm6n"]
-material = SubResource("ShaderMaterial_cmjl5")
-size = Vector2(1000, 1000)
-
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_ik7hp")
-mapName = "cubes"
-save = true
-
-[node name="Mesh" type="Node3D" parent="."]
-
-[node name="AABB" type="CSGBox3D" parent="Mesh"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.2292, 42.8445, 36.4501)
-size = Vector3(49.8406, 63.5852, 57.2045)
-material = SubResource("StandardMaterial3D_d2j11")
+mapName = "yipee"
+seed = 4
+chunks = Vector3(10, 2, 10)
 
 [node name="MaterialAreas" type="Node3D" parent="."]
 
 [node name="MaterialArea" parent="MaterialAreas" instance=ExtResource("3_7h756")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.0494, 16.4287, 21.3345)
-size = Vector3(27.8413, 7.19057, 32.3901)
-material = SubResource("StandardMaterial3D_myprw")
-apply_material = "res://sources/shaders/ground.tres"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3098, 9.66645, 0)
+size = Vector3(103.476, 49.5509, 50.785)
+apply_material = "res://sources/shaders/test.tres"
 
 [node name="SpawnAreas" type="Node3D" parent="."]
 
 [node name="SpawnArea" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75082, 73.7891, 6.94324)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4443, 30.76, 19.4461)
 
 [node name="SpawnArea2" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2144, 34.6799, 10.1866)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1307, 26.7564, 12.733)
 
 [node name="SpawnArea3" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.375977, 32.4698, 34.909)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.1667, 25.784, -19.7601)
 
 [node name="SpawnArea4" parent="SpawnAreas" instance=ExtResource("4_er232")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.0243, 71.0189, 32.1474)
-
-[node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("PlaneMesh_iqm6n")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.980172, 0.144905, 0.135147, 0.066746, -0.400741, 0.913757, 0.186567, 0.90466, 0.383123, 8.56742, 130.844, 5.61154)
-shadow_enabled = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4651, 26.0024, -21.9126)
 
 [node name="Squid" parent="." instance=ExtResource("4_q443m")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 32.241, 34.218)

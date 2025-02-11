@@ -71,7 +71,7 @@ func on_player_death(player:Player):
 @rpc("call_local","any_peer","reliable")
 func player_died_remote(player_id:int,player_pos:Vector3):
 	var player_count := players.size()
-	if(player_count > 2):
+	if(player_count != 2):
 		if(player_id == GameManager.local_id):
 			var free_cam = FREE_CAM_SCENE.instantiate()
 			add_child(free_cam)

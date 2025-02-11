@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bki5um47hrs62"]
 
 [ext_resource type="Script" path="res://sources/skills/grappling_hook/grappling_hook_target.gd" id="1_0mxb1"]
-[ext_resource type="PackedScene" uid="uid://b4soslvuvmwab" path="res://sources/skills/grappling_hook/GHook.gltf" id="1_jm020"]
+[ext_resource type="PackedScene" uid="uid://bw2f0txbpbkwa" path="res://sources/skills/grappling_hook/Anchor.glb" id="2_7iihi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgpxp"]
 shading_mode = 0
@@ -31,8 +31,8 @@ script = ExtResource("1_0mxb1")
 material_override = SubResource("StandardMaterial3D_dgpxp")
 mesh = SubResource("ImmediateMesh_en6j4")
 
-[node name="GHook" parent="." instance=ExtResource("1_jm020")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+[node name="Anchor" parent="." instance=ExtResource("2_7iihi")]
+transform = Transform3D(-1.20206e-08, -2.40413e-08, -0.275, 0, -0.275, 2.40413e-08, -0.275, 1.05088e-15, 1.20206e-08, 0, 0, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3j8iu")

@@ -14,7 +14,7 @@ public partial class Map : Node3D
         ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/barrel.tscn"),
         ResourceLoader.Load<PackedScene>("res://sources/maps/assets/clutter/planks.tscn")
     };
-    const bool DEBUG_MATERIALS = true;
+    const bool DEBUG_MATERIALS = false;
     const int CHUNK_RECALCULATION_FRAMES = 30; // How many times per second the map recalculates chunks
     const string mapsFolder = "./maps/";
 
@@ -42,7 +42,7 @@ public partial class Map : Node3D
     private Node3D spawnAreas;
     private Node3D shark;
 
-    private static readonly Material DefaultMaterial = new StandardMaterial3D();
+    private static readonly Material DefaultMaterial = ResourceLoader.Load<Material>("res://sources/shaders/ground.tres");
 
     public override void _Ready()
     {
@@ -56,6 +56,10 @@ public partial class Map : Node3D
     {
         if(generate){
             generate = false;
+            foreach (var chunk in chunkData){
+                ((MeshInstance3D)chunk["mesh"]).Free();
+                ((CollisionShape3D)chunk["collision"]).Free();
+            }
             terrain = GetNode<Node3D>("Terrain");
             staticBody = GetNode<StaticBody3D>("StaticBody3D");
             var valueField = GenerateFromNoise((int)chunks.X, (int)chunks.Y, (int)chunks.Z, seed);
@@ -127,12 +131,19 @@ public partial class Map : Node3D
             {
                 for (int z = 0; z < cz*CHUNK_SIZE; z++)
                 {
-                    var noiseValue = noiseMap.GetNoise3D(x, y, z);
-                    var modifier_x = 1.0f-MathF.Abs(x - cx*CHUNK_SIZE/2.0f)/cx*CHUNK_SIZE/2.0f;
-                    var modifier_y = 1.0f-MathF.Abs(y - cy*CHUNK_SIZE/2.0f)/cy*CHUNK_SIZE/2.0f;
-                    var modifier_z = 1.0f-MathF.Abs(z - cz*CHUNK_SIZE/2.0f)/cz*CHUNK_SIZE/2.0f;
-                    var mod = (modifier_x+modifier_y+modifier_z) - 0.5f;
-                    full_field[x,y,z] = noiseValue*mod;
+                    float noiseValue = noiseMap.GetNoise3D(x, y, z);
+            
+                    // Calculate normalized distances from center for X/Z
+                    float maxX = (cx*CHUNK_SIZE - 1);
+                    float maxZ = (cz*CHUNK_SIZE - 1);
+                    
+                    float xDist = 1f - MathF.Abs((x - maxX/2f) / (maxX/2f));
+                    float zDist = 1f - MathF.Abs((z - maxZ/2f) / (maxZ/2f));
+                    
+                    // Combine axis distances with multiplication
+                    float edgeFactor = Math.Clamp(xDist * zDist, 0f, 1f);
+        
+                    full_field[x,y,z] = -0.1f + (noiseValue +0.1f) * edgeFactor;
                 }
             }
         }
@@ -147,9 +158,6 @@ public partial class Map : Node3D
         this.materialAreas = materialAreas;
 
         Vector3 center = new(chunks.X * CHUNK_SIZE / 2, 0, chunks.Z * CHUNK_SIZE / 2);
-        terrain.GlobalPosition = -center;
-        staticBody.GlobalPosition = -center;
-        spawnAreas.GlobalPosition = -center; 
         chunkData.Clear();
         
         for (int x = 0; x < chunks.X; x++)
@@ -347,15 +355,34 @@ public partial class Map : Node3D
         chunksChanged.Clear();
     }
 
-    private void LoadClutter(int count,Node parent = null){
-        Vector3 spawnpoint = new Vector3(0.0f,(chunks.Y+1)*CHUNK_SIZE,0.0f);
+    private void LoadClutter(int count, Node parent = null)
+    {
         var random = new RandomNumberGenerator();
-        for(int i = 0; i < count; i++){
-            int index = random.RandiRange(0,clutterScenes.Count-1);
-            Node3D clutter = clutterScenes[index].Instantiate() as Node3D;
+        random.Randomize();
+        
+        // Calculate grid distribution
+        int perAxis = Mathf.CeilToInt(Mathf.Sqrt(count));
+        float stepX = (chunks.X * CHUNK_SIZE) / Mathf.Max(perAxis - 1, 1);
+        float stepZ = (chunks.Z * CHUNK_SIZE) / Mathf.Max(perAxis - 1, 1);
+
+        for (int i = 0; i < count; i++)
+        {
+            // Calculate grid position
+            int xIndex = i % perAxis;
+            int zIndex = i / perAxis;
+            float xPos = xIndex * stepX;
+            float zPos = zIndex * stepZ;
+
+
+            // Determine spawn position
+            Vector3 spawnPos = new Vector3(xPos, chunks.Y*CHUNK_SIZE, zPos) - new Vector3(chunks.X * CHUNK_SIZE, 0, chunks.Z * CHUNK_SIZE) / 2.0f;
+
+            // Instantiate and position clutter
+            int index = random.RandiRange(0, clutterScenes.Count - 1);
+            Node3D clutter = clutterScenes[index].Instantiate<Node3D>();
             parent.AddChild(clutter,true);
-            clutter.Position = spawnpoint;
-            spawnpoint += new Vector3(0.0f,1.0f,0.0f);
+            clutter.Position = spawnPos;
         }
     }
+
 }

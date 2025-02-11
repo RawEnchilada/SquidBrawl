@@ -1,12 +1,10 @@
 [gd_scene load_steps=5 format=3 uid="uid://djct5qlo001wj"]
 
 [ext_resource type="Script" path="res://sources/interactables/weapons/base_weapon.gd" id="1_7e8u7"]
-[ext_resource type="PackedScene" uid="uid://dp38xwhsjdme1" path="res://sources/interactables/weapons/RocketLauncher1.glb" id="2_p8480"]
+[ext_resource type="PackedScene" uid="uid://0rg4vf404ewl" path="res://sources/interactables/weapons/Multishot.glb" id="2_a8hkc"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_74gx5"]
-margin = 0.1
-height = 0.823841
-radius = 0.071979
+[sub_resource type="BoxShape3D" id="BoxShape3D_yrjqb"]
+size = Vector3(0.149475, 0.743225, 0.154907)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_o5uep"]
 properties/0/path = NodePath(".:position")
@@ -29,15 +27,15 @@ fire_rate = 70.0
 bullet_explosion_radius = 2.0
 bullet_explosion_strength = 3.0
 bullet_speed = 25.0
-projectile_count = 3
-accuracy = 0.9
+projectile_count = 4
+accuracy = 0.85
 
-[node name="RocketLauncher1" parent="." instance=ExtResource("2_p8480")]
-transform = Transform3D(-0.19029, 0, -1.66357e-08, 0, 0.19029, 0, 1.66357e-08, 0, -0.19029, -0.285159, -0.42666, 5.96046e-08)
+[node name="Multishot" parent="." instance=ExtResource("2_a8hkc")]
+transform = Transform3D(0.177327, 0, 0, 0, 0.177327, 0, 0, 0, 0.177327, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
-shape = SubResource("CylinderShape3D_74gx5")
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.000640869, 0.00164795, 0.000579834)
+shape = SubResource("BoxShape3D_yrjqb")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_o5uep")

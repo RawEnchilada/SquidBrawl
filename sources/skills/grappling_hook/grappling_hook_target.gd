@@ -2,7 +2,7 @@ extends Node3D
 
 @export var target:Vector3 = Vector3.ZERO
 
-@onready var hook = $GHook
+@onready var hook = $Anchor
 @onready var rope_mesh = $RopeMesh.mesh as ImmediateMesh
 
 func _ready():

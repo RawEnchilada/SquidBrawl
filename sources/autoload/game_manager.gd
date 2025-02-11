@@ -114,7 +114,8 @@ func leave_game(_leaving_peer_id = 0):
 	local_id = -1
 	players_data = []
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	loading_scene.queue_free()
+	if loading_scene != null:
+		loading_scene.queue_free()
 	
 
 func init_game(map_name:String):
