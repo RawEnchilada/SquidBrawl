@@ -9,11 +9,11 @@ var target_length = 0.0
 var grappling_strength = 3.0
 var hook_node:Node3D = null
 
-var max_time:float = 2.5
+var max_time:float = 3.0
 var time:float = 0.0
 
 func _ready():
-	use_rate = 6.0
+	use_rate = 5.0
 
 
 # Returns true if the skill was activated

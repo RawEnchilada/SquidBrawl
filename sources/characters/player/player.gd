@@ -165,6 +165,7 @@ func get_look_target() -> Vector3:
 @rpc("call_local","any_peer")
 func apply_impulse_remote(impulse:Vector3):
 	velocity += impulse
+    # TODO smash bros like percentage
 
 func _on_death_area_area_entered(_area:Area3D):
 	if(equipped_weapon != null):

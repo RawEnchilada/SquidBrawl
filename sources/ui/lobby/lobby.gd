@@ -26,6 +26,7 @@ func show_lobby():
 	map_name_selector.clear()
 	for map in maps:
 		map_name_selector.add_item(map)
+	map_name_selector.select(0)
 
 	weapon_type_selector.clear()
 	var weapon_types = Enums.WeaponType.keys()

@@ -159,6 +159,9 @@ public partial class Map : Node3D
 
         Vector3 center = new(chunks.X * CHUNK_SIZE / 2, 0, chunks.Z * CHUNK_SIZE / 2);
         chunkData.Clear();
+        terrain.GlobalPosition = -center;
+        staticBody.GlobalPosition = -center;
+        spawnAreas.GlobalPosition = -center; 
         
         for (int x = 0; x < chunks.X; x++)
         {
