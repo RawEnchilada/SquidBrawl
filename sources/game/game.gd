@@ -100,8 +100,9 @@ func free_authority_nodes():
 	# player nodes are not spawned using MultiplayerSpawner, so queue_free is called on each peer
 	# everything else is spawned using MultiplayerSpawner, so despawn is synchronized
 	for node in synced_node.get_children():
-		if(node is Player and GameManager.is_host()):
-			rpc("remove_active_player",node.id)
-		elif(node is not Player and node.get_multiplayer_authority() == GameManager.local_id):
+		if(node is Player):
+			if(GameManager.is_host()):
+				rpc("remove_active_player",node.id)
+		elif(node.get_multiplayer_authority() == GameManager.local_id):
 			node.queue_free()
 	
